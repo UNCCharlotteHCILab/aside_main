@@ -1,4 +1,4 @@
 aside_backend
 =============
 
-This repository exists for the main aside code base, not including Eside or the interface
+This repository is the primary repositiory for aside. It contains a branch for each version customized for a study
