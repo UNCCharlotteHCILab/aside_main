@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+    <accessors>
+	
+     <accessor id="javax.net.ssl.SSLContext.init(javax.net.ssl.KeyManager[], javax.net.ssl.TrustManager[], java.security.SecureRandom)">
+		<paramCount>3</paramCount>
+		<vulnParam>0</vulnParam>
+		<category>SQL Injection</category>
+	</accessor>
+     <accessor id="javax.net.ssl.SSLContext.init(KeyManager[], TrustManager[], SecureRandom)">
+		<paramCount>3</paramCount>
+		<vulnParam>0</vulnParam>
+		<category>SQL Injection</category>
+	</accessor>
+	
+	
+	 <accessor id="java.sql.Statement.executeUpdate(String)">
+		<paramCount>1</paramCount>
+		<vulnParam>0</vulnParam>
+		<category>SQL Injection</category>
+	</accessor>
+	<accessor id="java.sql.Statement.executeUpdate(String,int)">
+		<paramCount>2</paramCount>
+		<vulnParam>0</vulnParam>
+		<category>SQL Injection</category>
+	</accessor>
+	<accessor id="java.sql.Statement.executeUpdate(String sql, int[])">
+		<paramCount>2</paramCount>
+		<vulnParam>0</vulnParam>
+		<category>SQL Injection</category>
+	</accessor>
+	<accessor id="java.sql.Statement.executeUpdate(String sql, String[])">
+		<paramCount>2</paramCount>
+		<vulnParam>0</vulnParam>
+		<category>SQL Injection</category>
+	</accessor>
+ 	<accessor id="java.sql.Statement.executeQuery(String)">
+		<paramCount>1</paramCount>
+		<vulnParam>0</vulnParam>
+		<category>SQL Injection</category>
+	</accessor>
+	
+	
+	 
+	<accessor id="java.sql.Statement.execute(String)">
+		<paramCount>1</paramCount>
+		<vulnParam>0</vulnParam>
+		<category>SQL Injection</category>
+	</accessor>
+ 
+	<accessor id="java.sql.Statement.execute(String,int)">
+		<paramCount>2</paramCount>
+		<vulnParam>0</vulnParam>
+		<category>SQL Injection</category>
+	</accessor>
+	<accessor id="java.sql.Statement.execute(String,String[])">
+		<paramCount>2</paramCount>
+		<vulnParam>0</vulnParam>
+		<category>SQL Injection</category>
+	</accessor>
+	<accessor id="java.sql.Statement.execute(String,int[])">
+		<paramCount>2</paramCount>
+		<vulnParam>0</vulnParam>
+		<category>SQL Injection</category>
+	</accessor> 
+	
+	<accessor id="java.sql.PreparedStatement.executeUpdate()">
+		<paramCount>0</paramCount>
+		<vulnParam>0</vulnParam>
+		<category>SQL Injection</category>
+	</accessor>
+ 	<accessor id="java.sql.PreparedStatement.executeQuery()">
+		<paramCount>0</paramCount>
+		<vulnParam>0</vulnParam>
+		<category>SQL Injection</category>
+	</accessor>
+	<accessor id="java.sql.PreparedStatement.execute()">
+		<paramCount>0</paramCount>
+		<vulnParam>0</vulnParam>
+		<category>SQL Injection</category>
+	</accessor>  
+	
+	<!-- Goldrush specific -->
+	<accessor id="uncc.goldrush.dao.AccountMapper.myAccounts(User)">
+		<paramCount>1</paramCount>
+		<vulnParam>0</vulnParam>
+		<category>Undecided</category>
+	</accessor>
+	<accessor id="uncc.goldrush.dao.AccountMapper.loginUser(User)">
+		<paramCount>1</paramCount>
+		<vulnParam>0</vulnParam>
+		<category>Undecided</category>
+	</accessor>
+	<accessor id="uncc.goldrush.dao.AccountMapper.getAccount(String)">
+		<paramCount>1</paramCount>
+		<vulnParam>0</vulnParam>
+		<category>Undecided</category>
+	</accessor>
+	<accessor id="uncc.goldrush.dao.AccountMapper.updateAccount(Account)">
+		<paramCount>1</paramCount>
+		<vulnParam>0</vulnParam>
+		<category>Undecided</category>
+	</accessor>
+	<accessor id="uncc.goldrush.dao.AccountMapper.getTransactionsForAccount(Account)">
+		<paramCount>1</paramCount>
+		<vulnParam>0</vulnParam>
+		<category>Undecided</category>
+	</accessor>
+	<accessor id="uncc.goldrush.dao.AccountMapper.createUserTable()">
+		<paramCount>0</paramCount>
+		<vulnParam>0</vulnParam>
+		<category>Undecided</category>
+	</accessor>
+	<accessor id="uncc.goldrush.dao.AccountMapper.createAccountTable()">
+		<paramCount>0</paramCount>
+		<vulnParam>0</vulnParam>
+		<category>Undecided</category>
+	</accessor>
+	<accessor id="uncc.goldrush.dao.AccountMapper.createTransactionTable()">
+		<paramCount>0</paramCount>
+		<vulnParam>0</vulnParam>
+		<category>Undecided</category>
+		</accessor>
+	<accessor id="uncc.goldrush.dao.AccountMapper.insertTransaction(Transaction)">
+		<paramCount>1</paramCount>
+		<vulnParam>0</vulnParam>
+		<category>Undecided</category>
+	</accessor>
+	<accessor id="uncc.goldrush.dao.AccountMapper.insertAccount(Account)">
+		<paramCount>1</paramCount>
+		<vulnParam>0</vulnParam>
+		<category>Undecided</category>
+	</accessor>
+	<accessor id="uncc.goldrush.dao.AccountMapper.insertUser(User)">
+		<paramCount>1</paramCount>
+		<vulnParam>0</vulnParam>
+		<category>Undecided</category>
+	</accessor>
+	<accessor id="uncc.goldrush.dao.AccountMapper.insertEntitlement(Entitlement)">
+		<paramCount>1</paramCount>
+		<vulnParam>0</vulnParam>
+		<category>Undecided</category>
+	</accessor> 
+	
+	<!-- Spring specific -->
+	<!-- 
+		<accessor id="org.springframework.orm.ibatis.SqlMapClientTemplate.queryForObject(String, Object)">
+		<paramCount>2</paramCount>
+		<vulnParam>1</vulnParam>
+		<category>SQL Injection</category>
+	</accessor>
+	<accessor id="org.springframework.orm.ibatis.SqlMapClientTemplate.update(String, Object)">
+		<paramCount>2</paramCount>
+		<vulnParam>1</vulnParam>
+		<category>SQL Injection</category>
+	</accessor>
+	<accessor id="org.springframework.orm.ibatis.SqlMapClientTemplate.insert(String, Object)">
+		<paramCount>2</paramCount>
+		<vulnParam>1</vulnParam>
+		<category>SQL Injection</category>
+	</accessor> -->
+	
+</accessors>	
