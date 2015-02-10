@@ -1,0 +1,5 @@
+@CHARSET "UTF-8";
+#nav { background-color: #aae }
+.padded { padding: 4px; }
+tr.light { background-color: #fff }
+tr.dark { background-color: #efe }
