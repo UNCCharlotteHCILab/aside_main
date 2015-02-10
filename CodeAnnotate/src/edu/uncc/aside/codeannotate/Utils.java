@@ -26,6 +26,7 @@ import org.eclipse.jdt.core.dom.MethodInvocation;
 import edu.uncc.aside.codeannotate.XMLConfig.SinkDescription;
 import edu.uncc.aside.codeannotate.models.Path;
 import edu.uncc.aside.codeannotate.models.Point;
+import edu.uncc.aside.codeannotate.asideInterface.InterfaceUtil;
 
 
 /*
@@ -224,6 +225,8 @@ public class Utils {
 					IMarker.SEVERITY_WARNING);
 			questionMarker
 					.setAttribute(IMarker.PRIORITY, IMarker.PRIORITY_HIGH);
+			
+			InterfaceUtil.prepareAnnotationRequest(questionMarker, resource);
 
 		} catch (CoreException e) {
 			e.printStackTrace();
@@ -249,6 +252,7 @@ public class Utils {
 				IMarker.SEVERITY_WARNING);
 		questionCheckedMarker.setAttribute(IMarker.PRIORITY,
 				IMarker.PRIORITY_HIGH);
+		InterfaceUtil.prepareAnnotationRequest(questionCheckedMarker, resource);
 	}
 
 	public static boolean isMethodInvocationOfInterest(MethodInvocation node,

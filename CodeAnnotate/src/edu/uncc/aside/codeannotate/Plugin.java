@@ -39,7 +39,7 @@ public class Plugin extends AbstractUIPlugin {
 	public static final String ANNOTATION_RELATIONSHIP_VIEW_ID = "relationships";
 
 	public static final String ANNOTATION_ANSWER = "CodeAnnotate.annotationAnswer";
-	public static final String ANNOTATION_QUESTION = "CodeAnnotate.annotationQuestion";
+	public static final String ANNOTATION_QUESTION = "yellow.question.box";
 	public static final String ANNOTATION_QUESTION_CHECKED = "CodeAnnotate.annotationQuestionChecked";
 	public static final String SENSITIVE_ACCESSORS_CONFIG = "SensitiveInfoAccessors.xml";
 	

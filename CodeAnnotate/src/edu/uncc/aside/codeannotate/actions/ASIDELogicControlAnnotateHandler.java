@@ -43,6 +43,7 @@ import edu.uncc.aside.codeannotate.Utils;
 import edu.uncc.aside.codeannotate.models.Path;
 import edu.uncc.aside.codeannotate.models.Point;
 import edu.uncc.aside.codeannotate.CallerFinder;
+import edu.uncc.aside.codeannotate.asideInterface.InterfaceUtil;
 
 import java.util.Arrays;
 import java.util.Iterator;
@@ -275,6 +276,8 @@ public class ASIDELogicControlAnnotateHandler extends AbstractHandler {
 					astRoot.getLineNumber(node.getStartPosition()));
 			answerMarker.setAttribute(IMarker.SEVERITY, IMarker.SEVERITY_INFO);
 			answerMarker.setAttribute(IMarker.PRIORITY, IMarker.PRIORITY_HIGH);
+			
+			InterfaceUtil.prepareAnnotationRequest(answerMarker, null);
 
 		} catch (CoreException e) {
 			e.printStackTrace();
@@ -349,6 +352,8 @@ public class ASIDELogicControlAnnotateHandler extends AbstractHandler {
 				IMarker.SEVERITY_INFO);
 		questionCheckedMarker.setAttribute(IMarker.PRIORITY,
 				IMarker.PRIORITY_HIGH);
+		
+		InterfaceUtil.prepareAnnotationRequest(questionCheckedMarker, resource);
 
 	}
 
