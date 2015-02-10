@@ -23,8 +23,6 @@ import org.eclipse.ui.IMarkerResolutionGenerator;
 import org.eclipse.ui.IMarkerResolutionGenerator2;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.PartInitException;
-import org.jboss.tools.common.quickfix.IQuickFixGenerator;
-import org.eclipse.wst.sse.ui.internal.reconcile.TemporaryAnnotation;
 
 	public class QuestionResolutionGenerator  implements
 			IMarkerResolutionGenerator, IMarkerResolutionGenerator2

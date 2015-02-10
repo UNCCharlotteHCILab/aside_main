@@ -161,7 +161,7 @@ public class ASIDECodeAnnotateHandler extends AbstractHandler {
 		
 		
 		
-		
+		/*
 		
 		IWorkbenchPartSite site = targetPart.getSite();
 		ISelectionProvider selectionProvider = site.getSelectionProvider();
@@ -190,19 +190,23 @@ public class ASIDECodeAnnotateHandler extends AbstractHandler {
 
 		if (selectProject == null)
 			return null;
-
+		*/
+		 
 		/*
 		 * Use a Job to attach a {@link CodeAnnotateDocumentEditListener} to
 		 * each and every IDocument that is related to a ICompilationUnit in the
 		 * selected project
 		 * I visit Mahmoud
 		 */
+		/*
 		Job job = new MountListenerJob("Mount listener to Java file",
 				JavaCore.create(selectProject));
 		job.setPriority(Job.INTERACTIVE);
 		job.schedule();
+		*/
 
 		/* Delegates all heavy lifting to {@link PathFinder} */
+		/*
 		Job heavy_job = new Job("Finding paths in Project: " + selectProject.getName()) {
 
 			@Override
@@ -226,8 +230,11 @@ public class ASIDECodeAnnotateHandler extends AbstractHandler {
 		};
 		heavy_job.setPriority(Job.LONG);
 		heavy_job.schedule();
-
+		
+		*/
 		return null;
+		
+		
 	}
 
 	class MountListenerJob extends Job {
