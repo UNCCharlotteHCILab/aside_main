@@ -4,5 +4,9 @@ This branch is the main version of aside customized for a study involving iTrust
 Note, eclipse does not handle markers properly in iTrust files (the resolution generator is not called when a marker is clicked). To get around the problem. files used by the study were renamed to .java files. It should not be necessary to notify participants, but if they notice it can be explained.
 Since eclipse does not handle jsp files very well, it may display many false errors in the file. To make them dismiss for the study, please run aside, wait for the new eclipse window to popup, right click the itrust project, left cick properties, choose the validation option, and disable validation for the project. Then click on one of the errors in the problems view and delete all errors. They should then dismiss and not bother the user during the study.
 
-Please use screen recording software and an external audio recording device. I recommend using litecam to record the screen activity because it is free and it works (despite showing a humanoid lizard firing a bazooka at the screen).
+Please use screen recording software and an external audio recording device. I have used litecam, but it seems the free version is now limited to 10 minutes per video.
+
+For a video showing an example with a pilot participant, please see the link below
+
+https://drive.google.com/folderview?id=0B9PkCcRv1BS5elFWeFFVMVUxX00&usp=sharing
 
