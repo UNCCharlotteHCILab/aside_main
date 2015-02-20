@@ -44,11 +44,11 @@ import org.eclipse.ui.PartInitException;
 		          
 		          return new IMarkerResolution[] 
 		        {
-		             new QuestionTitleResolution("**********ASIDE Annotation Request**********"+problem),
-		             new QuestionResolution("Delete Annotation"+problem),
-		             new QuestionResolution("Modify Annotation"+problem),
-		             new AnnotationRequestReadMore("Read More"+problem),
-		             new AnnotateNowResolution("Annotate Now"+problem, "yellow.question"),
+		             new QuestionTitleResolution("Annotation Request"+problem),
+		             new QuestionResolution("ASIDE Delete Annotation"+problem),
+		             new QuestionResolution("ASIDE Modify Annotation"+problem),
+		             new AnnotationRequestReadMore("ASIDE Read More"+problem),
+		             new AnnotateNowResolution("ASIDE Annotate Now"+problem, "yellow.question"),
 		          };
 		       }
 		       catch (CoreException e) 

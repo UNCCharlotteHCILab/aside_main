@@ -11,7 +11,7 @@ public class VariablesAndConstants
 		public final static String annotationURL = "https://www.owasp.org/index.php/Access_Control_Cheat_Sheet";
 		//these "chunks" are pieces of the description which are put together with some dynamic content by a method
 		public final static String chunkOne = "This annotation is linked to the following security sensitive operation:<P><P>Line ";
-		public final static String chunkTwo = "<P><P>Double click \"**********ASIDE Annotation**********\" on the left to navigate to the operation.";
+		public final static String chunkTwo = "<P><P>Double click \"Annotation\" on the left to navigate to the operation.";
 		public final static String ANNOTATION_VULNERABILITY_DESC = "ASIDE believes that this may be vulnerable. This same sensitive operation has appeared before but has different annotations";
 		public final static String ANNOTATION_VULNERABILITY_ONE_DESC = "ASIDE believes that this may be vulnerable. This same sensitive operation has appeared before but has different annotations. It has appeared at the following location <P><P> addER.jsp line 36 long newMID = new AddERespAction...";
 		public final static String ANNOTATION_VULNERABILITY_TWO_DESC = "ASIDE believes that this may be vulnerable. This same sensitive operation has appeared before but has different annotations. It has appeared at the following locations <P><P> addER.jsp line 36 long newMID = new AddERespAction...<P><P>addPHA.jsp line 27 long newMID = new AddPHAAction";
