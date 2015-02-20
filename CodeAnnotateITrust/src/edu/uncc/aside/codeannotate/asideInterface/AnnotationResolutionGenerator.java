@@ -42,7 +42,7 @@ import org.eclipse.ui.PartInitException;
 		          
 		          return new IMarkerResolution[] 
 		        {
-		             new AnnotationCodeResolution("Annotation"+problem, matchingRequestMarker),
+		             new AnnotationCodeResolution("**********ASIDE Annotation**********"+problem, matchingRequestMarker),
 		             new AnnotationDeleteResolution("ASIDE Delete Annotation"+problem),
 		             new AnnotationResolution("ASIDE Modify Annotation"+problem),
 		             new AnnotationReadMore("ASIDE Read More"+problem),
