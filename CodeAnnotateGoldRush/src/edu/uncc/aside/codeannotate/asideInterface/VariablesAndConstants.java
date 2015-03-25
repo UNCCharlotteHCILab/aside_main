@@ -9,6 +9,7 @@ public class VariablesAndConstants
 		public final static String ANNOTATION_REQUEST_UNBOUND_RESOLUTION_DESC = "This is a request for access control annotation";
 		public final static String ADD_ANNOTATION_DESC = "Double click this option and highlight code to make an annotation";
 		public final static String annotationURL = "https://www.owasp.org/index.php/Access_Control_Cheat_Sheet";
+		public final static String CONTEXTUAL_HELP_ROOT = "https://aside-context-help.herokuapp.com";
 		//these "chunks" are pieces of the description which are put together with some dynamic content by a method
 		public final static String chunkOne = "This annotation is linked to the following security sensitive operation:<P><P>Line ";
 		public final static String chunkTwo = "<P><P>Double click \"**********ASIDE Annotation**********\" on the left to navigate to the operation.";

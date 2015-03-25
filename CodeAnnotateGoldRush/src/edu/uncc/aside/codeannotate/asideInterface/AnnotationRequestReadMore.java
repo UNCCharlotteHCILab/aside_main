@@ -55,8 +55,10 @@ IMarkerResolution2{
     {
     	 try 
     	 {
+    		 String lineText = VariablesAndConstants.methodNames[marker.getAttribute("markerIndex", -1)];
     		 IWebBrowser webBrowser = PlatformUI.getWorkbench().getBrowserSupport().createBrowser(1, "myId", "ASIDE More Information", "ASIDE More Information");
-    		 URL url = new URL(VariablesAndConstants.annotationURL);
+    		 //URL url = new URL(VariablesAndConstants.annotationURL);
+    		 URL url = new URL(VariablesAndConstants.CONTEXTUAL_HELP_ROOT + "/error?text=" + lineText);
     		 webBrowser.openURL(url);
     		 URLConnection urlConnection = url.openConnection();
     		 urlConnection.setDoOutput(true);
