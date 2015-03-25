@@ -218,7 +218,7 @@ public class Utils {
 			questionMarker.setAttribute(IMarker.CHAR_END, mi.getStartPosition()
 					+ mi.getLength());
 			questionMarker.setAttribute(IMarker.MESSAGE,
-					"Where is the corresponding authentication process?");
+					"This line contains a security-sensitive operation. Please annotate access control.");
 			questionMarker.setAttribute(IMarker.LINE_NUMBER,
 					cu.getLineNumber(mi.getStartPosition()));
 			questionMarker.setAttribute(IMarker.SEVERITY,

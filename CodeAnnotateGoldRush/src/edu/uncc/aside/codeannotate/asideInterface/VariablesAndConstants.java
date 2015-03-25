@@ -6,8 +6,8 @@ import org.eclipse.ui.ISelectionListener;
 public class VariablesAndConstants 
 {
 		public final static String ANNOTATION_REQUEST_BOUND_RESOLUTION_DESC = "This annotation request has been bound to an annotation";
-		public final static String ANNOTATION_REQUEST_UNBOUND_RESOLUTION_DESC = "This is a request for access control annotation";
-		public final static String ADD_ANNOTATION_DESC = "Double click this option and highlight code to make an annotation";
+		public final static String ANNOTATION_REQUEST_UNBOUND_RESOLUTION_DESC = "[SSO] is an operation that involves sensitive information and requires access control checks.\n\nPlease annotate the access control code for this operation by double clicking on Annotate Now and highlighting the code.";
+		public final static String ADD_ANNOTATION_DESC = "Double click this option and highlight code to annotate the access control code.";
 		public final static String annotationURL = "https://www.owasp.org/index.php/Access_Control_Cheat_Sheet";
 		public final static String CONTEXTUAL_HELP_ROOT = "https://aside-context-help.herokuapp.com";
 		//these "chunks" are pieces of the description which are put together with some dynamic content by a method
@@ -19,6 +19,7 @@ public class VariablesAndConstants
 		public final static String ANNOTATION_DELETE_DESC = "Deletes the annotation";
 		public final static String ANNOTATION_CHECKED_DELETE_DESC = "Deletes all annotations associated with this annotation request";
 		public final static String PLACEHOLDER_TEXT = "Placeholder for description";
+		public final static String READ_MORE_DESC = "Go to a web page to learn more about access control vulnerabilities, why you are seeing this marker, and what you can do to fix it";
 
 		public static boolean isAnnotatingNow = false;
 		public static IMarker[] annotationRequestMarkers = new IMarker[100];

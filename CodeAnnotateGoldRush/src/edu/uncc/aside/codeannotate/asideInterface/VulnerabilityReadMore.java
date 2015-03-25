@@ -71,7 +71,7 @@ IMarkerResolution2{
 	@Override
 	public String getDescription() {
 		// TODO Auto-generated method stub
-		return edu.uncc.aside.codeannotate.asideInterface.VariablesAndConstants.PLACEHOLDER_TEXT;
+		return edu.uncc.aside.codeannotate.asideInterface.VariablesAndConstants.READ_MORE_DESC;
 	}
 	@Override
 	public Image getImage() {
