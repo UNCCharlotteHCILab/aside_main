@@ -68,13 +68,26 @@ public  class InterfaceUtil
 			//if the marker attributes are not invalid
 			if(markerStart != -1 && markerEnd != -1 && markerIndex != -1)
 			{
+				//Figure out what type of marker the new marker is and generate associated tooltip text
+				String tooltip = "";
+				switch (markerName) {
+					case "red.flag.box": 
+						tooltip = "Where is the access control check?";
+						break;
+					case "green.check":
+						tooltip = "Security sensitive operation with annotated check";
+						break;
+					default:
+						tooltip = "Access Control Plugin Marker";
+				}
 				//create new marker and delete the old one
 				IResource targetResource = annotationMarker.getResource();	
  			    IMarker theMarker = targetResource.createMarker(markerName);
  			    theMarker.setAttribute(IMarker.CHAR_START, markerStart);
  			   	theMarker.setAttribute(IMarker.CHAR_END, markerEnd);
  			   	theMarker.setAttribute("markerIndex", markerIndex);
- 			  	theMarker.setAttribute(IMarker.MESSAGE, "Access Control Plugin Marker");
+ 			  	//theMarker.setAttribute(IMarker.MESSAGE, "Access Control Plugin Marker");
+ 			    theMarker.setAttribute(IMarker.MESSAGE, tooltip);
  			 	theMarker.setAttribute(IMarker.PRIORITY, IMarker.PRIORITY_HIGH);
  				theMarker.setAttribute(IMarker.SEVERITY, IMarker.SEVERITY_ERROR);
  				
@@ -474,7 +487,7 @@ public  class InterfaceUtil
 			IMarker greenDiamond = iResource.createMarker("green.diamond");
 			greenDiamond.setAttribute(IMarker.CHAR_START, char_start);
 			greenDiamond.setAttribute(IMarker.CHAR_END, char_end);
-			greenDiamond.setAttribute(IMarker.MESSAGE, "Access Control Plugin Marker");
+			greenDiamond.setAttribute(IMarker.MESSAGE, "Access control check for a security sensitive operation");
 			greenDiamond.setAttribute(IMarker.PRIORITY, IMarker.PRIORITY_HIGH);
 	   		greenDiamond.setAttribute(IMarker.SEVERITY, IMarker.SEVERITY_ERROR);
 	   		greenDiamond.setAttribute("markerIndex", VariablesAndConstants.currentIndex);
