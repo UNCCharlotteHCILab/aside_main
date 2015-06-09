@@ -270,6 +270,8 @@ public class Utils {
 			if (accessor.getMethodName().equals(className + "." + methodName)
 					&& accessor.getTypeName().equals(className)) {
 				System.out.println("sensitive operation = " + accessor.getMethodName().toString());
+				
+				System.out.println("Category: " + accessor.getCategoryName());
 				return true;
 			}
 		}

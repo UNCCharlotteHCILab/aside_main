@@ -696,6 +696,57 @@ public  class InterfaceUtil
 		
 		
 	}
-	 
+	
+	 /*Manually create requests/warnings*/
+	public static void createMarker(String markerType, int charStart, int charEnd, IResource theResource)
+	{
+		try
+		{
+			String message = "Where is the access control?";
+			if(markerType.equals("yellow.question"))
+			{
+				message = "Where is the access control?";
+			}
+			IMarker theMarker = theResource.createMarker(markerType);
+			theMarker.setAttribute(IMarker.CHAR_START, charStart);
+		   	theMarker.setAttribute(IMarker.CHAR_END, charEnd);
+		   	//not setting marker index in this function
+		   	//theMarker.setAttribute("markerIndex", markerIndex);
+		  	theMarker.setAttribute(IMarker.MESSAGE, message);
+		 	theMarker.setAttribute(IMarker.PRIORITY, IMarker.PRIORITY_HIGH);
+			theMarker.setAttribute(IMarker.SEVERITY, IMarker.SEVERITY_ERROR);
+			
+			InterfaceUtil.prepareAnnotationRequest(theMarker, theResource);
+		}
+		catch(Exception e)
+		{
+			System.out.println("Exception creating marker in createMarker");
+		}
+	}
+	
+	public static int[] getCharStartFromLineNumber(int lineNumber, IFile theFile)
+	{
+		int charPositions[] = new int[2];
+		try
+		{
+		IDocumentProvider provider = new TextFileDocumentProvider();
+		provider.connect(theFile);
+		IDocument theDocument = provider.getDocument(theFile);
+		provider.disconnect(theFile);
+		int stringLineOffset;
+		int stringLineLength;
+		int stringLineEnd;
+		//ADDDED "- 1" BECAUSE THE LINES WERE OFF BY ONE
+		stringLineOffset = theDocument.getLineOffset(lineNumber - 1);
+		stringLineLength = theDocument.getLineLength(lineNumber - 1);
+		stringLineEnd = stringLineOffset + stringLineLength;
+		charPositions[0] = stringLineOffset;
+		charPositions[1] = stringLineEnd;
+		}
+		catch(Exception e){
+			System.out.println("exception in getCharStartFromLineNumber");
+		}
+		return charPositions;
+	}
 	
 }

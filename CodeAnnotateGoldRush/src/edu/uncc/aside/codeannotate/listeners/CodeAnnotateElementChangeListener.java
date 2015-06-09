@@ -84,6 +84,7 @@ public class CodeAnnotateElementChangeListener implements
 					if (evt == null) {
 						return;
 					} else {
+					
 						String modificationType = "UNKNOWN";
 						int offset = evt.getOffset();
 						int length = evt.getLength();
@@ -132,7 +133,6 @@ public class CodeAnnotateElementChangeListener implements
 									changedLineStartOffset, nextStartOffset, modificationType, offset, length, text);
 							job.setPriority(Job.INTERACTIVE);
 							job.schedule();
-							
 							MethodInvocationAccessorVisitor visitor = new MethodInvocationAccessorVisitor(
 									nodeFound, pathsOfInterest, unitOfInterest,
 									projectOfInterest, changedLineStartOffset, nextStartOffset);

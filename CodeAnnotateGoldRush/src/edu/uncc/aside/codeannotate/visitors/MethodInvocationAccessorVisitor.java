@@ -60,7 +60,6 @@ public class MethodInvocationAccessorVisitor extends ASTVisitor {
 
 	@Override
 	public boolean preVisit2(ASTNode _node) {
-
 		int start = _node.getStartPosition();
 		int end = start + _node.getLength();
 
@@ -70,11 +69,10 @@ public class MethodInvocationAccessorVisitor extends ASTVisitor {
 		if (_node.getNodeType() == ASTNode.METHOD_INVOCATION) {
 			MethodInvocation node = (MethodInvocation) _node;
 
-			/* I visit Mahmoud*/ 
+			 //I visit Mahmoud 
 			if (Utils.isMethodInvocationOfInterest(node, accessors)) {
-
 				MethodDeclaration parent = Utils
-						.getParentMethodDeclaration(node);
+						.getParentMethodDeclaration(node); 
 				IMethod method = Utils.convertMethodDecl2IMethod(parent,
 						resource);
 				IResource mResource;
@@ -94,12 +92,14 @@ public class MethodInvocationAccessorVisitor extends ASTVisitor {
 				if (Utils.isEntranceMethodDeclaration(parent)) {
 
 					Utils.markAccessor(node, resource,
-							Utils.getCompilationUnit(unitOfInterest));
+							Utils.getCompilationUnit(unitOfInterest)); 
 					Point accessor = new Point(node,
 							Utils.getCompilationUnit(unitOfInterest), resource);
 					Point entrance = new Point(parent,
 							Utils.getCompilationUnit(method
 									.getCompilationUnit()), mResource);
+					
+
 
 					final Path path = new Path(entrance, accessor, null);
 					

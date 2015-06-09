@@ -141,6 +141,14 @@
 		<category>Undecided</category>
 	</accessor> 
 	
+	<!--Old ASIDE Warnings-->
+	<accessor id = "javax.servlet.ServletRequest.getParameter(String arg0)"> 
+		<paramCount>1</paramCount>
+		<vulnParam>0</vulnParam>
+		<category>Input Validation</category>
+	</accessor>
+	 
+	
 	<!-- Spring specific -->
 	<!-- 
 		<accessor id="org.springframework.orm.ibatis.SqlMapClientTemplate.queryForObject(String, Object)">
