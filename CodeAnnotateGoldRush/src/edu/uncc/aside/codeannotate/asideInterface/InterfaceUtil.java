@@ -702,10 +702,12 @@ public  class InterfaceUtil
 	{
 		try
 		{
-			String message = "Accessing unvalidated input from HttpServletRequest";
+			String message = "Where is the access control";
 			if(markerType.equals("yellow.question"))
 			{
 				message = "Where is the access control?";
+			}else if(markerType.equals("red.devil")){
+				message = "Accessing unvalidated input from HttpServletRequest";
 			}
 			IMarker theMarker = theResource.createMarker(markerType);
 			theMarker.setAttribute(IMarker.CHAR_START, charStart);

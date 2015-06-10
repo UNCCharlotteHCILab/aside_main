@@ -46,9 +46,8 @@ public class ASIDECodeAnnotateHandler extends AbstractHandler {
 
 	private IWorkbenchPart targetPart;
 	IProject selectProject = null;
-
-//Hard coding the warnings using a different execute function	
-  @Override
+ 
+	/*@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		targetPart = HandlerUtil.getActivePart(event);
 		
@@ -82,7 +81,7 @@ public class ASIDECodeAnnotateHandler extends AbstractHandler {
 		 /* Use a Job to attach a {@link CodeAnnotateDocumentEditListener} to
 		 /* each and every IDocument that is related to a ICompilationUnit in the
 		 /* selected project
-		 /* I visit Mahmoud */
+		 /* I visit Mahmoud 
 		 
 		Job job = new MountListenerJob("Mount listener to Java file",
 				JavaCore.create(selectProject));
@@ -116,7 +115,7 @@ public class ASIDECodeAnnotateHandler extends AbstractHandler {
 
 		return null;
 	}
-	/*
+	*/
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		System.out.println("Code Annotate Command Run");
@@ -132,10 +131,10 @@ public class ASIDECodeAnnotateHandler extends AbstractHandler {
 		
 		
 		
-		 * This code runs when code annotate is run when the project is right clicked and code annotate is run
+		 /* This code runs when code annotate is run when the project is right clicked and code annotate is run
 		 * Each block dsiplays a warning or annotation request where we want it to.
 		 * We are not using all of these requests and warnings for the current ITrust study, but the extras are left
-		 * here in case of future studies. The extras can be commented out if desired.
+		 * here in case of future studies. The extras can be commented out if desired.*/
 		 
 		
 		
@@ -147,64 +146,104 @@ public class ASIDECodeAnnotateHandler extends AbstractHandler {
 		thePath = new Path("src/uncc/goldrush/servlet/AccountsServlet.java");
 		theFile = GoldRush.getFile(thePath);
 		charPositions = InterfaceUtil.getCharStartFromLineNumber(52 , theFile);
-		InterfaceUtil.createMarker("red.flag.box", charPositions[0], charPositions[1], theFile);
+		InterfaceUtil.createMarker("red.devil", charPositions[0], charPositions[1], theFile);
        
 		thePath = new Path("src/uncc/goldrush/servlet/AccountsServlet.java");
 		theFile = GoldRush.getFile(thePath);
 		charPositions = InterfaceUtil.getCharStartFromLineNumber(54 , theFile);
-		InterfaceUtil.createMarker("red.flag.box", charPositions[0], charPositions[1], theFile);
+		InterfaceUtil.createMarker("red.devil", charPositions[0], charPositions[1], theFile);
+		
+		thePath = new Path("src/uncc/goldrush/servlet/AccountsServlet.java");
+		theFile = GoldRush.getFile(thePath);
+		charPositions = InterfaceUtil.getCharStartFromLineNumber(67 , theFile);
+		InterfaceUtil.createMarker("yellow.question", charPositions[0], charPositions[1], theFile);
 		
 		thePath = new Path("src/uncc/goldrush/servlet/LoginServlet.java");
 		theFile = GoldRush.getFile(thePath);
 		charPositions = InterfaceUtil.getCharStartFromLineNumber(44 , theFile);
-		InterfaceUtil.createMarker("red.flag.box", charPositions[0], charPositions[1], theFile);
+		InterfaceUtil.createMarker("red.devil", charPositions[0], charPositions[1], theFile);
 		
 		thePath = new Path("src/uncc/goldrush/servlet/LoginServlet.java");
 		theFile = GoldRush.getFile(thePath);
 		charPositions = InterfaceUtil.getCharStartFromLineNumber(46 , theFile);
-		InterfaceUtil.createMarker("red.flag.box", charPositions[0], charPositions[1], theFile);
+		InterfaceUtil.createMarker("red.devil", charPositions[0], charPositions[1], theFile);
+		
+		thePath = new Path("src/uncc/goldrush/servlet/LoginServlet.java");
+		theFile = GoldRush.getFile(thePath);
+		charPositions = InterfaceUtil.getCharStartFromLineNumber(49 , theFile);
+		InterfaceUtil.createMarker("yellow.question", charPositions[0], charPositions[1], theFile);
 		
 		thePath = new Path("src/uncc/goldrush/servlet/Trainer.java");
 		theFile = GoldRush.getFile(thePath);
 		charPositions = InterfaceUtil.getCharStartFromLineNumber(45 , theFile);
-		InterfaceUtil.createMarker("red.flag.box", charPositions[0], charPositions[1], theFile);
+		InterfaceUtil.createMarker("red.devil", charPositions[0], charPositions[1], theFile);
+		
+		thePath = new Path("src/uncc/goldrush/servlet/Trainer.java");
+		theFile = GoldRush.getFile(thePath);
+		charPositions = InterfaceUtil.getCharStartFromLineNumber(50 , theFile);
+		InterfaceUtil.createMarker("yellow.question", charPositions[0], charPositions[1], theFile);
 		
 		thePath = new Path("src/uncc/goldrush/servlet/TransactionsServlet.java");
 		theFile = GoldRush.getFile(thePath);
 		charPositions = InterfaceUtil.getCharStartFromLineNumber(46 , theFile);
-		InterfaceUtil.createMarker("red.flag.box", charPositions[0], charPositions[1], theFile);
+		InterfaceUtil.createMarker("red.devil", charPositions[0], charPositions[1], theFile);
+		
+		thePath = new Path("src/uncc/goldrush/servlet/TransactionsServlet.java");
+		theFile = GoldRush.getFile(thePath);
+		charPositions = InterfaceUtil.getCharStartFromLineNumber(46 , theFile);
+		InterfaceUtil.createMarker("yellow.question", charPositions[0], charPositions[1], theFile);
 		
 		thePath = new Path("src/uncc/goldrush/servlet/TransactionsServlet.java");
 		theFile = GoldRush.getFile(thePath);
 		charPositions = InterfaceUtil.getCharStartFromLineNumber(48 , theFile);
-		InterfaceUtil.createMarker("red.flag.box", charPositions[0], charPositions[1], theFile);
+		InterfaceUtil.createMarker("red.devil", charPositions[0], charPositions[1], theFile);
+	
+		thePath = new Path("src/uncc/goldrush/servlet/TransactionsServlet.java");
+		theFile = GoldRush.getFile(thePath);
+		charPositions = InterfaceUtil.getCharStartFromLineNumber(57 , theFile);
+		InterfaceUtil.createMarker("yellow.question", charPositions[0], charPositions[1], theFile);
 		
 		thePath = new Path("src/uncc/goldrush/servlet/TransferServlet.java");
 		theFile = GoldRush.getFile(thePath);
 		charPositions = InterfaceUtil.getCharStartFromLineNumber(64 , theFile);
-		InterfaceUtil.createMarker("red.flag.box", charPositions[0], charPositions[1], theFile);
+		InterfaceUtil.createMarker("red.devil", charPositions[0], charPositions[1], theFile);
+		
+		thePath = new Path("src/uncc/goldrush/servlet/TransferServlet.java");
+		theFile = GoldRush.getFile(thePath);
+		charPositions = InterfaceUtil.getCharStartFromLineNumber(64 , theFile);
+		InterfaceUtil.createMarker("red.flag.box", charPositions[0], charPositions[1], theFile); 
 		
 		thePath = new Path("src/uncc/goldrush/servlet/TransferServlet.java");
 		theFile = GoldRush.getFile(thePath);
 		charPositions = InterfaceUtil.getCharStartFromLineNumber(70  , theFile);
-		InterfaceUtil.createMarker("red.flag.box", charPositions[0], charPositions[1], theFile);
+		InterfaceUtil.createMarker("red.devil", charPositions[0], charPositions[1], theFile);
 		
 		thePath = new Path("src/uncc/goldrush/servlet/TransferServlet.java");
 		theFile = GoldRush.getFile(thePath);
 		charPositions = InterfaceUtil.getCharStartFromLineNumber(99 , theFile);
-		InterfaceUtil.createMarker("red.flag.box", charPositions[0], charPositions[1], theFile);
+		InterfaceUtil.createMarker("red.devil", charPositions[0], charPositions[1], theFile);
 		
 		thePath = new Path("src/uncc/goldrush/servlet/TransferServlet.java");
 		theFile = GoldRush.getFile(thePath);
 		charPositions = InterfaceUtil.getCharStartFromLineNumber(103 , theFile);
-		InterfaceUtil.createMarker("red.flag.box", charPositions[0], charPositions[1], theFile);
+		InterfaceUtil.createMarker("red.devil", charPositions[0], charPositions[1], theFile);
 		
 		thePath = new Path("src/uncc/goldrush/servlet/TransferServlet.java");
 		theFile = GoldRush.getFile(thePath);
 		charPositions = InterfaceUtil.getCharStartFromLineNumber(105 , theFile);
 		InterfaceUtil.createMarker("red.flag.box", charPositions[0], charPositions[1], theFile);
 		
+		thePath = new Path("src/uncc/goldrush/servlet/TransferServlet.java");
+		theFile = GoldRush.getFile(thePath);
+		charPositions = InterfaceUtil.getCharStartFromLineNumber(107 , theFile);
+		InterfaceUtil.createMarker("red.devil", charPositions[0], charPositions[1], theFile);
 		
+		thePath = new Path("src/uncc/goldrush/servlet/TransferServlet.java");
+		theFile = GoldRush.getFile(thePath);
+		charPositions = InterfaceUtil.getCharStartFromLineNumber(109 , theFile);
+		InterfaceUtil.createMarker("yellow.question", charPositions[0], charPositions[1], theFile);
+		
+		/*
 		IPath thePath = new Path("WebRoot/auth/admin/addPHA.java");
 		IFile theFile = iTrust.getFile(thePath);
 		
@@ -262,7 +301,7 @@ public class ASIDECodeAnnotateHandler extends AbstractHandler {
         theFile = iTrust.getFile(thePath);
         charPositions = InterfaceUtil.getCharStartFromLineNumber(69,theFile);
         InterfaceUtil.createMarker("yellow.question", charPositions[0], charPositions[1], theFile);
-		
+		*/
 		
         //now prepare the contextual text for vulnerabilities
         IMarker firstMarker = VariablesAndConstants.annotationRequestMarkers[0];
@@ -283,7 +322,7 @@ public class ASIDECodeAnnotateHandler extends AbstractHandler {
 		
 		
 		
-		
+		/*
 		IWorkbenchPartSite site = targetPart.getSite();
 		ISelectionProvider selectionProvider = site.getSelectionProvider();
 		if (selectionProvider == null)
@@ -352,11 +391,11 @@ public class ASIDECodeAnnotateHandler extends AbstractHandler {
 		heavy_job.setPriority(Job.LONG);
 		heavy_job.schedule();
 		
-		
+		*/
 		return null;
 		
 		
-	}*/
+	}
 
 
 	class MountListenerJob extends Job {

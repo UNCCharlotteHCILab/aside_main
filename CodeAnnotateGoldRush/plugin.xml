@@ -861,25 +861,64 @@
    </extension>
     
     <!-- end spec for one marker and resolution generator -->
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
+
+      <extension
+         id="red.devil"
+         name="Red Devil"
+         point="org.eclipse.core.resources.markers">
+         <super type="org.eclipse.core.resources.marker"/>
+         <persistent value="false"/>
+   </extension>
+   <extension
+   		 id="redDevilValidationType"
+   		 name="Red Devil Marker Annotation"
+         point="org.eclipse.ui.editors.annotationTypes">
+      <type
+            markerType="red.devil"
+            name="redDevilValidationType">
+      </type>
+   </extension>
+	
+	<extension
+         point="org.eclipse.ui.editors.markerAnnotationSpecification"
+         id="redDevilSpec">
+        
+         
+      <specification
+            annotationType="redDevilValidationType"
+            includeOnPreferencePage="true"
+            contributesToHeader="true"
+            isGoToNextNavigationTarget="true"
+            isGoToNextNavigationTargetKey="questionIsGoToNextNavigationTarget"
+			isGoToPreviousNavigationTarget="true"
+			isGoToPreviousNavigationTargetKey="questionIsGoToPreviousNavigationTarget"
+			overviewRulerPreferenceValue="true" 
+			presentationLayer="8" 
+            overviewRulerPreferenceKey="questionOverviewRulerPreference"
+            showInNextPrevDropdownToolbarAction="true"
+			showInNextPrevDropdownToolbarActionKey="questionShowInNextPrevDropdownToolbarAction"
+			symbolicIcon="warning"   
+            label="Red Devil"
+            icon="icons/devil.png"
+			highlightPreferenceKey="highlight.background"
+			highlightPreferenceValue="true"
+			colorPreferenceKey="redDevil"
+			colorPreferenceValue="255,255,0"
+			textPreferenceKey="cltext"
+			textPreferenceValue="true"
+			verticalRulerPreferenceKey="clvertical"
+			verticalRulerPreferenceValue="true"
+			textStylePreferenceKey="clstyle"
+			textStylePreferenceValue="BOX">
+      </specification>
+      
+   </extension> 
+    
+    <extension point="org.eclipse.ui.ide.markerResolution">
+      <markerResolutionGenerator
+         markerType="red.devil"
+         class="edu.uncc.aside.codeannotate.asideInterface.ValdiationResolutionGenerator"/>
+   </extension>
    
    
    
