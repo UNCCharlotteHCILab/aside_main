@@ -702,7 +702,7 @@ public  class InterfaceUtil
 	{
 		try
 		{
-			String message = "Where is the access control?";
+			String message = "Accessing unvalidated input from HttpServletRequest";
 			if(markerType.equals("yellow.question"))
 			{
 				message = "Where is the access control?";
@@ -716,12 +716,15 @@ public  class InterfaceUtil
 		 	theMarker.setAttribute(IMarker.PRIORITY, IMarker.PRIORITY_HIGH);
 			theMarker.setAttribute(IMarker.SEVERITY, IMarker.SEVERITY_ERROR);
 			
+			
 			InterfaceUtil.prepareAnnotationRequest(theMarker, theResource);
 		}
 		catch(Exception e)
 		{
 			System.out.println("Exception creating marker in createMarker");
 		}
+		
+		
 	}
 	
 	public static int[] getCharStartFromLineNumber(int lineNumber, IFile theFile)

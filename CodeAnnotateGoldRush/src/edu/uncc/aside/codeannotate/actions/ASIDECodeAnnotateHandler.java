@@ -47,8 +47,8 @@ public class ASIDECodeAnnotateHandler extends AbstractHandler {
 	private IWorkbenchPart targetPart;
 	IProject selectProject = null;
 
-/* Hard coding the warnings using a different execute function	
- * @Override
+//Hard coding the warnings using a different execute function	
+  @Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		targetPart = HandlerUtil.getActivePart(event);
 		
@@ -79,17 +79,17 @@ public class ASIDECodeAnnotateHandler extends AbstractHandler {
 			return null;
 
 		
-		 * Use a Job to attach a {@link CodeAnnotateDocumentEditListener} to
-		 * each and every IDocument that is related to a ICompilationUnit in the
-		 * selected project
-		 * I visit Mahmoud
+		 /* Use a Job to attach a {@link CodeAnnotateDocumentEditListener} to
+		 /* each and every IDocument that is related to a ICompilationUnit in the
+		 /* selected project
+		 /* I visit Mahmoud */
 		 
 		Job job = new MountListenerJob("Mount listener to Java file",
 				JavaCore.create(selectProject));
 		job.setPriority(Job.INTERACTIVE);
 		job.schedule();
 
-		 Delegates all heavy lifting to {@link PathFinder} 
+		 //Delegates all heavy lifting to {@link PathFinder} 
 		Job heavy_job = new Job("Finding paths in Project: " + selectProject.getName()) {
 
 			@Override
@@ -115,8 +115,8 @@ public class ASIDECodeAnnotateHandler extends AbstractHandler {
 		heavy_job.schedule();
 
 		return null;
-	}*/
-	
+	}
+	/*
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		System.out.println("Code Annotate Command Run");
@@ -131,12 +131,12 @@ public class ASIDECodeAnnotateHandler extends AbstractHandler {
 		
 		
 		
-		/*
+		
 		 * This code runs when code annotate is run when the project is right clicked and code annotate is run
 		 * Each block dsiplays a warning or annotation request where we want it to.
 		 * We are not using all of these requests and warnings for the current ITrust study, but the extras are left
 		 * here in case of future studies. The extras can be commented out if desired.
-		 */
+		 
 		
 		
 		
@@ -151,8 +151,8 @@ public class ASIDECodeAnnotateHandler extends AbstractHandler {
        
 		thePath = new Path("src/uncc/goldrush/servlet/AccountsServlet.java");
 		theFile = GoldRush.getFile(thePath);
-		charPositions = InterfaceUtil.getCharStartFromLineNumber(53 , theFile);
-		InterfaceUtil.createMarker("yellow.question", charPositions[0], charPositions[1], theFile);
+		charPositions = InterfaceUtil.getCharStartFromLineNumber(54 , theFile);
+		InterfaceUtil.createMarker("red.flag.box", charPositions[0], charPositions[1], theFile);
 		
 		thePath = new Path("src/uncc/goldrush/servlet/LoginServlet.java");
 		theFile = GoldRush.getFile(thePath);
@@ -161,7 +161,7 @@ public class ASIDECodeAnnotateHandler extends AbstractHandler {
 		
 		thePath = new Path("src/uncc/goldrush/servlet/LoginServlet.java");
 		theFile = GoldRush.getFile(thePath);
-		charPositions = InterfaceUtil.getCharStartFromLineNumber(45 , theFile);
+		charPositions = InterfaceUtil.getCharStartFromLineNumber(46 , theFile);
 		InterfaceUtil.createMarker("red.flag.box", charPositions[0], charPositions[1], theFile);
 		
 		thePath = new Path("src/uncc/goldrush/servlet/Trainer.java");
@@ -205,7 +205,7 @@ public class ASIDECodeAnnotateHandler extends AbstractHandler {
 		InterfaceUtil.createMarker("red.flag.box", charPositions[0], charPositions[1], theFile);
 		
 		
-		/*IPath thePath = new Path("WebRoot/auth/admin/addPHA.java");
+		IPath thePath = new Path("WebRoot/auth/admin/addPHA.java");
 		IFile theFile = iTrust.getFile(thePath);
 		
 		thePath = new Path("WebRoot/auth/admin/addPHA.java");
@@ -262,19 +262,17 @@ public class ASIDECodeAnnotateHandler extends AbstractHandler {
         theFile = iTrust.getFile(thePath);
         charPositions = InterfaceUtil.getCharStartFromLineNumber(69,theFile);
         InterfaceUtil.createMarker("yellow.question", charPositions[0], charPositions[1], theFile);
-		*/
+		
 		
         //now prepare the contextual text for vulnerabilities
         IMarker firstMarker = VariablesAndConstants.annotationRequestMarkers[0];
 		IMarker secondMarker = VariablesAndConstants.annotationRequestMarkers[1];
-		IMarker thirdMarker = VariablesAndConstants.annotationRequestMarkers[2];
 		
 		//now set the marker ids so that they can be identified for the faked warning messages
 		try
 		{
 			firstMarker.setAttribute("markerIdentifier", 1);
 			secondMarker.setAttribute("markerIdentifier", 2);
-			thirdMarker.setAttribute("markerIdentifier", 3);
 		}
 		catch(Exception e)
 		{
@@ -284,7 +282,7 @@ public class ASIDECodeAnnotateHandler extends AbstractHandler {
 		
 		
 		
-		/*
+		
 		
 		IWorkbenchPartSite site = targetPart.getSite();
 		ISelectionProvider selectionProvider = site.getSelectionProvider();
@@ -313,23 +311,23 @@ public class ASIDECodeAnnotateHandler extends AbstractHandler {
 
 		if (selectProject == null)
 			return null;
-		*/
+		
 		 
-		/*
+		
 		 * Use a Job to attach a {@link CodeAnnotateDocumentEditListener} to
 		 * each and every IDocument that is related to a ICompilationUnit in the
 		 * selected project
 		 * I visit Mahmoud
-		 */
-		/*
+		 
+		
 		Job job = new MountListenerJob("Mount listener to Java file",
 				JavaCore.create(selectProject));
 		job.setPriority(Job.INTERACTIVE);
 		job.schedule();
-		*/
+		
 
-		/* Delegates all heavy lifting to {@link PathFinder} */
-		/*
+		 Delegates all heavy lifting to {@link PathFinder} 
+		
 		Job heavy_job = new Job("Finding paths in Project: " + selectProject.getName()) {
 
 			@Override
@@ -354,11 +352,11 @@ public class ASIDECodeAnnotateHandler extends AbstractHandler {
 		heavy_job.setPriority(Job.LONG);
 		heavy_job.schedule();
 		
-		*/
+		
 		return null;
 		
 		
-	}
+	}*/
 
 
 	class MountListenerJob extends Job {
