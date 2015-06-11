@@ -61,13 +61,13 @@ public class TransferServlet extends HttpServlet {
       try {
         session = DBUtil.getSqlMapper().openSession();
         AccountMapper accounts = session.getMapper(AccountMapper.class);
-        Account account = accounts.getAccount(request.getParameter("account"));
+        Account account = accounts.getAccount(request.getParameter("account")); 
         if (account == null) {
           request.setAttribute("MESSAGE", "Invalid account");
           request.getRequestDispatcher("/accounts").forward(request, response);
         } else {
           request.setAttribute("ACCOUNT", account);
-          request.setAttribute("SOURCE", request.getParameter("account"));
+          request.setAttribute("SOURCE", request.getParameter("account")); 
           request.setAttribute("PAGE", "/_transfer.jsp");
           request.getRequestDispatcher("/_template.jsp").forward(request,
               response);
@@ -100,7 +100,7 @@ public class TransferServlet extends HttpServlet {
 
         logger.info("User has access");
         sourceAccount.setBalance(sourceAccount.getBalance()
-            - Double.parseDouble(request.getParameter("amount")));
+            - Double.parseDouble(request.getParameter("amount"))); 
         accounts.updateAccount(sourceAccount);
         Transaction transaction = new Transaction(new Date(), "TRANSFER TO " + request.getParameter("target"), Double.parseDouble(request.getParameter("amount")), sourceAccount);
         accounts.insertTransaction(transaction);

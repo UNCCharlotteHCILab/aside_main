@@ -42,7 +42,7 @@ public class LoginServlet extends HttpServlet {
       AccountMapper accountMapper = session.getMapper(AccountMapper.class);
       User loginUser = new User();
       loginUser.setUsername(request.getParameter("username"));
-      loginUser.setPassword(request.getParameter("password"));
+      loginUser.setPassword(request.getParameter("password")); 
 
       logger.info("Getting user with username {}", loginUser.getUsername());
       User currentUser = accountMapper.loginUser(loginUser);

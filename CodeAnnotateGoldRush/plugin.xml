@@ -917,7 +917,7 @@
     <extension point="org.eclipse.ui.ide.markerResolution">
       <markerResolutionGenerator
          markerType="red.devil"
-         class="edu.uncc.aside.codeannotate.asideInterface.ValdiationResolutionGenerator"/>
+         class="edu.uncc.aside.codeannotate.asideInterface.ValidationResolutionGenerator"/>
    </extension>
    
    

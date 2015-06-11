@@ -26,7 +26,7 @@ public class ValidationResolutionGenerator implements
 	          
 	          return new IMarkerResolution[] 
 	        {
-	        	new ValidationTitleResolution("*****ASIDE POTENTIAL SECURITY VULNERABLITY*****" + problem, markerIdentifier),
+	        	new ValidationTitleResolution("**********ASIDE Potential Vulnerability Detected**********" + problem, markerIdentifier),
 	        	new ValidationResolution("Allow Alphabetical Characters and Numbers", "alphabet"),
 	        	new ValidationResolution("Allow Minimal HTTP Characters", "http"),
 	        	new ValidationResolution("Allow URL Characters", "url"),
