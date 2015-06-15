@@ -1,6 +1,7 @@
 package uncc.goldrush.servlet;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -42,7 +43,8 @@ public class LoginServlet extends HttpServlet {
       AccountMapper accountMapper = session.getMapper(AccountMapper.class);
       User loginUser = new User();
       loginUser.setUsername(request.getParameter("username"));
-      loginUser.setPassword(request.getParameter("password")); 
+      
+      loginUser.setPassword(request.getParameter("password"));
 
       logger.info("Getting user with username {}", loginUser.getUsername());
       User currentUser = accountMapper.loginUser(loginUser);
@@ -59,8 +61,11 @@ public class LoginServlet extends HttpServlet {
 
         logger.info("New session id {}", request.getSession().getId());
         request.getSession(true).setAttribute("USER", currentUser);
-        request.setAttribute("MESSAGE", "Successfully logged in " + currentUser.getUsername());
-
+       // request.setAttribute("MESSAGE", "Successfully logged in " + currentUser.getUsername());   
+        /* Added as a more obvious example for output validation */
+        PrintWriter out = response.getWriter();
+        out.println("Successfully logged in " + currentUser.getUsername());
+        out.flush();
         logger.debug("Forwarding to /accounts");
         request.getRequestDispatcher("/accounts").forward(request, response);
       }

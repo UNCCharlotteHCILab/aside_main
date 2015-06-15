@@ -1,6 +1,7 @@
 package uncc.goldrush.servlet;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -50,9 +51,12 @@ public class TransactionsServlet extends HttpServlet {
       logger.debug("Forwarding to /accounts");
       request.getRequestDispatcher("/accounts").forward(request, response);
     } else {
-      logger.info("Account {} found", account.toString());
+      //logger.info("Account {} found", account.toString());     
       request.setAttribute("ACCOUNT", account);
-
+      /* Added as a more obvious example for output validation */
+      PrintWriter out = response.getWriter();
+      out.println("Account " + account.toString() + " found");
+      out.flush();
       logger.debug("Getting transactions");
       List<Transaction> transactions = accounts.getTransactionsForAccount(account);
       request.setAttribute("TRANSACTIONS", transactions);

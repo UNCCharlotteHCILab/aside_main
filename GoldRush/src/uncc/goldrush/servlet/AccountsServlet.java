@@ -50,6 +50,7 @@ public class AccountsServlet extends HttpServlet {
 		
 					logger.trace("Entering doGet()");        
 					String accountName = request.getParameter("AccountName");
+					
 					int newBalance = Integer.valueOf(request.getParameter("NewBalance"));
 					
 					if (request.getSession().getAttribute("USER") == null) {
