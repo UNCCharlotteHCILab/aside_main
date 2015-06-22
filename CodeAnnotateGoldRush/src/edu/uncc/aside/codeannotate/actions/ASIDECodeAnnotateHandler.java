@@ -143,104 +143,40 @@ public class ASIDECodeAnnotateHandler extends AbstractHandler {
 		IPath thePath = new Path("src/uncc/goldrush/servlet/AccountsServlet.java");
 		IFile theFile = GoldRush.getFile(thePath);
         
+		//INPUT VALIDATION
 		thePath = new Path("src/uncc/goldrush/servlet/AccountsServlet.java");
 		theFile = GoldRush.getFile(thePath);
-		charPositions = InterfaceUtil.getCharStartFromLineNumber(52 , theFile);
+		charPositions = InterfaceUtil.getCharStartFromLineNumber(53 , theFile);
 		InterfaceUtil.createMarker("red.devil", charPositions[0], charPositions[1], theFile);
        
-		thePath = new Path("src/uncc/goldrush/servlet/AccountsServlet.java");
-		theFile = GoldRush.getFile(thePath);
-		charPositions = InterfaceUtil.getCharStartFromLineNumber(54 , theFile);
-		InterfaceUtil.createMarker("red.devil", charPositions[0], charPositions[1], theFile);
-		
-		thePath = new Path("src/uncc/goldrush/servlet/AccountsServlet.java");
+		//OUTPUT ENCODING
+		thePath = new Path("src/uncc/goldrush/servlet/LoginServlet.java");
 		theFile = GoldRush.getFile(thePath);
 		charPositions = InterfaceUtil.getCharStartFromLineNumber(67 , theFile);
 		InterfaceUtil.createMarker("yellow.question", charPositions[0], charPositions[1], theFile);
 		
-		thePath = new Path("src/uncc/goldrush/servlet/LoginServlet.java");
-		theFile = GoldRush.getFile(thePath);
-		charPositions = InterfaceUtil.getCharStartFromLineNumber(44 , theFile);
-		InterfaceUtil.createMarker("red.devil", charPositions[0], charPositions[1], theFile);
-		
-		thePath = new Path("src/uncc/goldrush/servlet/LoginServlet.java");
-		theFile = GoldRush.getFile(thePath);
-		charPositions = InterfaceUtil.getCharStartFromLineNumber(46 , theFile);
-		InterfaceUtil.createMarker("red.devil", charPositions[0], charPositions[1], theFile);
-		
-		thePath = new Path("src/uncc/goldrush/servlet/LoginServlet.java");
-		theFile = GoldRush.getFile(thePath);
-		charPositions = InterfaceUtil.getCharStartFromLineNumber(49 , theFile);
-		InterfaceUtil.createMarker("yellow.question", charPositions[0], charPositions[1], theFile);
-		
-		thePath = new Path("src/uncc/goldrush/servlet/Trainer.java");
-		theFile = GoldRush.getFile(thePath);
-		charPositions = InterfaceUtil.getCharStartFromLineNumber(45 , theFile);
-		InterfaceUtil.createMarker("red.devil", charPositions[0], charPositions[1], theFile);
-		
+		//SQL STATEMENT
 		thePath = new Path("src/uncc/goldrush/servlet/Trainer.java");
 		theFile = GoldRush.getFile(thePath);
 		charPositions = InterfaceUtil.getCharStartFromLineNumber(50 , theFile);
 		InterfaceUtil.createMarker("yellow.question", charPositions[0], charPositions[1], theFile);
-		
-		thePath = new Path("src/uncc/goldrush/servlet/TransactionsServlet.java");
-		theFile = GoldRush.getFile(thePath);
-		charPositions = InterfaceUtil.getCharStartFromLineNumber(46 , theFile);
-		InterfaceUtil.createMarker("red.devil", charPositions[0], charPositions[1], theFile);
-		
-		thePath = new Path("src/uncc/goldrush/servlet/TransactionsServlet.java");
-		theFile = GoldRush.getFile(thePath);
-		charPositions = InterfaceUtil.getCharStartFromLineNumber(46 , theFile);
-		InterfaceUtil.createMarker("yellow.question", charPositions[0], charPositions[1], theFile);
-		
-		thePath = new Path("src/uncc/goldrush/servlet/TransactionsServlet.java");
-		theFile = GoldRush.getFile(thePath);
-		charPositions = InterfaceUtil.getCharStartFromLineNumber(48 , theFile);
-		InterfaceUtil.createMarker("red.devil", charPositions[0], charPositions[1], theFile);
 	
+		//OUTPUT ENCODING
 		thePath = new Path("src/uncc/goldrush/servlet/TransactionsServlet.java");
 		theFile = GoldRush.getFile(thePath);
-		charPositions = InterfaceUtil.getCharStartFromLineNumber(57 , theFile);
+		charPositions = InterfaceUtil.getCharStartFromLineNumber(59 , theFile);
 		InterfaceUtil.createMarker("yellow.question", charPositions[0], charPositions[1], theFile);
 		
-		thePath = new Path("src/uncc/goldrush/servlet/TransferServlet.java");
-		theFile = GoldRush.getFile(thePath);
-		charPositions = InterfaceUtil.getCharStartFromLineNumber(64 , theFile);
-		InterfaceUtil.createMarker("red.devil", charPositions[0], charPositions[1], theFile);
-		
-		thePath = new Path("src/uncc/goldrush/servlet/TransferServlet.java");
-		theFile = GoldRush.getFile(thePath);
-		charPositions = InterfaceUtil.getCharStartFromLineNumber(64 , theFile);
-		InterfaceUtil.createMarker("red.flag.box", charPositions[0], charPositions[1], theFile); 
-		
-		thePath = new Path("src/uncc/goldrush/servlet/TransferServlet.java");
-		theFile = GoldRush.getFile(thePath);
-		charPositions = InterfaceUtil.getCharStartFromLineNumber(70  , theFile);
-		InterfaceUtil.createMarker("red.devil", charPositions[0], charPositions[1], theFile);
-		
-		thePath = new Path("src/uncc/goldrush/servlet/TransferServlet.java");
-		theFile = GoldRush.getFile(thePath);
-		charPositions = InterfaceUtil.getCharStartFromLineNumber(99 , theFile);
-		InterfaceUtil.createMarker("red.devil", charPositions[0], charPositions[1], theFile);
-		
+		//INPUT VALIDATION
 		thePath = new Path("src/uncc/goldrush/servlet/TransferServlet.java");
 		theFile = GoldRush.getFile(thePath);
 		charPositions = InterfaceUtil.getCharStartFromLineNumber(103 , theFile);
 		InterfaceUtil.createMarker("red.devil", charPositions[0], charPositions[1], theFile);
 		
+		//SQL STATEMENT
 		thePath = new Path("src/uncc/goldrush/servlet/TransferServlet.java");
 		theFile = GoldRush.getFile(thePath);
-		charPositions = InterfaceUtil.getCharStartFromLineNumber(105 , theFile);
-		InterfaceUtil.createMarker("red.flag.box", charPositions[0], charPositions[1], theFile);
-		
-		thePath = new Path("src/uncc/goldrush/servlet/TransferServlet.java");
-		theFile = GoldRush.getFile(thePath);
-		charPositions = InterfaceUtil.getCharStartFromLineNumber(107 , theFile);
-		InterfaceUtil.createMarker("red.devil", charPositions[0], charPositions[1], theFile);
-		
-		thePath = new Path("src/uncc/goldrush/servlet/TransferServlet.java");
-		theFile = GoldRush.getFile(thePath);
-		charPositions = InterfaceUtil.getCharStartFromLineNumber(109 , theFile);
+		charPositions = InterfaceUtil.getCharStartFromLineNumber(106 , theFile);
 		InterfaceUtil.createMarker("yellow.question", charPositions[0], charPositions[1], theFile);
 		
 		/*

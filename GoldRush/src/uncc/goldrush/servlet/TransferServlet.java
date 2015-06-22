@@ -101,11 +101,8 @@ public class TransferServlet extends HttpServlet {
         logger.info("User has access");
         sourceAccount.setBalance(sourceAccount.getBalance()
             - Double.parseDouble(request.getParameter("amount")));
-        
         accounts.updateAccount(sourceAccount);
-        
         Transaction transaction = new Transaction(new Date(), "TRANSFER TO " + request.getParameter("target"), Double.parseDouble(request.getParameter("amount")), sourceAccount);
-        
         accounts.insertTransaction(transaction); 
         session.commit();
         request.setAttribute("MESSAGE", "Transfer succeeded");

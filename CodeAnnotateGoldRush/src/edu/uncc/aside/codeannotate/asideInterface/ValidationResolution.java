@@ -33,7 +33,9 @@ public class ValidationResolution implements IMarkerResolution,
 		String description = "";
 		switch(resolutionType){
 		case "alphabet":
-			description = "Alphabetical characters and numbers only";
+			description = "Generate validation code using the Enterprise Security API (ESAPI)."
+					+ "<p><p>The getValidInput method of the Validation interface ensures the input matches the regular expression for any alphabetical characters and numbers."
+					+ "<p><p>Go to LINK for more information.";
 			break;
 		case "http":
 			description = "HTTP code";

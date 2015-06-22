@@ -44,6 +44,7 @@ public class TransactionsServlet extends HttpServlet {
 
     SqlSession session = DBUtil.getSqlMapper().openSession();
     AccountMapper accounts = session.getMapper(AccountMapper.class);
+    
     Account account = accounts.getAccount(request.getParameter("account"));
     if (account == null) {
       logger.warn("The account {} was not found", request.getParameter("account"));
