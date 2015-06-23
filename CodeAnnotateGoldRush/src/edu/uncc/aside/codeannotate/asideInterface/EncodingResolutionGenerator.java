@@ -6,14 +6,15 @@ import org.eclipse.ui.IMarkerResolution;
 import org.eclipse.ui.IMarkerResolutionGenerator;
 import org.eclipse.ui.IMarkerResolutionGenerator2;
 
-public class ValidationResolutionGenerator implements
-		IMarkerResolutionGenerator, IMarkerResolutionGenerator2 {
+public class EncodingResolutionGenerator implements IMarkerResolutionGenerator,
+		IMarkerResolutionGenerator2 {
 
 	public IMarkerResolution[] getResolutions(IMarker mk) 
 	{
 		//handle highlighting
 		InterfaceUtil.clearAndSetHighlighting(3, mk);
-				
+		
+		
 		int markerIdentifier = mk.getAttribute("markerIdentifier", -1);
 		
 		
@@ -24,13 +25,9 @@ public class ValidationResolutionGenerator implements
 	          
 	          return new IMarkerResolution[] 
 	        {
-	        	new ValidationTitleResolution("*Potential Security Vulnerability Detected*" + problem, markerIdentifier),
-	        	new ValidationResolution("Allow Alphabetical Characters and Numbers", "alphabet"),
-	        	new ValidationResolution("Allow Minimal HTTP Characters", "http"),
-	        	new ValidationResolution("Allow URL Characters", "url"),
-	        	new ValidationResolution("Allow Credit Card Numbers", "credit"),
-	        	new ValidationResolution("Allow Email Addresses", "email"),
-	        	new ValidationResolution("Allow Social Security Numbers", "ssn")
+	        	new EncodingTitleResolution("*Potential Security Vulnerability Detected*" + problem, markerIdentifier),
+	        	new EncodingResolution("Encode for URL", "url"),
+	        	new EncodingResolution("Encode for HTML", "html")
 	        	        		  
 	          };
 	       }
@@ -47,5 +44,4 @@ public class ValidationResolutionGenerator implements
 		// TODO Auto-generated method stub
 		return true;
 	}	
-
 }

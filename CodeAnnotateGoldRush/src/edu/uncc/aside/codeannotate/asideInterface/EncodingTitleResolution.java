@@ -9,13 +9,13 @@ import org.eclipse.ui.IMarkerResolution2;
 
 import edu.uncc.aside.codeannotate.Plugin;
 
-public class ValidationTitleResolution implements IMarkerResolution,
+public class EncodingTitleResolution implements IMarkerResolution,
 		IMarkerResolution2 {
 
 	String label;
 	int markerId = -1;
 	
-    ValidationTitleResolution(String label, int markerId) {
+    EncodingTitleResolution(String label, int markerId) {
        this.label = label;
        this.markerId = markerId;
     }
@@ -31,9 +31,9 @@ public class ValidationTitleResolution implements IMarkerResolution,
 	public String getDescription() {		
 		String descriptionString = "";
 		
-		descriptionString = "This code uses the getParameter method from the HttpServletRequest to access external user data.  "
-				+ "If the input is not validated attackers can exploit this vulnerability and insert malicious code."
-				+ "<p><p>Use the options below to generate validation code allowing specific input data types."
+		descriptionString = "This code uses the println method from the PrintWriter to output data to the application. "
+				+ "If this output is not encoded, attackers can exploit this vulnerability and insert malicious code into the application."
+				+ "<p><p>Use the options below to generate code to encode output data for different kinds of content."
 				+ "<p><p>Go to https://www.owasp.org/index.php/Data_Validation for more information.";
 		
 		 return descriptionString;
@@ -51,4 +51,5 @@ public class ValidationTitleResolution implements IMarkerResolution,
 		}
 		return image;
 	}
+
 }

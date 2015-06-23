@@ -30,31 +30,33 @@ public class ValidationResolution implements IMarkerResolution,
 	@Override
 	public String getDescription() {
 		// TODO Auto-generated method stub
-		String description = "";
+		String inputDescription = "";
 		switch(resolutionType){
 		case "alphabet":
-			description = "Generate validation code using the Enterprise Security API (ESAPI)."
-					+ "<p><p>The getValidInput method of the Validation interface ensures the input matches the regular expression for any alphabetical characters and numbers."
-					+ "<p><p>Go to LINK for more information.";
+			inputDescription = "any alphabetical characters and numbers";
 			break;
 		case "http":
-			description = "HTTP code";
+			inputDescription = "characters used in HTTP code: alphanumeric and special characters .-/=_!$*?@";
 			break;
 		case "url":
-			description = "URL";
+			inputDescription = "appropriate protocol-host-port format";
 			break;
 		case "credit":
-			description = "credit";
+			inputDescription = "credit card numbers in the form of 'xxxx.xxxx.xxxx.xxxx'";
 			break;
 		case "email":
-			description = "email";
+			inputDescription = "email addresses in the form of 'foo@foo.foo'";
 			break;
 		case "ssn":
-			description = "ssn";
+			inputDescription = "social security numbers in the form of 'xxx-xx-xxxx'";
 			break;
 		default:
-			description = "i should put something here";
+			inputDescription = "";
 		}
+		String description = "Generate validation code using the Enterprise Security API (ESAPI)."
+				+ "<p><p>The getValidInput method of the Validation interface ensures the input matches the regular expression for "
+				+ inputDescription 
+				+ "<p><p>Go to LINK for more information.";
 
 		return description;
 	}

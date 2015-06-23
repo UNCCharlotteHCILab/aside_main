@@ -708,6 +708,8 @@ public  class InterfaceUtil
 				message = "Where is the access control?";
 			}else if(markerType.equals("red.devil")){
 				message = "Accessing unvalidated input from HttpServletRequest";
+			}else if (markerType.equals("encoding.devil")){
+				message = "Outputting unvalidated data to PrintWriter";
 			}
 			IMarker theMarker = theResource.createMarker(markerType);
 			theMarker.setAttribute(IMarker.CHAR_START, charStart);

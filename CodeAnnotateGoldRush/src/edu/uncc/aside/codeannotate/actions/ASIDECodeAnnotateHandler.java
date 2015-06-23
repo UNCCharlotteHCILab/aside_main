@@ -153,7 +153,7 @@ public class ASIDECodeAnnotateHandler extends AbstractHandler {
 		thePath = new Path("src/uncc/goldrush/servlet/LoginServlet.java");
 		theFile = GoldRush.getFile(thePath);
 		charPositions = InterfaceUtil.getCharStartFromLineNumber(67 , theFile);
-		InterfaceUtil.createMarker("yellow.question", charPositions[0], charPositions[1], theFile);
+		InterfaceUtil.createMarker("encoding.devil", charPositions[0], charPositions[1], theFile);
 		
 		//SQL STATEMENT
 		thePath = new Path("src/uncc/goldrush/servlet/Trainer.java");
@@ -165,7 +165,7 @@ public class ASIDECodeAnnotateHandler extends AbstractHandler {
 		thePath = new Path("src/uncc/goldrush/servlet/TransactionsServlet.java");
 		theFile = GoldRush.getFile(thePath);
 		charPositions = InterfaceUtil.getCharStartFromLineNumber(59 , theFile);
-		InterfaceUtil.createMarker("yellow.question", charPositions[0], charPositions[1], theFile);
+		InterfaceUtil.createMarker("encoding.devil", charPositions[0], charPositions[1], theFile);
 		
 		//INPUT VALIDATION
 		thePath = new Path("src/uncc/goldrush/servlet/TransferServlet.java");
