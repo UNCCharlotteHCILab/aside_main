@@ -9,38 +9,32 @@ import org.eclipse.ui.IMarkerResolution2;
 
 import edu.uncc.aside.codeannotate.Plugin;
 
-public class ValidationTitleResolution implements IMarkerResolution,
-		IMarkerResolution2 {
+public class SQLResolution implements IMarkerResolution, IMarkerResolution2 {
 
+	String resolutionType;
 	String label;
-	int markerId = -1;
 	
-    ValidationTitleResolution(String label, int markerId) {
+    SQLResolution(String label) {
        this.label = label;
-       this.markerId = markerId;
     }
     public String getLabel() {
        return label;
     }
     public void run(IMarker marker) {
-       MessageDialog.openInformation(null, "Red Devil Demo", "This quick-fix is not yet implemented");
+       MessageDialog.openInformation(null, "SQL Statement Demo", "This quick-fix is not yet implemented");
     	System.out.println("Resolution run");
 
     }
 	@Override
-	public String getDescription() {		
-		String descriptionString = "";
-		
-		descriptionString = "This code uses the getParameter method from the HttpServletRequest to access external user data.  "
-				+ "If the input is not validated, attackers can exploit this vulnerability and insert malicious code."
-				+ "<p><p>Use the options below to generate validation code allowing specific input data types."
-				+ "<p><p>Go to https://www.owasp.org/index.php/Data_Validation for more information.";
-		
-		 return descriptionString;
+	public String getDescription() {
+		return "When using a PreparedStatement, the SQL statement is precompiled so the DBMS does not compile"
+				+ " the statement when executed.  <p><p>In other words, the statement and the data are not presented "
+				+ "on the same line.  By separating the two, the DBMS does not execute the data as its own statement.  "
+				+ "This prevents unintended queries";
 	}
 	@Override
 	public Image getImage() {
-		
+		// TODO Auto-generated method stub
 		ImageDescriptor descriptor = Plugin
 				.getImageDescriptor("redQuestion.png");
 		Image image = Plugin.imageCache.get(descriptor);
@@ -51,4 +45,6 @@ public class ValidationTitleResolution implements IMarkerResolution,
 		}
 		return image;
 	}
+
+
 }

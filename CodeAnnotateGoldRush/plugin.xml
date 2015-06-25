@@ -861,7 +861,7 @@
    </extension>
     
     <!-- end spec for one marker and resolution generator -->
-
+	<!-- INPUT VALIDATION VULNERABILITY MARKER -->
       <extension
          id="red.devil"
          name="Red Devil"
@@ -920,7 +920,7 @@
          class="edu.uncc.aside.codeannotate.asideInterface.ValidationResolutionGenerator"/>
    </extension>
 
-<!-- EXTENSION -->
+<!-- Encoding Output Vulnerablility Marker -->
 
       <extension
          id="encoding.devil"
@@ -980,6 +980,62 @@
          class="edu.uncc.aside.codeannotate.asideInterface.EncodingResolutionGenerator"/>
    </extension>
    
-   
-
+   <!-- SQL Statement Marker -->
+<extension
+         id="sql.devil"
+         name="SQL Devil"
+         point="org.eclipse.core.resources.markers">
+         <super type="org.eclipse.core.resources.marker"/>
+         <persistent value="false"/>
+   </extension>
+   <extension
+   		 id="sqlDevilType"
+   		 name="SQL Devil Marker Annotation"
+         point="org.eclipse.ui.editors.annotationTypes">
+      <type
+            markerType="sql.devil"
+            name="sqlDevilType">
+      </type>
+   </extension>
+	
+	<extension
+         point="org.eclipse.ui.editors.markerAnnotationSpecification"
+         id="redDevilSpec">
+        
+         
+      <specification
+            annotationType="sqlDevilType"
+            includeOnPreferencePage="true"
+            contributesToHeader="true"
+            isGoToNextNavigationTarget="true"
+            isGoToNextNavigationTargetKey="questionIsGoToNextNavigationTarget"
+			isGoToPreviousNavigationTarget="true"
+			isGoToPreviousNavigationTargetKey="questionIsGoToPreviousNavigationTarget"
+			overviewRulerPreferenceValue="true" 
+			presentationLayer="8" 
+            overviewRulerPreferenceKey="questionOverviewRulerPreference"
+            showInNextPrevDropdownToolbarAction="true"
+			showInNextPrevDropdownToolbarActionKey="questionShowInNextPrevDropdownToolbarAction"
+			symbolicIcon="warning"   
+            label="Red Devil"
+            icon="icons/devil.png"
+			highlightPreferenceKey="highlight.background"
+			highlightPreferenceValue="true"
+			colorPreferenceKey="sqlDevil"
+			colorPreferenceValue="255,255,0"
+			textPreferenceKey="cltext"
+			textPreferenceValue="true"
+			verticalRulerPreferenceKey="clvertical"
+			verticalRulerPreferenceValue="true"
+			textStylePreferenceKey="clstyle"
+			textStylePreferenceValue="BOX">
+      </specification>
+      
+   </extension> 
+    
+    <extension point="org.eclipse.ui.ide.markerResolution">
+      <markerResolutionGenerator
+         markerType="sql.devil"
+         class="edu.uncc.aside.codeannotate.asideInterface.SQLResolutionGenerator"/>
+   </extension>
 </plugin>

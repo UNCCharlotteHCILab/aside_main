@@ -710,6 +710,8 @@ public  class InterfaceUtil
 				message = "Accessing unvalidated input from HttpServletRequest";
 			}else if (markerType.equals("encoding.devil")){
 				message = "Outputting unvalidated data to PrintWriter";
+			}else if(markerType.equals("sql.devil")){
+				message = "Accessing database with a dynamic query";
 			}
 			IMarker theMarker = theResource.createMarker(markerType);
 			theMarker.setAttribute(IMarker.CHAR_START, charStart);

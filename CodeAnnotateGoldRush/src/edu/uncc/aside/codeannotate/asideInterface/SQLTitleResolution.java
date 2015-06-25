@@ -9,13 +9,13 @@ import org.eclipse.ui.IMarkerResolution2;
 
 import edu.uncc.aside.codeannotate.Plugin;
 
-public class ValidationTitleResolution implements IMarkerResolution,
+public class SQLTitleResolution implements IMarkerResolution,
 		IMarkerResolution2 {
 
 	String label;
 	int markerId = -1;
 	
-    ValidationTitleResolution(String label, int markerId) {
+    SQLTitleResolution(String label, int markerId) {
        this.label = label;
        this.markerId = markerId;
     }
@@ -28,15 +28,12 @@ public class ValidationTitleResolution implements IMarkerResolution,
 
     }
 	@Override
-	public String getDescription() {		
-		String descriptionString = "";
-		
-		descriptionString = "This code uses the getParameter method from the HttpServletRequest to access external user data.  "
-				+ "If the input is not validated, attackers can exploit this vulnerability and insert malicious code."
-				+ "<p><p>Use the options below to generate validation code allowing specific input data types."
-				+ "<p><p>Go to https://www.owasp.org/index.php/Data_Validation for more information.";
-		
-		 return descriptionString;
+	public String getDescription() {	
+		String description = "This code uses external data to create a dynamic SQL statement. "
+				+ "This input data could contain an SQL command that executes unwanted actions (SQL injection attack)."
+				+ "<p><p>Discover how to use prepared statements to prevent code injection with the below option."
+				+ "<p><p>Go to LINK for more information.";
+		 return description;
 	}
 	@Override
 	public Image getImage() {
@@ -51,4 +48,5 @@ public class ValidationTitleResolution implements IMarkerResolution,
 		}
 		return image;
 	}
+
 }
