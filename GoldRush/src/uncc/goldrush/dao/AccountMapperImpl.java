@@ -6,6 +6,7 @@ import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.List;
 import java.util.Properties;
 
@@ -99,7 +100,27 @@ public int insertTransaction(Transaction transaction){
 		// TODO Auto-generated catch block
 		e.printStackTrace();
 	}
-	  String query_string = "INSERT INTO transaction (accountNumber, transactionDate, payee, amount) VALUES (?, ?, ?, ?);";
+	  
+	//Insert transaction without prepared statement
+	  
+	 Statement stmt = null;
+	 try {
+		stmt = con.createStatement();
+	} catch (SQLException e1) {
+		// TODO Auto-generated catch block
+		e1.printStackTrace();
+	}
+	  String sql = "INSERT INTO transaction (accountNumber, transactionDate, payee, amount) VALUES ("
+	  		+ transaction.getAccount().getAccountNumber() + ", " + transaction.getDate() + ", "
+	  		+ transaction.getPayee() + ", " + transaction.getAmount() + ")";
+	  try {
+		stmt.executeUpdate(sql);
+	} catch (SQLException e1) {
+		// TODO Auto-generated catch block
+		e1.printStackTrace();
+	}
+	  
+/*	  String query_string = "INSERT INTO transaction (accountNumber, transactionDate, payee, amount) VALUES (?, ?, ?, ?);";
 	  PreparedStatement preparedStatement = null;
 	try {
 		preparedStatement = con.prepareStatement(query_string);
@@ -112,7 +133,7 @@ public int insertTransaction(Transaction transaction){
 	} catch (SQLException e1) {
 		// TODO Auto-generated catch block
 		e1.printStackTrace();
-	}
+	}*/
 	try {
 		con.close();
 	} catch (SQLException e) {
@@ -135,7 +156,25 @@ public int insertTransaction(Transaction transaction){
 		// TODO Auto-generated catch block
 		e.printStackTrace();
 	}
-	  String query_string = "UPDATE Account SET balance = ? WHERE account_name = ?;";
+	  
+	  //Update account without prepared statement
+	  Statement stmt = null;
+	try {
+		stmt = con.createStatement();
+	} catch (SQLException e1) {
+		// TODO Auto-generated catch block
+		e1.printStackTrace();
+	}
+	  String sql = "Update Account Set balance = " +balance + " WHERE account_name = " + accountName;
+	  try {
+		stmt.executeUpdate(sql);
+	} catch (SQLException e1) {
+		// TODO Auto-generated catch block
+		e1.printStackTrace();
+	}
+	  
+	  
+/*	  String query_string = "UPDATE Account SET balance = ? WHERE account_name = ?;";
 	  PreparedStatement preparedStatement = null;
 	try {
 		preparedStatement = con.prepareStatement(query_string);
@@ -145,7 +184,7 @@ public int insertTransaction(Transaction transaction){
 	} catch (SQLException e1) {
 		// TODO Auto-generated catch block
 		e1.printStackTrace();
-	}
+	}*/
 	try {
 		con.close();
 	} catch (SQLException e) {
