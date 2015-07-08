@@ -26,7 +26,7 @@ public class SQLResolutionGenerator implements IMarkerResolutionGenerator,
 	          return new IMarkerResolution[] 
 	        {
 	        	new SQLTitleResolution("*Potential Security Vulnerability Detected*" + problem, markerIdentifier),
-	        	new SQLResolution("Prepared Statements")
+	        	new SQLResolution("Use Prepared Statements")
 	        	        		  
 	          };
 	       }

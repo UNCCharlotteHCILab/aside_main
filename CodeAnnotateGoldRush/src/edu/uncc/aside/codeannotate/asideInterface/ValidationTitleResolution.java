@@ -31,8 +31,8 @@ public class ValidationTitleResolution implements IMarkerResolution,
 	public String getDescription() {		
 		String descriptionString = "";
 		
-		descriptionString = "This code uses the getParameter method from the HttpServletRequest to access external user data.  "
-				+ "If the input is not validated, attackers can exploit this vulnerability and insert malicious code."
+		descriptionString = "This code uses the getParameter method from the HttpServletRequest to access external user data. "
+				+ "If the input is not validated, attackers can exploit this vulnerability and insert malicious code (known as Cross Site Scripting)."
 				+ "<p><p>Use the options below to generate validation code allowing specific input data types."
 				+ "<p><p>Go to https://www.owasp.org/index.php/Data_Validation for more information.";
 		

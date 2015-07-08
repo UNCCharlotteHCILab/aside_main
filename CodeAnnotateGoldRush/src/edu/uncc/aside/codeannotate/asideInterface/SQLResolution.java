@@ -29,14 +29,14 @@ public class SQLResolution implements IMarkerResolution, IMarkerResolution2 {
 	public String getDescription() {
 		return "When using a PreparedStatement, the SQL statement is precompiled so the DBMS does not compile"
 				+ " the statement when executed.  <p><p>In other words, the statement and the data are not presented "
-				+ "on the same line.  By separating the two, the DBMS does not execute the data as its own statement.  "
-				+ "This prevents unintended queries";
+				+ "on the same line. By separating the two, the database management statement does not execute the data as its own statement. "
+				+ "This prevents unintended queries.";
 	}
 	@Override
 	public Image getImage() {
 		// TODO Auto-generated method stub
 		ImageDescriptor descriptor = Plugin
-				.getImageDescriptor("redQuestion.png");
+				.getImageDescriptor("devil.png");
 		Image image = Plugin.imageCache.get(descriptor);
 
 		if (image == null) {

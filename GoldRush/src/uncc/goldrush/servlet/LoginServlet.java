@@ -61,10 +61,10 @@ public class LoginServlet extends HttpServlet {
 
         logger.info("New session id {}", request.getSession().getId());
         request.getSession(true).setAttribute("USER", currentUser);
-       // request.setAttribute("MESSAGE", "Successfully logged in " + currentUser.getUsername());   
-        /* Added as a more obvious example for output validation */
+
+        
         PrintWriter out = response.getWriter();
-        out.println("Successfully logged in " + currentUser.getUsername());
+        out.println("Successfully logged in " + currentUser.getUsername());        
         out.flush();
         logger.debug("Forwarding to /accounts");
         request.getRequestDispatcher("/accounts").forward(request, response);

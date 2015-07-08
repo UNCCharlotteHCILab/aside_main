@@ -146,7 +146,7 @@ public class ASIDECodeAnnotateHandler extends AbstractHandler {
 		//INPUT VALIDATION
 		thePath = new Path("src/uncc/goldrush/servlet/AccountsServlet.java");
 		theFile = GoldRush.getFile(thePath);
-		charPositions = InterfaceUtil.getCharStartFromLineNumber(53 , theFile);
+		charPositions = InterfaceUtil.getCharStartFromLineNumber(52 , theFile);
 		InterfaceUtil.createMarker("red.devil", charPositions[0], charPositions[1], theFile);
        
 		//OUTPUT ENCODING
@@ -155,11 +155,17 @@ public class ASIDECodeAnnotateHandler extends AbstractHandler {
 		charPositions = InterfaceUtil.getCharStartFromLineNumber(67 , theFile);
 		InterfaceUtil.createMarker("encoding.devil", charPositions[0], charPositions[1], theFile);
 		
-		//SQL STATEMENT
+		//ACCESS CONTROL
 		thePath = new Path("src/uncc/goldrush/servlet/Trainer.java");
 		theFile = GoldRush.getFile(thePath);
 		charPositions = InterfaceUtil.getCharStartFromLineNumber(50 , theFile);
-		InterfaceUtil.createMarker("sql.devil", charPositions[0], charPositions[1], theFile);
+		InterfaceUtil.createMarker("yellow.question", charPositions[0], charPositions[1], theFile);
+		
+		//INPUT VALIDATION
+		thePath = new Path("src/uncc/goldrush/servlet/Trainer.java");
+		theFile = GoldRush.getFile(thePath);
+		charPositions = InterfaceUtil.getCharStartFromLineNumber(45 , theFile);
+		InterfaceUtil.createMarker("red.devil", charPositions[0], charPositions[1], theFile);
 	
 		//OUTPUT ENCODING
 		thePath = new Path("src/uncc/goldrush/servlet/TransactionsServlet.java");
@@ -174,10 +180,34 @@ public class ASIDECodeAnnotateHandler extends AbstractHandler {
 		InterfaceUtil.createMarker("red.devil", charPositions[0], charPositions[1], theFile);
 		
 		//SQL STATEMENT
-		thePath = new Path("src/uncc/goldrush/servlet/TransferServlet.java");
+		thePath = new Path("src/uncc/goldrush/dao/AccountMapperImpl.java");
 		theFile = GoldRush.getFile(thePath);
-		charPositions = InterfaceUtil.getCharStartFromLineNumber(106 , theFile);
+		charPositions = InterfaceUtil.getCharStartFromLineNumber(154 , theFile);
 		InterfaceUtil.createMarker("sql.devil", charPositions[0], charPositions[1], theFile);
+		
+		//SQL STATEMENT
+		thePath = new Path("src/uncc/goldrush/dao/AccountMapperImpl.java");
+		theFile = GoldRush.getFile(thePath);
+		charPositions = InterfaceUtil.getCharStartFromLineNumber(116 , theFile);
+		InterfaceUtil.createMarker("sql.devil", charPositions[0], charPositions[1], theFile);
+		
+		//Access Control
+		thePath = new Path("src/uncc/goldrush/servlet/TransactionsServlet.java");
+		theFile = GoldRush.getFile(thePath);
+		charPositions = InterfaceUtil.getCharStartFromLineNumber(62 , theFile);
+		InterfaceUtil.createMarker("yellow.question", charPositions[0], charPositions[1], theFile);
+		
+		//INPUT VALIDATION FALSE POSITIVE
+		thePath = new Path("src/uncc/goldrush/servlet/AccountsServlet.java");
+		theFile = GoldRush.getFile(thePath);
+		charPositions = InterfaceUtil.getCharStartFromLineNumber(54, theFile);
+		InterfaceUtil.createMarker("red.devil", charPositions[0], charPositions[1], theFile);
+		
+		//ACCESS CONTROL FALSE POSITIVE
+		thePath = new Path("src/uncc/goldrush/servlet/LoginServlet.java");
+		theFile = GoldRush.getFile(thePath);
+		charPositions = InterfaceUtil.getCharStartFromLineNumber(50 , theFile);
+		InterfaceUtil.createMarker("yellow.question", charPositions[0], charPositions[1], theFile);
 		
 		/*
 		IPath thePath = new Path("WebRoot/auth/admin/addPHA.java");

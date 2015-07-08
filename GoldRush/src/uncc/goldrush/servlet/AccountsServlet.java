@@ -49,7 +49,8 @@ public class AccountsServlet extends HttpServlet {
 			HttpServletResponse response) throws ServletException, IOException {
 		
 					logger.trace("Entering doGet()");        
-					String accountName = request.getParameter("AccountName");			
+					String accountName = request.getParameter("AccountName");
+					
 					int newBalance = Integer.valueOf(request.getParameter("NewBalance"));
 					if (request.getSession().getAttribute("USER") == null) {
 						logger.warn("User not authenticated");

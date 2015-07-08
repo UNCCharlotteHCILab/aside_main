@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 
 import uncc.goldrush.bean.Account;
 import uncc.goldrush.bean.Transaction;
+import uncc.goldrush.bean.User;
 import uncc.goldrush.dao.AccountMapper;
 import uncc.goldrush.util.DBUtil;
 
@@ -51,10 +52,10 @@ public class TransactionsServlet extends HttpServlet {
       request.setAttribute("MESSAGE", "The specified account does not exist");
       logger.debug("Forwarding to /accounts");
       request.getRequestDispatcher("/accounts").forward(request, response);
-    } else {
-      //logger.info("Account {} found", account.toString());     
+    } else if (((User) request.getSession().getAttribute("USER")).ownAccount(account.getAccountNumber())){
+    
       request.setAttribute("ACCOUNT", account);
-      /* Added as a more obvious example for output validation */
+
       PrintWriter out = response.getWriter();
       out.println("Account " + account.toString() + " found");
       out.flush();

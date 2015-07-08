@@ -101,7 +101,6 @@ public int insertTransaction(Transaction transaction){
 		e.printStackTrace();
 	}
 	  
-	//Insert transaction without prepared statement
 	  
 	 Statement stmt = null;
 	 try {
@@ -119,21 +118,7 @@ public int insertTransaction(Transaction transaction){
 		// TODO Auto-generated catch block
 		e1.printStackTrace();
 	}
-	  
-/*	  String query_string = "INSERT INTO transaction (accountNumber, transactionDate, payee, amount) VALUES (?, ?, ?, ?);";
-	  PreparedStatement preparedStatement = null;
-	try {
-		preparedStatement = con.prepareStatement(query_string);
-		preparedStatement.setString(1, transaction.getAccount().getAccountNumber());
-		preparedStatement.setDate(2, (Date) transaction.getDate());
-		preparedStatement.setString(3, transaction.getPayee());
-		preparedStatement.setDouble(4, transaction.getAmount());
-		preparedStatement.executeUpdate();
-		return 1;
-	} catch (SQLException e1) {
-		// TODO Auto-generated catch block
-		e1.printStackTrace();
-	}*/
+
 	try {
 		con.close();
 	} catch (SQLException e) {
@@ -157,7 +142,6 @@ public int insertTransaction(Transaction transaction){
 		e.printStackTrace();
 	}
 	  
-	  //Update account without prepared statement
 	  Statement stmt = null;
 	try {
 		stmt = con.createStatement();
@@ -173,18 +157,6 @@ public int insertTransaction(Transaction transaction){
 		e1.printStackTrace();
 	}
 	  
-	  
-/*	  String query_string = "UPDATE Account SET balance = ? WHERE account_name = ?;";
-	  PreparedStatement preparedStatement = null;
-	try {
-		preparedStatement = con.prepareStatement(query_string);
-		preparedStatement.setInt(1, balance);
-		preparedStatement.setString(2, accountName);
-		preparedStatement.executeUpdate();
-	} catch (SQLException e1) {
-		// TODO Auto-generated catch block
-		e1.printStackTrace();
-	}*/
 	try {
 		con.close();
 	} catch (SQLException e) {

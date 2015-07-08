@@ -677,8 +677,8 @@ public  class InterfaceUtil
 	
 	public static void fakeVulnerabilities()
 	{
-		changeMarker("red.flag.box", 3, 0, 0);
-		changeMarker("red.flag.box", 6, 0, 0);
+		//changeMarker("red.flag.box", 3, 0, 0);
+		//changeMarker("red.flag.box", 6, 0, 0);
 		
 		IMarker firstMarker = VariablesAndConstants.annotationRequestMarkers[3];
 		IMarker secondMarker = VariablesAndConstants.annotationRequestMarkers[6];
@@ -705,7 +705,7 @@ public  class InterfaceUtil
 			String message = "Where is the access control";
 			if(markerType.equals("yellow.question"))
 			{
-				message = "Where is the access control?";
+				message = "Sensitive Security Operation";
 			}else if(markerType.equals("red.devil")){
 				message = "Accessing unvalidated input from HttpServletRequest";
 			}else if (markerType.equals("encoding.devil")){
@@ -753,6 +753,7 @@ public  class InterfaceUtil
 		charPositions[1] = stringLineEnd;
 		}
 		catch(Exception e){
+			e.printStackTrace();
 			System.out.println("exception in getCharStartFromLineNumber");
 		}
 		return charPositions;

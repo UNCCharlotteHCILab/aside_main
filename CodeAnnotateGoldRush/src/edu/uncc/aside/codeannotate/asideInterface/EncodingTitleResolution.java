@@ -32,7 +32,8 @@ public class EncodingTitleResolution implements IMarkerResolution,
 		String descriptionString = "";
 		
 		descriptionString = "This code uses the println method from the PrintWriter to output data to the application. "
-				+ "If this output is not encoded, attackers can exploit this vulnerability and insert malicious code into the application."
+				+ "If this output is not encoded, attackers can exploit this vulnerability and insert malicious code into the application "
+				+ "(known as Cross-Site Scripting)."
 				+ "<p><p>Use the options below to generate code to encode output data for different content."
 				+ "<p><p>Go to https://www.owasp.org/index.php/Data_Validation for more information.";
 		
