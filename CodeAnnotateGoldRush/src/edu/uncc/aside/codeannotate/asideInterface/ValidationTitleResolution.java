@@ -13,9 +13,9 @@ public class ValidationTitleResolution implements IMarkerResolution,
 		IMarkerResolution2 {
 
 	String label;
-	int markerId = -1;
+	String markerId;
 	
-    ValidationTitleResolution(String label, int markerId) {
+    ValidationTitleResolution(String label, String markerId) {
        this.label = label;
        this.markerId = markerId;
     }
@@ -30,11 +30,15 @@ public class ValidationTitleResolution implements IMarkerResolution,
 	@Override
 	public String getDescription() {		
 		String descriptionString = "";
-		
-		descriptionString = "This code uses the getParameter method from the HttpServletRequest to access external user data. "
-				+ "If the input is not validated, attackers can exploit this vulnerability and insert malicious code (known as Cross Site Scripting)."
-				+ "<p><p>Use the options below to generate validation code allowing specific input data types."
-				+ "<p><p>Go to https://www.owasp.org/index.php/Data_Validation for more information.";
+		if(markerId.equals("inputValidation1")){
+			descriptionString = "The variable \"accountName\" is external user data read from the getParameter method from the HttpServletRequest. ";
+		}else if(markerId.equals("inputValidation3")){
+			descriptionString = "The variable \"newBalance\" is external user data read from the getParameter method from the HttpServletRequest. ";
+		}else{
+			descriptionString = "The data read from request.getParameter is external user data read from the HttpServletRequest. ";
+		}
+		descriptionString += "If the input is not validated, attackers can exploit this vulnerability and insert malicious code (known as Cross Site Scripting)."
+				+ "<p><p>Use the options below to generate code that validates this input or click Read More for more information.";
 		
 		 return descriptionString;
 	}

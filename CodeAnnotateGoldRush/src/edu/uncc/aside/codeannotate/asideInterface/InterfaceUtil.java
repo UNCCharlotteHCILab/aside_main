@@ -676,10 +676,7 @@ public  class InterfaceUtil
 	}
 	
 	public static void fakeVulnerabilities()
-	{
-		//changeMarker("red.flag.box", 3, 0, 0);
-		//changeMarker("red.flag.box", 6, 0, 0);
-		
+	{	
 		IMarker firstMarker = VariablesAndConstants.annotationRequestMarkers[3];
 		IMarker secondMarker = VariablesAndConstants.annotationRequestMarkers[6];
 		
@@ -694,11 +691,10 @@ public  class InterfaceUtil
 			System.out.println("Exception setting marker id's in fakeVulnerabilities method");
 		}
 		
-		
 	}
 	
 	 /*Manually create requests/warnings*/
-	public static void createMarker(String markerType, int charStart, int charEnd, IResource theResource)
+	public static void createMarker(String markerType, int charStart, int charEnd, IResource theResource, String vulnerability)
 	{
 		try
 		{
@@ -722,6 +718,9 @@ public  class InterfaceUtil
 		 	theMarker.setAttribute(IMarker.PRIORITY, IMarker.PRIORITY_HIGH);
 			theMarker.setAttribute(IMarker.SEVERITY, IMarker.SEVERITY_ERROR);
 			
+			if(vulnerability != null){
+				theMarker.setAttribute("markerIdentifier", vulnerability);
+			}
 			
 			InterfaceUtil.prepareAnnotationRequest(theMarker, theResource);
 		}

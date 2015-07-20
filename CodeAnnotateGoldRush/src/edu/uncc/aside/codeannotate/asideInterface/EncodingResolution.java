@@ -14,10 +14,12 @@ public class EncodingResolution implements IMarkerResolution,
 
 	String resolutionType;
 	String label;
+	String markerId;
 	
-    EncodingResolution(String label, String resolutionType) {
+    EncodingResolution(String label, String resolutionType, String markerId) {
        this.label = label;
        this.resolutionType = resolutionType;
+       this.markerId = markerId;
     }
     public String getLabel() {
        return label;
@@ -32,20 +34,26 @@ public class EncodingResolution implements IMarkerResolution,
 		// TODO Auto-generated method stub
 		String methodName = "";
 		String methodAction = "";
+		String variableName = "output";
 		switch(resolutionType){
-		case "url":
+		case "URL":
 			methodName = "encodeForURL";
 			methodAction = "URL encoding (percent encoding)";
 			break;
-		case "html":
+		case "HTML":
 			methodName = "encodeForHTML";
 			methodAction = "HTML encoding";
 			break;
 		}
-		String description = "Encode the output using the Enterprise Security API."
-				+ "<p><p>The " + methodName +  " method of the Encoder interface performs "
-				+ methodAction + " on the given output."
-				+ "<p><p>Go to LINK for documentation.";
+		if(markerId.equals("outputEncoding1")){
+			variableName = "\"currentUser.getUsername()\"";
+		}else if(markerId.equals("outputEncoding2")){
+			variableName = "\"account.toString()\"";
+		}
+		String description = "<p><p>This will add code to encode/abstract data returned by " +variableName+ " to ensure that any injected commands "
+				+ "aren't run when loading a page's " + resolutionType + ".<p><p>The generated code uses the "
+				+ methodName + " method from the Enterprise Security API (ESAPI) to perform " + methodAction + ". "
+				+ "Go to LINK for documentation.";
 		return description;
 	}
 	@Override

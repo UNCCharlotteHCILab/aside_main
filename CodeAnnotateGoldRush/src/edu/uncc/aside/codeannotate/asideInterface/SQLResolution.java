@@ -27,7 +27,8 @@ public class SQLResolution implements IMarkerResolution, IMarkerResolution2 {
     }
 	@Override
 	public String getDescription() {
-		return "When using a PreparedStatement, the SQL statement is precompiled so the DBMS does not compile"
+		return "Generate code that uses PreparedStatements. <p><p>"
+				+ "When using a PreparedStatement, the SQL statement is precompiled so the DBMS does not compile"
 				+ " the statement when executed.  <p><p>In other words, the statement and the data are not presented "
 				+ "on the same line. By separating the two, the database management statement does not execute the data as its own statement. "
 				+ "This prevents unintended queries.";

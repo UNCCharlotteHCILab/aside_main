@@ -13,9 +13,9 @@ public class EncodingTitleResolution implements IMarkerResolution,
 		IMarkerResolution2 {
 
 	String label;
-	int markerId = -1;
+	String markerId;
 	
-    EncodingTitleResolution(String label, int markerId) {
+    EncodingTitleResolution(String label, String markerId) {
        this.label = label;
        this.markerId = markerId;
     }
@@ -30,12 +30,16 @@ public class EncodingTitleResolution implements IMarkerResolution,
 	@Override
 	public String getDescription() {		
 		String descriptionString = "";
-		
-		descriptionString = "This code uses the println method from the PrintWriter to output data to the application. "
-				+ "If this output is not encoded, attackers can exploit this vulnerability and insert malicious code into the application "
+		String outputType = "data";
+		if(markerId.equals("outputEncoding1")){
+			outputType = "\"currentUser.getUsername()\"";
+		}else if(markerId.equals("outputEncoding2")){
+			outputType = "\"account.toString()\"";
+		}
+		descriptionString = "This code uses the println method from the PrintWriter to output data returned by " + outputType + " to the application. "
+				+ "If the data returned by " + outputType + " is not encoded, attackers can exploit this vulnerability and insert malicious code into the application "
 				+ "(known as Cross-Site Scripting)."
-				+ "<p><p>Use the options below to generate code to encode output data for different content."
-				+ "<p><p>Go to https://www.owasp.org/index.php/Data_Validation for more information.";
+				+ "<p><p>Use the options below to generate code to encode data from" + outputType + " or click Read More for more information.";
 		
 		 return descriptionString;
 	}

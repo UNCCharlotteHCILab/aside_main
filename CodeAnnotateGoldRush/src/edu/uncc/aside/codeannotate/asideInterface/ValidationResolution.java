@@ -14,10 +14,12 @@ public class ValidationResolution implements IMarkerResolution,
 
 	String resolutionType;
 	String label;
+	String markerId;
 	
-    ValidationResolution(String label, String resolutionType) {
+    ValidationResolution(String label, String resolutionType, String markerId) {
        this.label = label;
        this.resolutionType = resolutionType;
+       this.markerId = markerId;
     }
     public String getLabel() {
        return label;
@@ -31,9 +33,10 @@ public class ValidationResolution implements IMarkerResolution,
 	public String getDescription() {
 		// TODO Auto-generated method stub
 		String inputDescription = "";
+		String variableName = "input";
 		switch(resolutionType){
 		case "alphabet":
-			inputDescription = "any alphabetical characters and numbers";
+			inputDescription = "alphabetical characters and numbers";
 			break;
 		case "http":
 			inputDescription = "characters used in HTTP code: alphanumeric and special characters .-/=_!$*?@";
@@ -53,10 +56,15 @@ public class ValidationResolution implements IMarkerResolution,
 		default:
 			inputDescription = "";
 		}
-		String description = "Generate validation code using the Enterprise Security API (ESAPI)."
-				+ "<p><p>The getValidInput method of the Validation interface ensures the input matches the regular expression for "
-				+ inputDescription 
-				+ "<p><p>Go to LINK for more information.";
+		if(markerId.equals("inputValidation1")){
+			variableName = "\"accountName\"";
+		}else if(markerId.equals("inputValidation3")){
+			variableName = "\"newBalance\"";
+		}
+		
+		String description =  "<p><p>This will generate code to ensure that " + variableName + " only contains "
+				+ inputDescription + ". All other characters will throw an exception."
+				+ "<p><p>The generated code uses getValidInput method from the Enterprise Security API (ESAPI). Go to LINK for more information.";
 
 		return description;
 	}

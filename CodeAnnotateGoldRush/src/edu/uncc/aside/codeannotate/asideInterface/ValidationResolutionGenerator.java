@@ -14,7 +14,13 @@ public class ValidationResolutionGenerator implements
 		//handle highlighting
 		InterfaceUtil.clearAndSetHighlighting(3, mk);
 				
-		int markerIdentifier = mk.getAttribute("markerIdentifier", -1);
+		String markerIdentifier = null;
+		try {
+			markerIdentifier = (String) mk.getAttribute("markerIdentifier");
+		} catch (CoreException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		
 		
 	       try {
@@ -25,12 +31,13 @@ public class ValidationResolutionGenerator implements
 	          return new IMarkerResolution[] 
 	        {
 	        	new ValidationTitleResolution("*Potential Security Vulnerability Detected*" + problem, markerIdentifier),
-	        	new ValidationResolution("Allow Alphabetical Characters and Numbers", "alphabet"),
-	        	new ValidationResolution("Allow Minimal HTTP Characters", "http"),
-	        	new ValidationResolution("Allow URL Characters", "url"),
-	        	new ValidationResolution("Allow Credit Card Numbers", "credit"),
-	        	new ValidationResolution("Allow Email Addresses", "email"),
-	        	new ValidationResolution("Allow Social Security Numbers", "ssn")
+	        	new ValidationResolution("Allow Alphabetical Characters and Numbers", "alphabet", markerIdentifier),
+	        	new ValidationResolution("Allow Minimal HTTP Characters", "http", markerIdentifier),
+	        	new ValidationResolution("Allow URL Characters", "url", markerIdentifier),
+	        	new ValidationResolution("Allow Credit Card Numbers", "credit", markerIdentifier),
+	        	new ValidationResolution("Allow Email Addresses", "email", markerIdentifier),
+	        	new ValidationResolution("Allow Social Security Numbers", "ssn", markerIdentifier),
+	        	new ValidationReadMore("Read More", markerIdentifier)
 	        	        		  
 	          };
 	       }

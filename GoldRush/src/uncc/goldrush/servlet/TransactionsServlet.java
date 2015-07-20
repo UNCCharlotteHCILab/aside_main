@@ -55,7 +55,6 @@ public class TransactionsServlet extends HttpServlet {
     } else if (((User) request.getSession().getAttribute("USER")).ownAccount(account.getAccountNumber())){
     
       request.setAttribute("ACCOUNT", account);
-
       PrintWriter out = response.getWriter();
       out.println("Account " + account.toString() + " found");
       out.flush();

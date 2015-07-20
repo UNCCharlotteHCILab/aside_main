@@ -14,8 +14,13 @@ public class EncodingResolutionGenerator implements IMarkerResolutionGenerator,
 		//handle highlighting
 		InterfaceUtil.clearAndSetHighlighting(3, mk);
 		
-		
-		int markerIdentifier = mk.getAttribute("markerIdentifier", -1);
+		String markerIdentifier = null;
+		try {
+			markerIdentifier = (String) mk.getAttribute("markerIdentifier");
+		} catch (CoreException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		
 		
 	       try {
@@ -26,8 +31,9 @@ public class EncodingResolutionGenerator implements IMarkerResolutionGenerator,
 	          return new IMarkerResolution[] 
 	        {
 	        	new EncodingTitleResolution("*Potential Security Vulnerability Detected*" + problem, markerIdentifier),
-	        	new EncodingResolution("Encode for URL", "url"),
-	        	new EncodingResolution("Encode for HTML", "html")
+	        	new EncodingResolution("Encode for URL", "URL", markerIdentifier),
+	        	new EncodingResolution("Encode for HTML", "HTML", markerIdentifier),
+	        	new EncodingReadMore("Read More", markerIdentifier)
 	        	        		  
 	          };
 	       }
