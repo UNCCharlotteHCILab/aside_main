@@ -677,14 +677,14 @@ public  class InterfaceUtil
 	
 	public static void fakeVulnerabilities()
 	{	
-		IMarker firstMarker = VariablesAndConstants.annotationRequestMarkers[3];
-		IMarker secondMarker = VariablesAndConstants.annotationRequestMarkers[6];
+		//IMarker firstMarker = VariablesAndConstants.annotationRequestMarkers[3];
+		//IMarker secondMarker = VariablesAndConstants.annotationRequestMarkers[6];
 		
 		//now set the marker ids so that they can be identified for the faked warning messages
 		try
 		{
-			firstMarker.setAttribute("markerIdentifier", 1);
-			secondMarker.setAttribute("markerIdentifier", 2);
+			//firstMarker.setAttribute("markerIdentifier", 1);
+			//secondMarker.setAttribute("markerIdentifier", 2);
 		}
 		catch(Exception e)
 		{
