@@ -118,6 +118,7 @@ public class AsidePlugin extends AbstractUIPlugin {
 	 * )
 	 */
 	public void start(BundleContext context) throws Exception {
+		//This function is run when aside starts. It shows the consent form and handles other actions
 		setAllowed(false);
 		String userIDFromSystem = System.getProperty("user.name");
 		setUserId(userIDFromSystem);
