@@ -179,6 +179,12 @@ public class ASIDECodeAnnotateHandler extends AbstractHandler {
 		charPositions = InterfaceUtil.getCharStartFromLineNumber(103 , theFile);
 		InterfaceUtil.createMarker("red.devil", charPositions[0], charPositions[1], theFile, "inputValidation2");
 		
+		//ACCESS CONTROL WARNING
+		thePath = new Path("src/uncc/goldrush/servlet/TransferServlet.java");
+		theFile = GoldRush.getFile(thePath);
+		charPositions = InterfaceUtil.getCharStartFromLineNumber(106 , theFile);
+		InterfaceUtil.createMarker("red.flag", charPositions[0], charPositions[1], theFile, null);
+		
 		//SQL STATEMENT
 		thePath = new Path("src/uncc/goldrush/dao/AccountMapperImpl.java");
 		theFile = GoldRush.getFile(thePath);
