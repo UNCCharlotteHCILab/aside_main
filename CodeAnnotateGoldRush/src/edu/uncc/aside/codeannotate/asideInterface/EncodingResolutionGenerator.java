@@ -31,8 +31,8 @@ public class EncodingResolutionGenerator implements IMarkerResolutionGenerator,
 	          return new IMarkerResolution[] 
 	        {
 	        	new EncodingTitleResolution("*Potential Security Vulnerability Detected*" + problem, markerIdentifier),
-	        	new EncodingResolution("Encode for URL", "URL", markerIdentifier),
-	        	new EncodingResolution("Encode for HTML", "HTML", markerIdentifier),
+	        	new EncodingResolution("Sanitize URL", "URL", markerIdentifier),
+	        	new EncodingResolution("Sanitize HTML", "HTML", markerIdentifier),
 	        	new EncodingReadMore("Read More", markerIdentifier)
 	        	        		  
 	          };

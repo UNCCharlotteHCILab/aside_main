@@ -235,6 +235,10 @@ public  class InterfaceUtil
 		 * the corresponding markers from annotation requests to vulnerability detections.
 		 */
 		
+		/* This method has been commented out for 2016 contextual help study because of a bug which causes
+		 * some of the red devil icons to change to annotation request when an annotation is completed.
+		 * This is likely due to creating annotation markers "manually." This method was written for an annotation
+		 * request only version with no input validation, output encoding, etc.
 		
 		String tempCompare = ""; //this is a holder for an annotation request which is about to be compared
 		String tempCompare2 = ""; //a holder for the other annotation request that it is being compared to
@@ -355,7 +359,7 @@ public  class InterfaceUtil
 			
 			
 		}
-		
+		*/
 		
 	}
 	

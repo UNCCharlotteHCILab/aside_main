@@ -31,12 +31,12 @@ public class ValidationResolutionGenerator implements
 	          return new IMarkerResolution[] 
 	        {
 	        	new ValidationTitleResolution("*Potential Security Vulnerability Detected*" + problem, markerIdentifier),
-	        	new ValidationResolution("Allow Alphabetical Characters and Numbers", "alphabet", markerIdentifier),
-	        	new ValidationResolution("Allow Minimal HTTP Characters", "http", markerIdentifier),
-	        	new ValidationResolution("Allow URL Characters", "url", markerIdentifier),
-	        	new ValidationResolution("Allow Credit Card Numbers", "credit", markerIdentifier),
-	        	new ValidationResolution("Allow Email Addresses", "email", markerIdentifier),
-	        	new ValidationResolution("Allow Social Security Numbers", "ssn", markerIdentifier),
+	        	new ValidationResolution("Allow Only Letters and Numbers", "alphabet", markerIdentifier),
+	        	new ValidationResolution("Allow Only Minimal HTTP Characters", "http", markerIdentifier),
+	        	new ValidationResolution("Allow Only URL Characters", "url", markerIdentifier),
+	        	new ValidationResolution("Allow Only Credit Card Numbers", "credit", markerIdentifier),
+	        	new ValidationResolution("Allow Only Email Addresses", "email", markerIdentifier),
+	        	new ValidationResolution("Allow Only Social Security Numbers", "ssn", markerIdentifier),
 	        	new ValidationReadMore("Read More", markerIdentifier)
 	        	        		  
 	          };

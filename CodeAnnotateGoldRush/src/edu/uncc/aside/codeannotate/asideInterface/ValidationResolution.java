@@ -65,7 +65,7 @@ public class ValidationResolution implements IMarkerResolution,
 		String description =  "<p><p>This will generate code to ensure that " + variableName + " only contains "
 				+ inputDescription + ". All other characters will throw an exception."
 				+ "<p><p>The generated code uses getValidInput method from the Enterprise Security API (ESAPI). Go to LINK for more information.";
-
+		
 		return description;
 	}
 	@Override

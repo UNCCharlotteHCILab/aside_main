@@ -29,9 +29,8 @@ public class SQLTitleResolution implements IMarkerResolution,
     }
 	@Override
 	public String getDescription() {	
-		String description = "This code uses external data to create a dynamic SQL statement. "
-				+ "This input data could contain an SQL command that executes unwanted actions (known as an SQL injection attack)."
-				+ "<p><p>Change this dynamic SQL statement to a Prepared Statement.  Choose Read More to find out how.";
+		String description = "This code uses external data to create a dynamic SQL statement. Attackers could manipulate this data to run their own SQL commands.  This is known as an SQL injection attack."
+				+ "<p><p>To fix this vulnerability, change this dynamic SQL statement to a prepared SQL statement, which cannot be manipulated by an attacker. Choose \"Read More\" for details on creating prepared SQL statements.";
 		 return description;
 	}
 	@Override

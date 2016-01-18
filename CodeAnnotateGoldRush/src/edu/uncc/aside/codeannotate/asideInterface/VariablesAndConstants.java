@@ -5,8 +5,8 @@ import org.eclipse.ui.ISelectionListener;
 
 public class VariablesAndConstants 
 {
-		public final static String ANNOTATION_REQUEST_BOUND_RESOLUTION_DESC = "This annotation request has been bound to an annotation";
-		public final static String ANNOTATION_REQUEST_UNBOUND_RESOLUTION_DESC = "[SSO] is an operation that involves sensitive information and requires access control checks.\n\nPlease annotate the access control code for this operation by double clicking on Annotate Now and highlighting the code.";
+		public final static String ANNOTATION_REQUEST_BOUND_RESOLUTION_DESC = "This annotation request has been satisfied with an annotation";
+		public final static String ANNOTATION_REQUEST_UNBOUND_RESOLUTION_DESC = "This involves sensitive information and could possibly be an access control vulnerability if access control code is not in place. \n\n Please annotate the access control code for this this sensitive operation by double clicking on \"Annotate Now\" and highlighting the code.";
 		public final static String ADD_ANNOTATION_DESC = "Double click this option and highlight code to annotate the access control code.";
 		public final static String annotationURL = "https://www.owasp.org/index.php/Access_Control_Cheat_Sheet";
 		public final static String CONTEXTUAL_HELP_ROOT = "https://aside-context-help.herokuapp.com";

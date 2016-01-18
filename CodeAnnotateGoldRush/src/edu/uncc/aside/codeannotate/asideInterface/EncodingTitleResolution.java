@@ -36,10 +36,16 @@ public class EncodingTitleResolution implements IMarkerResolution,
 		}else if(markerId.equals("outputEncoding2")){
 			outputType = "\"account.toString()\"";
 		}
+		/*
 		descriptionString = "This code uses the println method from the PrintWriter to output data returned by " + outputType + " to the application. "
 				+ "If the data returned by " + outputType + " is not encoded, attackers can exploit this vulnerability and insert malicious code into the application "
 				+ "(known as Cross-Site Scripting)."
 				+ "<p><p>Use the options below to generate code to encode data from" + outputType + " or click Read More for more information.";
+				
+		*/
+		
+		descriptionString = "This code uses the println method from the PrintWriter object to output data returned by \"" + outputType + "\" to the application. If this is not sanitized, attackers can insert arbitrary malicious code which will be executed when this data is displayed. This attack is known as a Cross-Site-Scripting attack."
+				+ "<p><p>Use the options below to generate code which will sanitize data from \"" + outputType + "\" or click \"Read More\" for more information.";
 		
 		 return descriptionString;
 	}

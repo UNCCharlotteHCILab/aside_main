@@ -36,7 +36,7 @@ import org.eclipse.ui.PartInitException;
 		          
 		          return new IMarkerResolution[] 
 		          {
-		             new CheckedTitleResolution("**********ASIDE Bound Annotation Request**********"+problem),
+		             new CheckedTitleResolution("**********ASIDE Completed Annotation Request**********"+problem),
 		             new AnnotateNowResolution("Add Annotation" + problem, "green.check"),
 		             new CheckedDeleteResolution("Delete All Associated Annotations"+problem),
 		             new CheckedResolution("Modify Annotation Binding"+problem),
