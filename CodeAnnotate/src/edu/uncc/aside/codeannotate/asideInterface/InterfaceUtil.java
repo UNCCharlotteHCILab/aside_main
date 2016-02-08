@@ -6,9 +6,9 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.dltk.core.DLTKCore;
-import org.eclipse.dltk.core.IScriptProject;
-import org.eclipse.dltk.core.ISourceModule;
+//import org.eclipse.dltk.core.DLTKCore;
+//import org.eclipse.dltk.core.IScriptProject;
+//import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IMethod;
@@ -450,7 +450,7 @@ public  class InterfaceUtil
 	public static void processAnnotationChanges(IWorkbenchPart theWorkbenchPart, ITextSelection tSelection)
 	{
 			IEditorPart target;
-			ISourceModule iSourceModule;
+			//ISourceModule iSourceModule;
 			IResource iResource;
 			IFile iFile;
 			
