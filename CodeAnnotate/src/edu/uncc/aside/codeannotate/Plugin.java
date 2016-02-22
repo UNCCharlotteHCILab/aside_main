@@ -22,6 +22,8 @@ import java.util.StringTokenizer;
 
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaProject;
+import org.eclipse.jdt.core.IPackageFragment;
+import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceDescription;
@@ -153,7 +155,7 @@ public class Plugin extends AbstractUIPlugin {
 		
 		super.start(context);
 		plugin = this;
-		 JavaCore.addElementChangedListener(CodeAnnotateElementChangeListener
+	 JavaCore.addElementChangedListener(CodeAnnotateElementChangeListener
 		 .getListener());
 		 
 		 //io code starts here
@@ -565,4 +567,21 @@ public class Plugin extends AbstractUIPlugin {
 	public static String getAsideUseridFile() {
 		return ASIDE_USERID_FILE;
 	}
+	
+//	private int numberOfJavaFiles(IJavaProject project)
+//			throws JavaModelException {
+//
+//		int count = 0;
+//		IPackageFragment[] fragments = projectOfInterest
+//				.getPackageFragments();
+//		for (IPackageFragment fragment : fragments) {
+//			ICompilationUnit[] units = fragment.getCompilationUnits();
+//			for (ICompilationUnit unit : units) {
+//				totalUnits.add(unit);
+//				count++;
+//			}
+//		}
+//
+//		return count;
+//	}
 }
