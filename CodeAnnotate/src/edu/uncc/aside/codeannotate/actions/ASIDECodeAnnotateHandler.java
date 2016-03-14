@@ -109,7 +109,7 @@ public class ASIDECodeAnnotateHandler extends AbstractHandler {
 		return null;
 	}
 
-	class MountListenerJob extends Job {
+	public class MountListenerJob extends Job {
 
 		IJavaProject projectOfInterest;
 		IBufferChangedListener listener;

@@ -36,7 +36,7 @@
           name="ASIDE Code Annotate">
     </command>
 </extension>
-
+<!--
 <extension
        point="org.eclipse.ui.handlers">
     <handler
@@ -58,7 +58,7 @@
     </handler>
 </extension>
 <extension
-         point="org.eclipse.ui.menus">
+         point="org.eclipse.ui.menus">-->
       <!--
       <menuContribution
             locationURI="popup:org.eclipse.ui.popup.any?after=additions">
@@ -71,6 +71,7 @@
             </command>        
       </menuContribution>
       -->
+      <!--
       <menuContribution
             locationURI="popup:org.eclipse.ui.popup.any?after=additions">
             <command
@@ -83,7 +84,7 @@
       </menuContribution>
       
       
-   </extension>  
+   </extension>  -->
    
     <extension
          point="org.eclipse.core.resources.markers" 
@@ -221,24 +222,7 @@
             id="CodeAnnotate.codeAnnotationCompilerParticipant">
       </compilationParticipant>
    </extension>
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-       
+         
        <extension
          id="my.marker"
          name="Testing Marker"

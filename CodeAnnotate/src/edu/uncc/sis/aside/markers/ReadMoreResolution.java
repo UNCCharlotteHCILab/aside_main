@@ -23,6 +23,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.browser.IWebBrowser;
 
 import edu.uncc.aside.codeannotate.Plugin;
+import edu.uncc.aside.codeannotate.asideInterface.VariablesAndConstants;
 import edu.uncc.sis.aside.AsidePlugin;
 import edu.uncc.sis.aside.constants.PluginConstants;
 import edu.uncc.sis.aside.utils.ASIDEMarkerAndAnnotationUtil;
@@ -96,6 +97,28 @@ IMarkerResolution2{
 
 	@Override
 	public void run(IMarker marker) {
+		
+//		try 
+//   	 {
+//   		 URL url;
+//   		 String lineText = VariablesAndConstants.methodNames[marker.getAttribute("markerIndex", -1)];
+//   		 System.out.println(lineText);
+//   		 IWebBrowser webBrowser = PlatformUI.getWorkbench().getBrowserSupport().createBrowser(1, "myId", "ASIDE More Information", "ASIDE More Information");
+//   		 if(this.readMoreType.equals("input")){
+//   			 url = new URL("https://cd881bde7e4e09b16cb85cc7a0d5e747929b7864.googledrive.com/host/0BzEfllwR2DGafnVyZEV2ODhEQ1p0ekoyZ1I5anZ6aURHbkJoZFFTeXQ2NldBbFotV0hNMlE/ASIDE%20Validation.html");
+//   		 }else if(this.readMoreType.equals("output")){
+//			 url = new URL("https://e93c6c1b3c43bf644cdfce81f94611601da37359.googledrive.com/host/0BzEfllwR2DGafm5MbjlfaWZGSDFZUE1qeWZZVHRjWl9SdDdQX3ZwU2NfZ0hFN01ISGt0Qjg/ASIDE%20Encoding.html");
+//   		 }else{
+//   			 url = new URL("https://cd881bde7e4e09b16cb85cc7a0d5e747929b7864.googledrive.com/host/0BzEfllwR2DGafnVyZEV2ODhEQ1p0ekoyZ1I5anZ6aURHbkJoZFFTeXQ2NldBbFotV0hNMlE/ASIDE%20Validation3.html");
+//   		 }
+//   		 webBrowser.openURL(url);
+//   		 URLConnection urlConnection = url.openConnection();
+//   		 urlConnection.setDoOutput(true);
+//		 } 
+//   	catch (Exception e) 
+//   	{
+//			e.printStackTrace();
+//		}	    
 		// TODO Auto-generated method stub
 		
 		String ruleNameBelongTo="";
@@ -106,6 +129,7 @@ IMarkerResolution2{
 		Date date = new Date();
 	   
 	    try {
+	    	 URL url;
 	    String queryUrlStr = PluginConstants.HostUrl;
 	   // IWebBrowser webBrowser = PlatformUI.getWorkbench().getBrowserSupport().createBrowser("myId");
 	    int constantValue = 1<<1;
@@ -136,11 +160,23 @@ IMarkerResolution2{
 	    }else
 	    urlStr = queryUrlStr + ruleTypeUrlParam + ".jsp?userName=" + userID;
 	    //System.out.println("urlStr = " + urlStr);
-	    URL url = new URL(urlStr);
+	    if(this.readMoreType.equals("output")){
+			 url = new URL("https://bf01edb9cef99332ecbb51e2b7d6bd6e0ea6e715.googledrive.com/host/0B_sYP_Y3om2XaVVManJKcU1xVHc/ASIDE_Output_Encoding.html");
+		 }else if(this.readMoreType.equals("input")){
+			 url = new URL("https://5b1d4b79290586caa52348cf1f0035de64b53bf3.googledrive.com/host/0B_sYP_Y3om2XSDB0aUMwSTRTQUE/ASIDE_Input_Validation.html");
+		 }
+		 else
+		 {
+			 url = new URL("https://1b11f44f746ed3e929e864ba53f92c994760f743.googledrive.com/host/0B_sYP_Y3om2XTEpXRVhuVENuUkk/ASIDE_SQL_Statement.html");
+		 }
+		 webBrowser.openURL(url);
+		 URLConnection urlConnection = url.openConnection();
+		 urlConnection.setDoOutput(true);
+	    //URL url = new URL(urlStr);
 	    
-	    webBrowser.openURL(url);
-		URLConnection urlConnection = url.openConnection();
-		urlConnection.setDoOutput(true);
+	    //webBrowser.openURL(url);
+		//URLConnection urlConnection = url.openConnection();
+		//urlConnection.setDoOutput(true);
 		//added Aug 30th
 		/*
 	   

@@ -3,6 +3,7 @@ package edu.uncc.sis.aside.auxiliary.core;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -11,11 +12,22 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.jdt.core.IBuffer;
+import org.eclipse.jdt.core.IBufferChangedListener;
+import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaProject;
+import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
 
+import edu.uncc.aside.codeannotate.PathFinder;
 import edu.uncc.aside.codeannotate.Plugin;
+//import edu.uncc.aside.codeannotate.actions.ASIDECodeAnnotateHandler.MountListenerJob;
+import edu.uncc.aside.codeannotate.listeners.CodeAnnotateDocumentEditListener;
 import edu.uncc.sis.aside.AsidePlugin;
 import edu.uncc.sis.aside.jobs.ESAPIConfigurationJob;
 import edu.uncc.sis.aside.popup.actions.ManuallyLaunchAsideOnTargetAction;
@@ -66,6 +78,39 @@ public class TestRunOnAllProjects {
 					e.printStackTrace();
 				}
 				//break; //for now, only run on one project
+			
+				Job jobCodeAnnotate = new MountListenerJob("Mount listener to Java file",
+						JavaCore.create(project));
+				jobCodeAnnotate.setPriority(Job.INTERACTIVE);
+				jobCodeAnnotate.schedule();
+
+				/* Delegates all heavy lifting to {@link PathFinder} */
+				Job heavy_job = new Job("Finding paths in Project: " + project.getName()) {
+
+					@Override
+					protected IStatus run(final IProgressMonitor monitor) {
+						try{
+							Plugin.getDefault().getWorkbench().getDisplay()
+									.asyncExec(new Runnable() {
+
+										@Override
+										public void run() {
+											PathFinder.getInstance(project).run(monitor);
+										}
+
+									});
+						}finally{
+							monitor.done();
+						}
+						return Status.OK_STATUS;
+					}
+
+				};
+				heavy_job.setPriority(Job.LONG);
+				heavy_job.schedule();
+				
+				
+			
 			}
 			date = new Date();
 		    logger.info(dateFormat.format(date) + " " + Plugin.getUserId() + " ASIDE finished inspect all the projects in the workspace");
@@ -73,3 +118,72 @@ public class TestRunOnAllProjects {
 	}
 
 }
+
+class MountListenerJob extends Job {
+
+	IJavaProject projectOfInterest;
+	IBufferChangedListener listener;
+	ArrayList<ICompilationUnit> totalUnits;
+
+	public MountListenerJob(String name, IJavaProject project) {
+		super(name);
+		projectOfInterest = project;
+		listener = new CodeAnnotateDocumentEditListener();
+		totalUnits = new ArrayList<ICompilationUnit>();
+	}
+
+	@Override
+	protected IStatus run(IProgressMonitor monitor) {
+		try {
+			monitor.beginTask(
+					"Mounting a CodeAnnotateDocumentEditListener to a Java file",
+					numberOfJavaFiles(projectOfInterest));
+
+			for (ICompilationUnit unit : totalUnits) {
+
+				if (unit == null || !unit.exists())
+					continue;
+
+				if (!unit.isOpen()) {
+					unit.open(monitor);
+				}
+
+				unit.becomeWorkingCopy(monitor);
+
+				IBuffer buffer = (unit).getBuffer();
+				if (buffer != null) {
+					buffer.addBufferChangedListener(listener);
+				}
+				if (monitor.isCanceled()) {
+					return Status.CANCEL_STATUS;
+				}
+			}
+
+		} catch (JavaModelException e) {
+			e.printStackTrace();
+			return Status.CANCEL_STATUS;
+		} finally {
+			monitor.done();
+		}
+
+		return Status.OK_STATUS;
+	}
+
+	private int numberOfJavaFiles(IJavaProject project)
+			throws JavaModelException {
+
+		int count = 0;
+		IPackageFragment[] fragments = projectOfInterest
+				.getPackageFragments();
+		for (IPackageFragment fragment : fragments) {
+			ICompilationUnit[] units = fragment.getCompilationUnits();
+			for (ICompilationUnit unit : units) {
+				totalUnits.add(unit);
+				count++;
+			}
+		}
+
+		return count;
+	}
+}
+
