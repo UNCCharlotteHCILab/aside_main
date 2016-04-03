@@ -1,6 +1,10 @@
 package edu.uncc.aside.codeannotate.asideInterface;
 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
@@ -33,6 +37,8 @@ import org.eclipse.ui.texteditor.AnnotationPreference;
 import org.eclipse.ui.texteditor.AnnotationPreferenceLookup;
 import org.eclipse.ui.texteditor.AnnotationTypeLookup;
 import org.eclipse.ui.texteditor.IDocumentProvider;
+
+import au.com.bytecode.opencsv.CSVWriter;
 
 //import edu.uncc.aside.codeannotate.NodeFinder;
 //import edu.uncc.aside.codeannotate.util.Utils;
@@ -167,7 +173,9 @@ public  class InterfaceUtil
 			lineNumber = theDocument.getLineOfOffset(charStart);
 			lineLength = theDocument.getLineLength(lineNumber);
 			theLineText = theDocument.get(charStart, lineLength);
+			System.out.println("theLineText "+theLineText);
 			trimmedText = theLineText.trim();
+			System.out.println("trimmedText "+trimmedText);
 			
 			//save the marker index
 			theMarker.setAttribute("markerIndex", VariablesAndConstants.count);
@@ -277,7 +285,10 @@ public  class InterfaceUtil
 			lineLength = theDocument.getLineLength(lineNumber);
 			displayedCode = theDocument.get(charStart, lineLength);
 			
-			completeText = chunkOne + shownLineNumber + " " + theFileName + "<P>" + displayedCode + chunkTwo;	
+			completeText = chunkOne + shownLineNumber + " " + theFileName + "<P>" + displayedCode + chunkTwo;
+			
+			System.out.println("completeText "+ completeText);
+			
 		
 		}
 		catch(Exception e)
@@ -760,7 +771,21 @@ public  class InterfaceUtil
 		
 		
 	}
-	
+	private static void writeAllExample() throws IOException {
+		System.out.println("\n**** writeAllExample ****");
+
+		String csv = "C:\\work\\output2.csv";
+		CSVWriter writer = new CSVWriter(new FileWriter(csv));
+
+		List<String[]> data = new ArrayList<String[]>();
+		data.add(new String[] { "India", "New Delhi" });
+		data.add(new String[] { "United States", "Washington D.C" });
+		data.add(new String[] { "Germany", "Berlin" });
+
+		writer.writeAll(data);
+		System.out.println("CSV written successfully.");
+		writer.close();
+	}
 	public static void fakeVulnerabilities()
 	{
 		/* do nothing for now. Use this for studies

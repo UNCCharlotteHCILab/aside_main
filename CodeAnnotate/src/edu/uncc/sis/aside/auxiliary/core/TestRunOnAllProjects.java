@@ -79,10 +79,10 @@ public class TestRunOnAllProjects {
 				}
 				//break; //for now, only run on one project
 			
-				Job jobCodeAnnotate = new MountListenerJob("Mount listener to Java file",
+				/*Job jobCodeAnnotate = new MountListenerJob("Mount listener to Java file",
 						JavaCore.create(project));
 				jobCodeAnnotate.setPriority(Job.INTERACTIVE);
-				jobCodeAnnotate.schedule();
+				jobCodeAnnotate.schedule();*/
 
 				/* Delegates all heavy lifting to {@link PathFinder} */
 				Job heavy_job = new Job("Finding paths in Project: " + project.getName()) {

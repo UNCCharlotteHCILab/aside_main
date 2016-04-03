@@ -52,7 +52,7 @@ public class NoticeResolution implements IMarkerResolution,
 
 	@Override
 	public String getLabel() {
-		String start = "0";
+		String start = "10";
 		String end = " - Options below are not ASIDE generated";
 		return start + this.rankNum + end;
 	}

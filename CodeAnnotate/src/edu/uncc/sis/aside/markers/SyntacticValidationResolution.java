@@ -135,19 +135,19 @@ public class SyntacticValidationResolution implements IMarkerResolution,
 	public String getLabel() {
 		String labelStr = "Filter HttpServletPath";
 		if(fInputType.equals("SafeString"))
-			labelStr= "02 - Filter String Input";
+			labelStr= "102 - Allow Alphabetical Characters and Numbers";
 	/*	else if(fInputType.equals("HttpServletPath"))
 			labelStr= "Filter HttpServletPath";*/
 		else if(fInputType.equals("HTTPParameterValue"))
-			labelStr= "03 - Filter for Minimal HTTP Characters Only";
+			labelStr= "103 - Allow Minimal HTTP Characters";
 		else if(fInputType.equals("URL"))
-			labelStr= "04 - Filter for URL Characters Only";
+			labelStr= "104 - Allow URL Characters";
 		else if(fInputType.equals("CreditCard"))
-			labelStr= "05 - Credit Card Validation";
+			labelStr= "105 - Allow Credit Card Numbers";
 		else if(fInputType.equals("Email"))
-			labelStr= "06 - eMail Validation";
+			labelStr= "106 - Allow Email Addresses";
 		else if(fInputType.equals("SSN"))
-			labelStr= "07 - SSN Validation";
+			labelStr= "107 - Allow Social Security Number";
 		return labelStr;
 	}
 

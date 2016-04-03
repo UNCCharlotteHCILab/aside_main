@@ -106,13 +106,13 @@ public class EncodingResolution implements IMarkerResolution,
 	@Override
 	public String getLabel() {
 		if(fStrategyType.equals("HTML"))
-			return "02 - HTML Encoder";
+			return "102 - HTML Encoder";
 		else if(fStrategyType.equals("HTMLAttribute"))
-		    return "03 - HTML Attribute Encoder";
+		    return "103 - HTML Attribute Encoder";
 		else if(fStrategyType.equals("JavaScript"))
-		    return "04 - JavaScript Encoder";
+		    return "104 - JavaScript Encoder";
 		else if(fStrategyType.equals("CSS"))
-		    return "05 - CSS Encoder";
+		    return "105 - CSS Encoder";
 		else
 			return "";
 	}

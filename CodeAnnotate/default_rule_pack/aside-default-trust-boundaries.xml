@@ -207,9 +207,9 @@
 
 	-->
 	<!--the followings are newly added rules for SQL input validation-->
-
+<!--
 	
-<!-- <TrustBoundary type="MethodInvocation" attr="specialOutput">
+<TrustBoundary type="MethodInvocation" attr="specialOutput">
 		<DeclarationClass><![CDATA[java\.sql\.PreparedStatement]]></DeclarationClass>
 		<MethodName><![CDATA[setInt]]></MethodName>
 		<ArgumentOrdinal>1</ArgumentOrdinal>
@@ -316,9 +316,9 @@ only cover some common methods of hibernate query
 		<DeclarationClass><![CDATA[org\.hibernate\.Query]]></DeclarationClass>
 		<MethodName><![CDATA[setShort]]></MethodName>
 		<ArgumentOrdinal>1</ArgumentOrdinal>
-	</TrustBoundary> -->
+	</TrustBoundary> 
 	
-<!--
+
 <TrustBoundary type="MethodInvocation" attr="specialOutput">
 		<DeclarationClass><![CDATA[java\.sql\.PreparedStatement]]></DeclarationClass>
 		<MethodName><![CDATA[setBigDecimal]]></MethodName>
@@ -358,7 +358,7 @@ only cover some common methods of hibernate query
 <!--
 MethodInvoation that ASIDE should show a warnning at each place used
 -->
-<!-- <TrustBoundary type="MethodInvocation" attr="warning">
+ <TrustBoundary type="MethodInvocation" attr="warning">
 		<DeclarationClass><![CDATA[java\.sql\.Statement]]></DeclarationClass>
 		<MethodName><![CDATA[execute]]></MethodName>
 		<ReturnType><![CDATA[boolean]]></ReturnType>
@@ -385,5 +385,5 @@ MethodInvoation that ASIDE should show a warnning at each place used
 		<MethodName><![CDATA[getResultSet]]></MethodName>
 		<ReturnType><![CDATA[java\.sql\.ResultSet]]></ReturnType>
 	</TrustBoundary>
-	 -->
+	 
 </TrustBoundaries>

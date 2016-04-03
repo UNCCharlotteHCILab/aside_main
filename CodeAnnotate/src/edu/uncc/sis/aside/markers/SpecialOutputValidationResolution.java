@@ -120,19 +120,19 @@ public class SpecialOutputValidationResolution implements IMarkerResolution,
 	public String getLabel() {
 		String labelStr = "Filter HttpServletPath";
 		if(fInputType.equals("SafeString"))
-			labelStr= "Filter String Input";
+			labelStr= "102-Filter String Input";
 		else if(fInputType.equals("HttpServletPath"))
-			labelStr= "Filter HttpServletPath";
+			labelStr= "103-Filter HttpServletPath";
 		else if(fInputType.equals("HTTPParameterValue"))
-			labelStr= "Filter HTTPParameterValue";
+			labelStr= "104-Filter HTTPParameterValue";
 		else if(fInputType.equals("URL"))
-			labelStr= "Filter URLs";
+			labelStr= "105-Filter URLs";
 		else if(fInputType.equals("CreditCard"))
-			labelStr= "CreditCard Validation";
+			labelStr= "106-CreditCard Validation";
 		else if(fInputType.equals("Email"))
-			labelStr= "eMail Validation";
+			labelStr= "107-eMail Validation";
 		else if(fInputType.equals("SSN"))
-			labelStr=  "SSN Validation";
+			labelStr=  "108-SSN Validation";
 		return labelStr;
 	}
 

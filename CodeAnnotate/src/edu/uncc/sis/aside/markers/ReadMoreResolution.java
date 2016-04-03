@@ -87,12 +87,12 @@ IMarkerResolution2{
 	@Override
 	public String getLabel() {
 		if(this.readMoreType.equals("input")){
-			return "01 - Input Validation: Explanations and Examples";
+			return "101 - Input Validation: Explanations and Examples";
 			}
 		else if(this.readMoreType.equals("output")){
-			return "01 - Output Encoding: Explanations and Examples";
+			return "101 - Output Encoding: Explanations and Examples";
 		}else
-			return "01 - Input Validation: Explanations and Examples";
+			return "101 - Input Validation: Explanations and Examples";
 	}
 
 	@Override
