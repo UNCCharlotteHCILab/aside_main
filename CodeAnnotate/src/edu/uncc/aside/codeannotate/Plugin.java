@@ -142,6 +142,12 @@ public class Plugin extends AbstractUIPlugin {
 	 */
 	public void start(BundleContext context) throws Exception {
 		
+		super.start(context);
+		plugin = this;
+	 JavaCore.addElementChangedListener(CodeAnnotateElementChangeListener
+		 .getListener());
+		
+		
 		 //io code starts here
 		setAllowed(false);
 		String userIDFromSystem = System.getProperty("user.name");
@@ -151,14 +157,8 @@ public class Plugin extends AbstractUIPlugin {
 			
 		}
 		
-		 //io code ends here
-		
-		super.start(context);
-		plugin = this;
-	 JavaCore.addElementChangedListener(CodeAnnotateElementChangeListener
-		 .getListener());
-		 
-		 //io code starts here
+		MakerManagement.removeAllASIDEMarkersInWorkspace();
+
 		 //MakerManagement.removeAllASIDEMarkersInWorkspace();
 		 if (astMatcher == null) {
 				astMatcher = new ASTMatcher();
@@ -187,65 +187,65 @@ public class Plugin extends AbstractUIPlugin {
 			
 			System.out.println("Plugin.getDefault().isAllowed() = "
 					+ Plugin.getDefault().isAllowed());
-//			if (Plugin.isAllowed()) {
-//				if (userIdFile.exists()) {
-//					try {
-//						FileReader fr = new FileReader(userIdFile);
-//						BufferedReader br = new BufferedReader(fr);
-//						String userIdRead = br.readLine();
-//						System.out.println("userId read from the file = "
-//								+ userIdRead);
-//						Plugin.getDefault().setUserId(userIdRead);
-//						br.close();
-//						fr.close();
-//					} catch (IOException e) {
-//						// TODO Auto-generated catch block
-//						e.printStackTrace();
-//					}
-//
-//					
-//				} else {
-//					// /////////////
-//					// pop up consent form asking for id and consent
-//					Display.getDefault().syncExec(new Runnable() {
-//						public void run() {
-//							ConsentForm.process();
-//						}
-//					});
-//					
-//					// System.out.println("userIdRead in Maunual =" + userIdRead);
-//
-//					boolean created = false;
-//					try {
-//						created = userIdFile.createNewFile();
-//					} catch (IOException e) {
-//						// TODO Auto-generated catch block
-//						e.printStackTrace();
-//					}
-//					if (created) {
-//						FileWriter fw = null;
-//						try {
-//							fw = new FileWriter(userIdFile);
-//							BufferedWriter bw = new BufferedWriter(fw);
-//							bw.write(userIDFromSystem);
-//							bw.close();
-//							fw.close();
-//						} catch (IOException e) {
-//							// TODO Auto-generated catch block
-//							e.printStackTrace();
-//						}
-//						Plugin.getDefault().setUserId(userIDFromSystem);
-//					} else {
-//						System.err.println("UserId file is not created properly!");
-//					}
-//				}
+			if (Plugin.isAllowed()) {
+				if (userIdFile.exists()) {
+					try {
+						FileReader fr = new FileReader(userIdFile);
+						BufferedReader br = new BufferedReader(fr);
+						String userIdRead = br.readLine();
+						System.out.println("userId read from the file = "
+								+ userIdRead);
+						Plugin.getDefault().setUserId(userIdRead);
+						br.close();
+						fr.close();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+
+					
+				} else {
+					// /////////////
+					// pop up consent form asking for id and consent
+					Display.getDefault().syncExec(new Runnable() {
+						public void run() {
+							ConsentForm.process();
+						}
+					});
+					
+					// System.out.println("userIdRead in Maunual =" + userIdRead);
+
+					boolean created = false;
+					try {
+						created = userIdFile.createNewFile();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					if (created) {
+						FileWriter fw = null;
+						try {
+							fw = new FileWriter(userIdFile);
+							BufferedWriter bw = new BufferedWriter(fw);
+							bw.write(userIDFromSystem);
+							bw.close();
+							fw.close();
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						Plugin.getDefault().setUserId(userIDFromSystem);
+					} else {
+						System.err.println("UserId file is not created properly!");
+					}
+				}
 				TestRunOnAllProjects testRunOnAllProjects = new TestRunOnAllProjects();
 				testRunOnAllProjects.runOnAllProjects();
-//
-//			}else{
-//				System.out.println("this user is not allowed");
-//			}
-//			
+
+			}else{
+				System.out.println("this user is not allowed");
+			}
+			
 			//io code ends here
 		 
 //		 ISaveParticipant saveParticipant = new CodeAnnotateSaveParticipant();

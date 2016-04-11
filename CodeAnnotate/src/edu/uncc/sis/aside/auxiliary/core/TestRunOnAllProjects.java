@@ -62,11 +62,22 @@ public class TestRunOnAllProjects {
 				IJavaProject javaProject = JavaCore.create(project);
 				if(javaProject == null || project.getName()=="RemoteSystemsTempFiles")
 					continue;
-			Plugin.getDefault().setProject(project);
+			
+				//break; //for now, only run on one project
+			
+				Job jobCodeAnnotate = new MountListenerJob("Mount listener to Java file",
+						JavaCore.create(project));
+				jobCodeAnnotate.setPriority(Job.INTERACTIVE);
+				jobCodeAnnotate.schedule();
+				
+				//code for i/o
+
+				Plugin.getDefault().setProject(project);
 				
 				ESAPIConfigurationJob job = new ESAPIConfigurationJob(
 						"ESAPI Configuration", project, javaProject);
-				job.scheduleInteractive();
+				//job.scheduleInteractive();
+				job.scheduleShort();
 				try {
 					ManuallyLaunchAsideOnTargetAction.inspectOnProject(javaProject);
 					//System.out.println("test on all projects finished");
@@ -77,13 +88,10 @@ public class TestRunOnAllProjects {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				//break; //for now, only run on one project
-			
-				/*Job jobCodeAnnotate = new MountListenerJob("Mount listener to Java file",
-						JavaCore.create(project));
-				jobCodeAnnotate.setPriority(Job.INTERACTIVE);
-				jobCodeAnnotate.schedule();*/
-
+				
+				
+				
+				
 				/* Delegates all heavy lifting to {@link PathFinder} */
 				Job heavy_job = new Job("Finding paths in Project: " + project.getName()) {
 
@@ -108,6 +116,8 @@ public class TestRunOnAllProjects {
 				};
 				heavy_job.setPriority(Job.LONG);
 				heavy_job.schedule();
+				
+				
 				
 				
 			

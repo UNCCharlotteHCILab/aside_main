@@ -352,7 +352,12 @@ public class ESAPIConfigurationJob extends Job {
 			e.printStackTrace();
 		}
 	}
-
+	public void scheduleShort() {
+		setUser(true);
+		setPriority(Job.SHORT);
+		schedule();
+	}
+	
 	public void scheduleInteractive() {
 		setUser(true);
 		setPriority(Job.INTERACTIVE);

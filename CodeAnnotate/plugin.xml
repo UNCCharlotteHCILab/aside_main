@@ -91,7 +91,7 @@
          id="annotationQuestionChecked" name="Sensitive Information Retrieval Points">
       <!--   <super type="org.eclipse.core.resources.textmarker"/>	-->
        <super type="org.eclipse.core.resources.marker"/>
-         <persistent value="true"/>
+         <persistent value="false"/>
    </extension>
   
    <extension point="org.eclipse.ui.editors.annotationTypes">
@@ -228,7 +228,7 @@
          name="Testing Marker"
          point="org.eclipse.core.resources.markers">
          <super type="org.eclipse.core.resources.textmarker"/>
-         <persistent value="true"/>
+         <persistent value="false"/>
    </extension>
    <extension
    		 id="my.annotationType"
@@ -329,7 +329,7 @@
          name="Green Diamond"
          point="org.eclipse.core.resources.markers">
          <super type="org.eclipse.core.resources.textmarker"/>
-         <persistent value="true"/>
+         <persistent value="false"/>
    </extension>
    <extension
    		 id="greenDiamondAnnotationType"
@@ -382,7 +382,7 @@
          name="Red Flag"
          point="org.eclipse.core.resources.markers">
          <super type="org.eclipse.core.resources.textmarker"/>
-         <persistent value="true"/>
+         <persistent value="false"/>
    </extension>
    <extension
    		 id="redFlagAnnotationType"
@@ -431,7 +431,7 @@
          name="Red Question"
          point="org.eclipse.core.resources.markers">
          <super type="org.eclipse.core.resources.textmarker"/>
-         <persistent value="true"/>
+         <persistent value="false"/>
    </extension>
    <extension
    		 id="redQuestionAnnotationType"
@@ -481,7 +481,7 @@
          name="Green Check"
          point="org.eclipse.core.resources.markers">
          <super type="org.eclipse.core.resources.textmarker"/>
-         <persistent value="true"/>
+         <persistent value="false"/>
    </extension>
    <extension
    		 id="greenCheckAnnotationType"
@@ -532,7 +532,7 @@
          name="Yellow Question"
          point="org.eclipse.core.resources.markers">
          <super type="org.eclipse.core.resources.marker"/>
-         <persistent value="true"/>
+         <persistent value="false"/>
    </extension>
    <extension
    		 id="yellowQuestionAnnotationType"
@@ -594,7 +594,7 @@
          name="Green Diamond"
          point="org.eclipse.core.resources.markers">
          <super type="org.eclipse.core.resources.textmarker"/>
-         <persistent value="true"/>
+         <persistent value="false"/>
    </extension>
    <extension
    		 id="greenDiamondBoxAnnotationType"
@@ -645,7 +645,7 @@
          name="Red Flag"
          point="org.eclipse.core.resources.markers">
          <super type="org.eclipse.core.resources.textmarker"/>
-         <persistent value="true"/>
+         <persistent value="false"/>
    </extension>
    <extension
    		 id="redFlagBoxAnnotationType"
@@ -694,7 +694,7 @@
          name="Green Check"
          point="org.eclipse.core.resources.markers">
          <super type="org.eclipse.core.resources.textmarker"/>
-         <persistent value="true"/>
+         <persistent value="false"/>
    </extension>
    <extension
    		 id="greenCheckBoxAnnotationType"
@@ -743,7 +743,7 @@
          name="Yellow Question"
          point="org.eclipse.core.resources.markers">
          <super type="org.eclipse.core.resources.marker"/>
-         <persistent value="true"/>
+         <persistent value="false"/>
    </extension>
    <extension
    		 id="yellowQuestionBoxAnnotationType"
@@ -805,7 +805,7 @@
          name="Red Question"
          point="org.eclipse.core.resources.markers">
          <super type="org.eclipse.core.resources.textmarker"/>
-         <persistent value="true"/>
+         <persistent value="false"/>
    </extension>
    <extension
    		 id="redQuestionBoxAnnotationType"
@@ -1005,7 +1005,7 @@
 		name="Bad Security Practice">
 		<attribute name="type">
 		</attribute>
-		<persistent value="true">
+		<persistent value="false">
 		</persistent>
 		<super type="org.eclipse.core.resources.textmarker">
 		</super>
