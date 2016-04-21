@@ -48,7 +48,7 @@ public  class InterfaceUtil
 	
 	private static int[] forbiddenArray = new int[100];
 	private static int forbiddenArrayCounter = 0;
-	
+	public String fileName=null;
 	//changes a marker type, like a yellow question into a green check. markerType of 0 means it is an annotation request. markerType of 1 means it is an annotation
 	public static void changeMarker(String markerName, int theIndex, int markerType, int secondIndex)
 	{
