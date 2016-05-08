@@ -5,8 +5,8 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="lib" path="mail.jar"/>
 	<classpathentry kind="lib" path="activation.jar"/>
-	<classpathentry kind="lib" path="/ReadWrite_CSV_Java_example/lib/jaxen-1.1.1.jar"/>
-	<classpathentry kind="lib" path="/ReadWrite_CSV_Java_example/lib/jdom-1.0.jar"/>
-	<classpathentry kind="lib" path="/ReadWrite_CSV_Java_example/lib/opencsv-2.3.jar"/>
+	<classpathentry kind="lib" path="jaxen-1.1.1.jar"/>
+	<classpathentry kind="lib" path="jdom-1.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="opencsv-2.3.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
