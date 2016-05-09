@@ -26,8 +26,15 @@ import org.eclipse.ui.PartInitException;
 	{
 		public IMarkerResolution[] getResolutions(IMarker mk) 
 		{
+			Random rand = new Random();
+			int  n = rand.nextInt(9999) + 1000;
+			String randomId=Integer.toString(n);
+			
+			System.out.println(randomId);
+			
+			
 			//handle highlighting
-			InterfaceUtil.clearAndSetHighlighting(0, mk);
+			InterfaceUtil.clearAndSetHighlighting(0, mk,randomId);
 			
 			
 		       try {
@@ -43,9 +50,9 @@ import org.eclipse.ui.PartInitException;
 		          return new IMarkerResolution[] 
 		        {
 		             new AnnotationCodeResolution("**********ASIDE Annotation**********"+problem, matchingRequestMarker),
-		             new AnnotationDeleteResolution("Delete Annotation"+problem),
-		             new AnnotationResolution("Modify Annotation"+problem),
-		             new AnnotationReadMore("Read More"+problem),
+		             new AnnotationDeleteResolution("301-Delete Annotation"+problem),
+		             new AnnotationResolution("302-Modify Annotation"+problem),
+		             new AnnotationReadMore("303-Read More"+problem),
 		          };
 		       }
 		       catch (CoreException e) 

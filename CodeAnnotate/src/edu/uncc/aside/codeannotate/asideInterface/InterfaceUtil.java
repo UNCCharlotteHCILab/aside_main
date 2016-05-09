@@ -39,11 +39,6 @@ import org.eclipse.ui.texteditor.AnnotationPreferenceLookup;
 import org.eclipse.ui.texteditor.AnnotationTypeLookup;
 import org.eclipse.ui.texteditor.IDocumentProvider;
 
-import au.com.bytecode.opencsv.CSVReader;
-import au.com.bytecode.opencsv.CSVWriter;
-import au.com.bytecode.opencsv.bean.ColumnPositionMappingStrategy;
-import au.com.bytecode.opencsv.bean.CsvToBean;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
@@ -622,7 +617,7 @@ public  class InterfaceUtil
 	    	VariablesAndConstants.annotationMarkerCounters[VariablesAndConstants.currentIndex]++;
 	    	
 	    	//set highlighting back to box
-	    	clearAndSetHighlighting(0, null);
+	    	clearAndSetHighlighting(0, null,randomId);
 			
 	   		//now dispose of selection listener
 	   		ISelectionService theSelectionService = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getSelectionService();
@@ -639,12 +634,10 @@ public  class InterfaceUtil
 	
 	//marker number is the type of marker which is calling the function. for now, only 0 and 1 are used, but more can be added in the switch statement
 	//this method sets all markers to boxes and then sets highlighting for active markers
-	public static void clearAndSetHighlighting(int markerNumber, IMarker callingMarker)
+	public static void clearAndSetHighlighting(int markerNumber, IMarker callingMarker,String randomID)
 	{
-		Random rand = new Random();
-		int  n = rand.nextInt(9999) + 1000;
-		randomId=Integer.toString(n);
-		
+		randomId=randomID;
+
 		
 		IMarker tempRequestMarker;
 		int tempIndex = -1;
@@ -655,6 +648,14 @@ public  class InterfaceUtil
 		{
 			callingIndex = callingMarker.getAttribute("markerIndex", -1);
 			secondIndex = callingMarker.getAttribute("secondIndex", -1); //this will be -1 if the marker is an annotation request. This is ok since changeAnnotationHighlighting handles it properly
+			
+			IResource theResource = callingMarker.getResource();
+			IFile theFile = (IFile) theResource;
+			fileName = theFile.getName();
+			
+			markerStart = callingMarker.getAttribute(IMarker.CHAR_START, -1);
+			int markerEnd=callingMarker.getAttribute(IMarker.CHAR_END, -1);
+			highlightingLength=markerEnd- markerStart+1;
 		}
 		
 		//first make everything a box instead of highlighted
@@ -673,34 +674,28 @@ public  class InterfaceUtil
 			}
 			
 			if(callingIndex != tempIndex)
-			{
-				IResource theResource = callingMarker.getResource();
-				IFile theFile = (IFile) theResource;
-				fileName = theFile.getName();
-				
-				markerStart = callingMarker.getAttribute(IMarker.CHAR_START, -1);
-				int markerEnd=callingMarker.getAttribute(IMarker.CHAR_END, -1);
-				highlightingLength=markerEnd- markerStart+1;
-				
+			{		
 				try
 				{
 					markerType = VariablesAndConstants.annotationRequestMarkers[i].getType();
-					annotationMarkerName=markerType;
-					
+										
 					if(markerType.equals("green.check") == true)
 					{
 						changeMarker("green.check.box", tempIndex, 0, 0);
+						annotationMarkerName="green.check.box";
 					}
 					else if(markerType.equals("red.flag") == true)
 					{
 						changeMarker("red.flag.box", tempIndex, 0, 0);
+						annotationMarkerName="red.flag.box";
 					}
 					else if(markerType.equals("yellow.question") == true)
 					{
 						changeMarker("yellow.question.box", tempIndex, 0, 0);
+						annotationMarkerName="yellow.question.box";
 					}
 					
-					saveAnnotationsToCSV();
+					
 				}	
 				catch(Exception e)
 				{
@@ -712,8 +707,15 @@ public  class InterfaceUtil
 				//don't do anything to the selected marker to avoid breaking the resolutions menu
 			}
 		}
-		
-		
+		if(callingMarker != null)
+		{
+		try {
+			saveAnnotationsToCSV();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		}
 		if(callingMarker != null)
 		{
 		
@@ -815,7 +817,7 @@ public  class InterfaceUtil
 		//String csv = "C:\\Users\\Nasheen Nur\\Desktop\\AnnotationCSV.csv";
 		System.out.println("Before CSV write "+annotationMarkerName+" "+fileName+" " +markerStart+" " +highlightingLength+" "+annotatedText);
 		try {
-		    FileWriter writer = new FileWriter("C:\\Users\\Nasheen Nur\\Desktop\\AnnotationCSV.csv", true);
+		    FileWriter writer = new FileWriter("C:\\Users\\nnur\\Desktop\\AnnotationCSV.csv", true);
 
 		    writer.append(annotationMarkerName);
 		    writer.append(',');
@@ -829,20 +831,11 @@ public  class InterfaceUtil
 		    writer.append(',');
 		    writer.append(randomId);
 		    writer.append('\n');
-
 		    writer.flush();
 		    writer.close();
 		} catch (Exception e) {} 
 	
 	    System.out.println("done!");
-//		System.out.println("Before CSV write "+AnnotationMarkerName+" "+fileName+" " +markerStart+" " +highlightingLength+" "+annotatedText);
-//		CSVWriter writer = new CSVWriter(new FileWriter(csv));
-//	
-//		List<String[]> data = new ArrayList<String[]>();
-//		data.add(new String[] { AnnotationMarkerName,fileName, Integer.toString(markerStart), Integer.toString(highlightingLength),annotatedText });
-//		writer.writeAll(data);
-//		System.out.println("CSV written successfully.");
-//		writer.close();
 	}
 	public static void fakeVulnerabilities()
 	{

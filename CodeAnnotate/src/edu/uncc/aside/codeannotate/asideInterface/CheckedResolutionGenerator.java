@@ -27,8 +27,13 @@ import org.eclipse.ui.PartInitException;
 	{
 		public IMarkerResolution[] getResolutions(IMarker mk) 
 		{
+			
+			Random rand = new Random();
+			int  n = rand.nextInt(9999) + 1000;
+			String randomId=Integer.toString(n);
+			
 			//handle highlighting
-			InterfaceUtil.clearAndSetHighlighting(1, mk);
+			InterfaceUtil.clearAndSetHighlighting(1, mk,randomId);
 		       try {
 		          Object problem = mk.getAttribute("WhatsUp");
 		          //making "problem" an empty string. normally it would be from the marker
@@ -37,7 +42,7 @@ import org.eclipse.ui.PartInitException;
 		          return new IMarkerResolution[] 
 		          {
 		             new CheckedTitleResolution("**********ASIDE Bound Annotation Request**********"+problem),
-		             new AnnotateNowResolution("Add Annotation" + problem, "green.check"),
+		             new AnnotateNowResolution("Add Annotation" + problem, "green.check",randomId),
 		             new CheckedDeleteResolution("Delete All Associated Annotations"+problem),
 		             new CheckedResolution("Modify Annotation Binding"+problem),
 		             new CheckedReadMore("Read More"+problem),

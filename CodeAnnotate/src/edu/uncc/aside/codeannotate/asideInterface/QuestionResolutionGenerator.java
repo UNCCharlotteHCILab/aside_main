@@ -26,8 +26,12 @@ import org.eclipse.ui.PartInitException;
 	{
 		public IMarkerResolution[] getResolutions(IMarker mk) 
 		{
+			Random rand = new Random();
+			int  n = rand.nextInt(9999) + 1000;
+			String randomId=Integer.toString(n);
+			
 			//handle highlighting
-			InterfaceUtil.clearAndSetHighlighting(2, mk);
+			InterfaceUtil.clearAndSetHighlighting(2, mk,randomId);
 			
 			//fake vulnerabilities
 			InterfaceUtil.fakeVulnerabilities();
@@ -44,7 +48,7 @@ import org.eclipse.ui.PartInitException;
 		             new QuestionResolution("302-Delete Annotation"+problem),
 		             new QuestionResolution("303-Modify Annotation"+problem),
 		             new AnnotationRequestReadMore("304-Read More"+problem),
-		             new AnnotateNowResolution("301-Annotate Now"+problem, "yellow.question"),
+		             new AnnotateNowResolution("301-Annotate Now"+problem, "yellow.question",randomId),
 		          };
 		       }
 		       catch (CoreException e) 

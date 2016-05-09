@@ -51,9 +51,11 @@ IMarkerResolution2{
 
 	String label;
 	String markerType = "";
-    AnnotateNowResolution(String label, String incomingType) {
+	String rendomId= "";
+    AnnotateNowResolution(String label, String incomingType, String randomId) {
        this.label = label;
        this.markerType = incomingType;
+       this.rendomId=randomId;
     }
     public String getLabel() {
        return label;
