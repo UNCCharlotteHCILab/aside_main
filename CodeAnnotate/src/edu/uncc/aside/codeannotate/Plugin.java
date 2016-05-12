@@ -3,6 +3,7 @@ package edu.uncc.aside.codeannotate;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -29,6 +30,7 @@ import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceDescription;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.resources.IMarker;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -60,6 +62,9 @@ import edu.uncc.aside.codeannotate.presentations.AnnotationView;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 /**
  * The activator class controls the plug-in life cycle
  * 
@@ -140,15 +145,64 @@ public class Plugin extends AbstractUIPlugin {
 	 * org.eclipse.ui.plugin.AbstractUIPlugin#start(org.osgi.framework.BundleContext
 	 * )
 	 */
-	public void start(BundleContext context) throws Exception {
-		
-		super.start(context);
-		plugin = this;
-	 JavaCore.addElementChangedListener(CodeAnnotateElementChangeListener
-		 .getListener());
+	
+	public static void setAnnotationFromCSVFile(String annotationMarkerName,String fileName,String markerStart,String highlightingLength,String annotatedText,String randomId){
 		
 		
-		 //io code starts here
+	}
+	
+	public Runnable readFromCSVFile() throws InterruptedException
+	{
+		String csvFile = "C:\\Users\\nnur\\Desktop\\AnnotationCSV.csv";
+		BufferedReader br = null;
+		String line = "";
+		String headerLine="";
+		String cvsSplitBy = ",";
+		
+		try {
+
+			br = new BufferedReader(new FileReader(csvFile));
+			headerLine = br.readLine();
+			while ((line = br.readLine()) != null) {
+
+			        // use comma as separator
+				String[] annotation = line.split(cvsSplitBy);
+
+				System.out.println("Annotation [annotationMarkerName= " + annotation[0] 
+						 				+ " , fileName=" + annotation[1]
+						 				+ " , markerStart=" + annotation[2]
+						 				+ " , highlightingLength =" + annotation[3]
+						 				+ " , annotatedText=" + annotation[4]
+						 				+ " , randomId=" + annotation[5] + "]");
+				//setAnnotationFromCSVFile(annotation[0],annotation[1],annotation[2],annotation[3],annotation[4],annotation[5]);
+				MakerManagement.emni( annotation[0],annotation[1],annotation[2],annotation[3]);
+			}
+
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			if (br != null) {
+				try {
+					br.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+
+		System.out.println("Done");
+		return null;
+	  }
+		
+	public Runnable runningCodeForIO(){
+		
+		
+		JavaCore.addElementChangedListener(CodeAnnotateElementChangeListener
+				 .getListener());
+		
+		
 		setAllowed(false);
 		String userIDFromSystem = System.getProperty("user.name");
 		setUserId(userIDFromSystem);
@@ -169,7 +223,12 @@ public class Plugin extends AbstractUIPlugin {
 			IWorkspaceDescription description = workspace.getDescription();
 			if (!description.isAutoBuilding()) {
 				description.setAutoBuilding(true);
-				workspace.setDescription(description);
+				try {
+					workspace.setDescription(description);
+				} catch (CoreException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 
 			configure();
@@ -245,6 +304,20 @@ public class Plugin extends AbstractUIPlugin {
 			}else{
 				System.out.println("this user is not allowed");
 			}
+			return null;
+
+		
+	}
+	public void start(BundleContext context) throws Exception {
+		
+		super.start(context);
+		plugin = this;
+	 
+		ExecutorService executor = Executors.newFixedThreadPool(1);
+		executor.submit(runningCodeForIO());
+		executor.submit(readFromCSVFile());
+		executor.shutdown();
+		executor.awaitTermination(2, TimeUnit.SECONDS);
 			
 			//io code ends here
 		 

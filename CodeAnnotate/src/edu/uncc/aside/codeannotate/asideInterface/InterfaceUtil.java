@@ -655,7 +655,7 @@ public  class InterfaceUtil
 			
 			markerStart = callingMarker.getAttribute(IMarker.CHAR_START, -1);
 			int markerEnd=callingMarker.getAttribute(IMarker.CHAR_END, -1);
-			highlightingLength=markerEnd- markerStart+1;
+			highlightingLength=markerEnd- markerStart;
 		}
 		
 		//first make everything a box instead of highlighted
@@ -682,17 +682,17 @@ public  class InterfaceUtil
 					if(markerType.equals("green.check") == true)
 					{
 						changeMarker("green.check.box", tempIndex, 0, 0);
-						annotationMarkerName="green.check.box";
+						
 					}
 					else if(markerType.equals("red.flag") == true)
 					{
 						changeMarker("red.flag.box", tempIndex, 0, 0);
-						annotationMarkerName="red.flag.box";
+						
 					}
 					else if(markerType.equals("yellow.question") == true)
 					{
 						changeMarker("yellow.question.box", tempIndex, 0, 0);
-						annotationMarkerName="yellow.question.box";
+						
 					}
 					
 					
@@ -710,8 +710,17 @@ public  class InterfaceUtil
 		if(callingMarker != null)
 		{
 		try {
+			String markerName=callingMarker.getType();
+			System.out.println("MarkerNameCheck"+markerName);
+			if(markerName.equals("yellow.question.box") == true)
+				annotationMarkerName="green.check.box";
+			else if(markerName.equals("red.question.box") == true)
+				annotationMarkerName="red.flag.box";
 			saveAnnotationsToCSV();
 		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (CoreException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
