@@ -13,6 +13,7 @@ import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Date;
@@ -32,8 +33,10 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jdt.core.dom.ASTMatcher;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -62,9 +65,12 @@ import edu.uncc.aside.codeannotate.presentations.AnnotationView;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * The activator class controls the plug-in life cycle
  * 
@@ -121,6 +127,8 @@ public class Plugin extends AbstractUIPlugin {
 	private IProject project;
 		
 	private static boolean isAllowed;
+	final AtomicBoolean lock2 = new AtomicBoolean(false);
+	final AtomicBoolean lock3 = new AtomicBoolean(false);
 	/**
 	 * The constructor
 	 */
@@ -146,58 +154,8 @@ public class Plugin extends AbstractUIPlugin {
 	 * )
 	 */
 	
-	public static void setAnnotationFromCSVFile(String annotationMarkerName,String fileName,String markerStart,String highlightingLength,String annotatedText,String randomId){
-		
-		
-	}
-	
-	public Runnable readFromCSVFile() throws InterruptedException
-	{
-		String csvFile = "C:\\Users\\nnur\\Desktop\\AnnotationCSV.csv";
-		BufferedReader br = null;
-		String line = "";
-		String headerLine="";
-		String cvsSplitBy = ",";
-		
-		try {
 
-			br = new BufferedReader(new FileReader(csvFile));
-			headerLine = br.readLine();
-			while ((line = br.readLine()) != null) {
-
-			        // use comma as separator
-				String[] annotation = line.split(cvsSplitBy);
-
-				System.out.println("Annotation [annotationMarkerName= " + annotation[0] 
-						 				+ " , fileName=" + annotation[1]
-						 				+ " , markerStart=" + annotation[2]
-						 				+ " , highlightingLength =" + annotation[3]
-						 				+ " , annotatedText=" + annotation[4]
-						 				+ " , randomId=" + annotation[5] + "]");
-				//setAnnotationFromCSVFile(annotation[0],annotation[1],annotation[2],annotation[3],annotation[4],annotation[5]);
-				MakerManagement.emni( annotation[0],annotation[1],annotation[2],annotation[3]);
-			}
-
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-			if (br != null) {
-				try {
-					br.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		}
-
-		System.out.println("Done");
-		return null;
-	  }
-		
 	public Runnable runningCodeForIO(){
-		
 		
 		JavaCore.addElementChangedListener(CodeAnnotateElementChangeListener
 				 .getListener());
@@ -305,19 +263,85 @@ public class Plugin extends AbstractUIPlugin {
 				System.out.println("this user is not allowed");
 			}
 			return null;
-
-		
 	}
+	
+	public static Runnable readFromCSVFile() throws InterruptedException
+	{
+		String csvFile = "C:\\Users\\nnur\\Desktop\\AnnotationCSV.csv";
+		BufferedReader br = null;
+		String line = "";
+		String headerLine="";
+		String cvsSplitBy = ",";
+		
+		try {
+
+			br = new BufferedReader(new FileReader(csvFile));
+			headerLine = br.readLine();
+			while ((line = br.readLine()) != null) {
+
+			        // use comma as separator
+				String[] annotation = line.split(cvsSplitBy);
+
+				System.out.println("Annotation [annotationMarkerName= " + annotation[0] 
+						 				+ " , fileName=" + annotation[1]
+						 				+ " , markerStart=" + annotation[2]
+						 				+ " , highlightingLength =" + annotation[3]
+						 				+ " , annotatedText=" + annotation[4]
+						 				+ " , randomId=" + annotation[5] + "]");
+				//setAnnotationFromCSVFile(annotation[0],annotation[1],annotation[2],annotation[3],annotation[4],annotation[5]);
+				MakerManagement.setAnnotationFromCSVFile( annotation[0],annotation[1],annotation[2],annotation[3]);
+			}
+
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			if (br != null) {
+				try {
+					br.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+
+		System.out.println("Done");
+		return null;
+	  }
+		
+	
+	
 	public void start(BundleContext context) throws Exception {
 		
 		super.start(context);
 		plugin = this;
+
+	    runningCodeForIO();
+	        	
+		
+				
+		Job heavy_job = new Job("Setting annotation from CSV files") {
+
+			@Override
+			protected IStatus run(final IProgressMonitor monitor) {
+				try{
+					readFromCSVFile();
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}finally{
+					monitor.done();
+				}
+				return Status.OK_STATUS;
+			}
+
+		};
+		heavy_job.setPriority(Job.SHORT);
+		heavy_job.schedule();
 	 
-		ExecutorService executor = Executors.newFixedThreadPool(1);
-		executor.submit(runningCodeForIO());
-		executor.submit(readFromCSVFile());
-		executor.shutdown();
-		executor.awaitTermination(2, TimeUnit.SECONDS);
+
+
 			
 			//io code ends here
 		 
@@ -640,21 +664,7 @@ public class Plugin extends AbstractUIPlugin {
 	public static String getAsideUseridFile() {
 		return ASIDE_USERID_FILE;
 	}
+
 	
-//	private int numberOfJavaFiles(IJavaProject project)
-//			throws JavaModelException {
-//
-//		int count = 0;
-//		IPackageFragment[] fragments = projectOfInterest
-//				.getPackageFragments();
-//		for (IPackageFragment fragment : fragments) {
-//			ICompilationUnit[] units = fragment.getCompilationUnits();
-//			for (ICompilationUnit unit : units) {
-//				totalUnits.add(unit);
-//				count++;
-//			}
-//		}
-//
-//		return count;
-//	}
 }
+

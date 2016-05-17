@@ -46,7 +46,7 @@ public class MakerManagement {
 			removeAllASIDEMarkersOneProject(javaProject);
 		}   
 	}
-	public static void emni(String markerType,String fileName,String markerStart,String highlightingLength){
+	public static void setAnnotationFromCSVFile(String markerType,String fileName,String markerStart,String highlightingLength){
 		IProject[] allProjects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
 		Set<IProject> activeProjects= new HashSet<IProject>();
 		for (IProject p : allProjects){
