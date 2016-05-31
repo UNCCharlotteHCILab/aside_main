@@ -53,14 +53,14 @@ public class TestRunOnAllProjects {
 
 			for(IProject project : activeProjects){
 			
-				if(project == null || project.getName()=="RemoteSystemsTempFiles")
+				if(project == null) //|| project.getName()=="RemoteSystemsTempFiles"
 					continue;
 				System.out.println("projectname = " + project.getName());
 				if(project.getName().equals("Servers") || project.getName().equals("servers") || project.getName().equals("Server") || project.getName().equals("server")){
 					continue;
 				}
 				IJavaProject javaProject = JavaCore.create(project);
-				if(javaProject == null || project.getName()=="RemoteSystemsTempFiles")
+				if(javaProject == null)// || project.getName()=="RemoteSystemsTempFiles"
 					continue;
 			
 				//break; //for now, only run on one project

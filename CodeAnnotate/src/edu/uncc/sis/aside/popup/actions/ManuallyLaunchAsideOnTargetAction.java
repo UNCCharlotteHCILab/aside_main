@@ -146,7 +146,7 @@ public class ManuallyLaunchAsideOnTargetAction implements IObjectActionDelegate 
 	public static void inspectOnProject(IJavaProject project)
 			throws JavaModelException, CoreException {
 
-		if (project == null || project.getElementName()=="RemoteSystemsTempFiles") {
+		if (project == null) { // || project.getElementName()=="RemoteSystemsTempFiles"
 			return;
 		}
 		
@@ -156,7 +156,7 @@ public class ManuallyLaunchAsideOnTargetAction implements IObjectActionDelegate 
 	    //get current date time with Date()
 		Date date = new Date();
 	    logger.info(dateFormat.format(date) + " " + Plugin.getUserId() + " ASIDE is inspecting project: " + project.getElementName());
-        if(project != null && project.getElementName()!="RemoteSystemsTempFiles"){
+        if(project != null){ // && project.getElementName()!="RemoteSystemsTempFiles"
         	try{
 		        project.getCorrespondingResource().deleteMarkers(
 				PluginConstants.ASIDE_MARKER_TYPE, false,

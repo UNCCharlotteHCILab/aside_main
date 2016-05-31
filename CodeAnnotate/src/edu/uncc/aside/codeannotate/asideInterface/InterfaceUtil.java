@@ -43,6 +43,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 
+import javax.print.DocFlavor.URL;
+
 //import edu.uncc.aside.codeannotate.NodeFinder;
 //import edu.uncc.aside.codeannotate.util.Utils;
 
@@ -826,8 +828,10 @@ public  class InterfaceUtil
 		//String csv = "C:\\Users\\Nasheen Nur\\Desktop\\AnnotationCSV.csv";
 		System.out.println("Before CSV write "+annotationMarkerName+" "+fileName+" " +markerStart+" " +highlightingLength+" "+annotatedText);
 		try {
-		    FileWriter writer = new FileWriter("C:\\Users\\nnur\\Desktop\\AnnotationCSV.csv", true);
+			java.net.URL location = InterfaceUtil.class.getProtectionDomain().getCodeSource().getLocation();
 
+		    FileWriter writer = new FileWriter(location.getFile()+"AnnotationCSV.csv", true);
+		    
 		    writer.append(annotationMarkerName);
 		    writer.append(',');
 		    writer.append(fileName);

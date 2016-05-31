@@ -154,8 +154,59 @@ public class Plugin extends AbstractUIPlugin {
 	 * )
 	 */
 	
+	public static Runnable readFromCSVFile() throws InterruptedException
+	{
+		String csvFile = "C:\\Users\\nnur\\Desktop\\AnnotationCSV.csv";
+		BufferedReader br = null;
+		String line = "";
+		String headerLine="";
+		String cvsSplitBy = ",";
+		
+		try {
 
-	public Runnable runningCodeForIO(){
+			br = new BufferedReader(new FileReader(csvFile));
+			headerLine = br.readLine();
+			while ((line = br.readLine()) != null) {
+
+			        // use comma as separator
+				String[] annotation = line.split(cvsSplitBy);
+
+				System.out.println("Annotation [annotationMarkerName= " + annotation[0] 
+						 				+ " , fileName=" + annotation[1]
+						 				+ " , markerStart=" + annotation[2]
+						 				+ " , highlightingLength =" + annotation[3]
+						 				+ " , annotatedText=" + annotation[4]
+						 				+ " , randomId=" + annotation[5] + "]");
+				//setAnnotationFromCSVFile(annotation[0],annotation[1],annotation[2],annotation[3],annotation[4],annotation[5]);
+				MakerManagement.setAnnotationFromCSVFile( annotation[0],annotation[1],annotation[2],annotation[3]);
+			}
+
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			if (br != null) {
+				try {
+					br.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+
+		System.out.println("Done");
+		return null;
+	  }
+		
+	
+	
+	public void start(BundleContext context) throws Exception {
+		
+		super.start(context);
+		plugin = this;
+		
+		
 		
 		JavaCore.addElementChangedListener(CodeAnnotateElementChangeListener
 				 .getListener());
@@ -177,7 +228,7 @@ public class Plugin extends AbstractUIPlugin {
 			}
 
 			IWorkspace workspace = ResourcesPlugin.getWorkspace();
-	        
+	       
 			IWorkspaceDescription description = workspace.getDescription();
 			if (!description.isAutoBuilding()) {
 				description.setAutoBuilding(true);
@@ -262,87 +313,13 @@ public class Plugin extends AbstractUIPlugin {
 			}else{
 				System.out.println("this user is not allowed");
 			}
-			return null;
-	}
-	
-	public static Runnable readFromCSVFile() throws InterruptedException
-	{
-		String csvFile = "C:\\Users\\nnur\\Desktop\\AnnotationCSV.csv";
-		BufferedReader br = null;
-		String line = "";
-		String headerLine="";
-		String cvsSplitBy = ",";
+
+//		RetrievalImplementation q = new RetrievalImplementation();
+//		 new AnnotationIO(q);
+//		 new ReadingFromCSV(q);
 		
-		try {
-
-			br = new BufferedReader(new FileReader(csvFile));
-			headerLine = br.readLine();
-			while ((line = br.readLine()) != null) {
-
-			        // use comma as separator
-				String[] annotation = line.split(cvsSplitBy);
-
-				System.out.println("Annotation [annotationMarkerName= " + annotation[0] 
-						 				+ " , fileName=" + annotation[1]
-						 				+ " , markerStart=" + annotation[2]
-						 				+ " , highlightingLength =" + annotation[3]
-						 				+ " , annotatedText=" + annotation[4]
-						 				+ " , randomId=" + annotation[5] + "]");
-				//setAnnotationFromCSVFile(annotation[0],annotation[1],annotation[2],annotation[3],annotation[4],annotation[5]);
-				MakerManagement.setAnnotationFromCSVFile( annotation[0],annotation[1],annotation[2],annotation[3]);
-			}
-
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-			if (br != null) {
-				try {
-					br.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		}
-
-		System.out.println("Done");
-		return null;
-	  }
 		
-	
-	
-	public void start(BundleContext context) throws Exception {
-		
-		super.start(context);
-		plugin = this;
-
-	    runningCodeForIO();
-	        	
-		
-				
-		Job heavy_job = new Job("Setting annotation from CSV files") {
-
-			@Override
-			protected IStatus run(final IProgressMonitor monitor) {
-				try{
-					readFromCSVFile();
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}finally{
-					monitor.done();
-				}
-				return Status.OK_STATUS;
-			}
-
-		};
-		heavy_job.setPriority(Job.SHORT);
-		heavy_job.schedule();
-	 
-
-
-			
+	        			
 			//io code ends here
 		 
 //		 ISaveParticipant saveParticipant = new CodeAnnotateSaveParticipant();
@@ -367,6 +344,8 @@ public class Plugin extends AbstractUIPlugin {
 	 * )
 	 */
 	public void stop(BundleContext context) throws Exception {
+		
+		System.out.println("in stop method");
 		Date currentDate = new Date();
 		
 	    if(!currentDate.after(this.END_DAY_SEND_LOGS)){
@@ -666,5 +645,210 @@ public class Plugin extends AbstractUIPlugin {
 	}
 
 	
+	class RetrievalImplementation 
+	{
+	  int n;
+	  boolean valueSet = false;
+
+	  synchronized void readFromCSVFile()
+	  {
+	    if(!valueSet)
+	      try 
+	      {
+	        wait(60000);
+	      }
+	      catch(InterruptedException e) 
+	      {
+	        System.out.println("InterruptedException caught");
+	      }
+	    String csvFile = "C:\\Users\\nnur\\Desktop\\AnnotationCSV.csv";
+		BufferedReader br = null;
+		String line = "";
+		String csvSplitBy = ",";
+		
+		try {
+
+			br = new BufferedReader(new FileReader(csvFile));
+			while ((line = br.readLine()) != null) {
+
+			        // use comma as separator
+				String[] annotation = line.split(csvSplitBy);
+
+				System.out.println("Annotation [annotationMarkerName= " + annotation[0] 
+						 				+ " , fileName=" + annotation[1]
+						 				+ " , markerStart=" + annotation[2]
+						 				+ " , highlightingLength =" + annotation[3]
+						 				+ " , annotatedText=" + annotation[4]
+						 				+ " , randomId=" + annotation[5] + "]");
+				//setAnnotationFromCSVFile(annotation[0],annotation[1],annotation[2],annotation[3],annotation[4],annotation[5]);
+				MakerManagement.setAnnotationFromCSVFile( annotation[0],annotation[1],annotation[2],annotation[3]);
+			}
+
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			if (br != null) {
+				try {
+					br.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+
+		System.out.println("Done");
+		
+		valueSet = false;
+	    notify();
+	  }
+
+	  synchronized void runningCodeForIO() 
+	  {
+	    if(valueSet)
+	      try {
+	        wait();
+	      } catch(InterruptedException e) {
+	        System.out.println("InterruptedException caught");
+	      }
+	    JavaCore.addElementChangedListener(CodeAnnotateElementChangeListener
+				 .getListener());
+		
+		
+		setAllowed(false);
+		String userIDFromSystem = System.getProperty("user.name");
+		setUserId(userIDFromSystem);
+		if(AuthenCenter.hasPermission(userIDFromSystem)){
+			setAllowed(true);
+			
+		}
+		
+		MakerManagement.removeAllASIDEMarkersInWorkspace();
+
+		 //MakerManagement.removeAllASIDEMarkersInWorkspace();
+		 if (astMatcher == null) {
+				astMatcher = new ASTMatcher();
+			}
+
+			IWorkspace workspace = ResourcesPlugin.getWorkspace();
+	       
+			IWorkspaceDescription description = workspace.getDescription();
+			if (!description.isAutoBuilding()) {
+				description.setAutoBuilding(true);
+				try {
+					workspace.setDescription(description);
+				} catch (CoreException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+
+			configure();
+			System.out.println("Aside Plugin start print test");
+			
+			DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+			// get current date time with Date()
+			Date date = new Date();
+		 
+			IPath stateLocation = Plugin.getDefault().getStateLocation();
+			String fileName = stateLocation + "/"
+					+ Plugin.getAsideUseridFile(); // might have to be updated
+														// about "/"
+			File userIdFile = new File(fileName);
+			
+			System.out.println("Plugin.getDefault().isAllowed() = "
+					+ Plugin.getDefault().isAllowed());
+			if (Plugin.isAllowed()) {
+				if (userIdFile.exists()) {
+					try {
+						FileReader fr = new FileReader(userIdFile);
+						BufferedReader br = new BufferedReader(fr);
+						String userIdRead = br.readLine();
+						System.out.println("userId read from the file = "
+								+ userIdRead);
+						Plugin.getDefault().setUserId(userIdRead);
+						br.close();
+						fr.close();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+
+					
+				} else {
+					// /////////////
+					// pop up consent form asking for id and consent
+					Display.getDefault().syncExec(new Runnable() {
+						public void run() {
+							ConsentForm.process();
+						}
+					});
+					
+					// System.out.println("userIdRead in Maunual =" + userIdRead);
+
+					boolean created = false;
+					try {
+						created = userIdFile.createNewFile();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					if (created) {
+						FileWriter fw = null;
+						try {
+							fw = new FileWriter(userIdFile);
+							BufferedWriter bw = new BufferedWriter(fw);
+							bw.write(userIDFromSystem);
+							bw.close();
+							fw.close();
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						Plugin.getDefault().setUserId(userIDFromSystem);
+					} else {
+						System.err.println("UserId file is not created properly!");
+					}
+				}
+				TestRunOnAllProjects testRunOnAllProjects = new TestRunOnAllProjects();
+				testRunOnAllProjects.runOnAllProjects();
+
+			}else{
+				System.out.println("this user is not allowed");
+			}
+		  valueSet = true;
+	      notify();
+	  }
+	}
+
+	class AnnotationIO implements Runnable {
+		RetrievalImplementation q;
+
+		AnnotationIO(RetrievalImplementation q) {
+	    this.q = q;
+	    new Thread(this, "Code Annotation and I/O").start();
+	  }
+
+	  public void run() {
+	    q.runningCodeForIO();
+	  }
+	}
+
+	class ReadingFromCSV implements Runnable {
+		RetrievalImplementation q;
+
+		ReadingFromCSV(RetrievalImplementation q) {
+	    this.q = q;
+	    new Thread(this, "Reading from CSV starts").start();
+	  }
+
+	  public void run() {
+	   q.readFromCSVFile();
+	  }
+	}
+
+	
 }
+
 

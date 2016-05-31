@@ -33,7 +33,7 @@ public class MakerManagement {
 		IProject[] allProjects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
 		Set<IProject> activeProjects= new HashSet<IProject>();
 		for (IProject p : allProjects){
-		    if(p.isOpen() && p.getName()!="RemoteSystemsTempFiles")
+		    if(p.isOpen())// && p.getName()!="RemoteSystemsTempFiles"
 			        activeProjects.add(p);
 		}
 		
@@ -41,7 +41,7 @@ public class MakerManagement {
 			if(project == null)
 				continue;
 			IJavaProject javaProject = JavaCore.create(project);
-			if(javaProject == null|| javaProject.getElementName()=="RemoteSystemsTempFiles")
+			if(javaProject == null)//|| javaProject.getElementName()=="RemoteSystemsTempFiles"
 				continue;
 			removeAllASIDEMarkersOneProject(javaProject);
 		}   
@@ -50,7 +50,7 @@ public class MakerManagement {
 		IProject[] allProjects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
 		Set<IProject> activeProjects= new HashSet<IProject>();
 		for (IProject p : allProjects){
-		    if(p.isOpen() && p.getName()!="RemoteSystemsTempFiles")
+		    if(p.isOpen())// && p.getName()!="RemoteSystemsTempFiles"
 			        activeProjects.add(p);
 		}
 		for(IProject project : activeProjects){
