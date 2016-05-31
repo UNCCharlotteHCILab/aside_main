@@ -1,0 +1,3 @@
+annotationMarkerName,fileName,markerStart,highlightingLength,annotatedText,randomId
+green.check.box,AccountsServlet.java,2337,56,null,4272
+green.diamond.box,AccountsServlet.java,1891,49,"request.getSession().getAttribute(""USER"") == null",4272
