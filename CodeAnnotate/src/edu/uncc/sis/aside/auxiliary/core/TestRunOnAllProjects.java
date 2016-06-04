@@ -40,7 +40,9 @@ public class TestRunOnAllProjects {
 	public void runOnAllProjects(){
 		
 			IProject[] allProjects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
+			
 			Set<IProject> activeProjects= new HashSet<IProject>();
+			
 			for (IProject p : allProjects){
 			    if(p.isOpen())
 				        activeProjects.add(p);
@@ -51,23 +53,29 @@ public class TestRunOnAllProjects {
 			Date date = new Date();
 		    logger.info(dateFormat.format(date) + " " + Plugin.getUserId() + " ASIDE starts to inspect all the projects in the workspace");
 
-			for(IProject project : activeProjects){
+			for(final IProject project : activeProjects){
 			
-				if(project == null) //|| project.getName()=="RemoteSystemsTempFiles"
+				if(project == null|| project.getName().equalsIgnoreCase("RemoteSystemsTempFiles"))
 					continue;
+				
 				System.out.println("projectname = " + project.getName());
-				if(project.getName().equals("Servers") || project.getName().equals("servers") || project.getName().equals("Server") || project.getName().equals("server")){
+				
+				if(project.getName().equalsIgnoreCase("RemoteSystemsTempFiles") || 
+						project.getName().equalsIgnoreCase("Servers")  
+						|| project.getName().equalsIgnoreCase("Server") ){
 					continue;
 				}
 				IJavaProject javaProject = JavaCore.create(project);
-				if(javaProject == null)// || project.getName()=="RemoteSystemsTempFiles"
+				if(javaProject == null )
 					continue;
 			
 				//break; //for now, only run on one project
 			
 				Job jobCodeAnnotate = new MountListenerJob("Mount listener to Java file",
 						JavaCore.create(project));
+				
 				jobCodeAnnotate.setPriority(Job.INTERACTIVE);
+				
 				jobCodeAnnotate.schedule();
 				
 				//code for i/o
@@ -78,6 +86,8 @@ public class TestRunOnAllProjects {
 						"ESAPI Configuration", project, javaProject);
 				//job.scheduleInteractive();
 				job.scheduleShort();
+				
+				
 				try {
 					ManuallyLaunchAsideOnTargetAction.inspectOnProject(javaProject);
 					//System.out.println("test on all projects finished");
@@ -87,16 +97,20 @@ public class TestRunOnAllProjects {
 				} catch (CoreException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
+					
+					
 				}
 				
-				
-				
-				
+			
+			System.out.println("Heavy Job Finding Paths: " + project.getName());
+			
 				/* Delegates all heavy lifting to {@link PathFinder} */
+				
 				Job heavy_job = new Job("Finding paths in Project: " + project.getName()) {
-
+				
+					
 					@Override
-					protected IStatus run(final IProgressMonitor monitor) {
+				protected IStatus run(final IProgressMonitor monitor) {
 						try{
 							Plugin.getDefault().getWorkbench().getDisplay()
 									.asyncExec(new Runnable() {
@@ -116,11 +130,7 @@ public class TestRunOnAllProjects {
 				};
 				heavy_job.setPriority(Job.LONG);
 				heavy_job.schedule();
-				
-				
-				
-				
-			
+						
 			}
 			date = new Date();
 		    logger.info(dateFormat.format(date) + " " + Plugin.getUserId() + " ASIDE finished inspect all the projects in the workspace");

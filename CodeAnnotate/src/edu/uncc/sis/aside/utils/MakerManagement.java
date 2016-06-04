@@ -30,55 +30,76 @@ import edu.uncc.sis.aside.constants.PluginConstants;
 
 public class MakerManagement {
 	public static void removeAllASIDEMarkersInWorkspace(){
+		
 		IProject[] allProjects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
 		Set<IProject> activeProjects= new HashSet<IProject>();
+		
 		for (IProject p : allProjects){
-		    if(p.isOpen())// && p.getName()!="RemoteSystemsTempFiles"
+			
+		    if(p.isOpen() && !p.getName().equalsIgnoreCase("RemoteSystemsTempFiles"))
 			        activeProjects.add(p);
 		}
 		
 		for(IProject project : activeProjects){
-			if(project == null)
+			if(project == null || project.getName().equalsIgnoreCase("RemoteSystemsTempFiles"))
 				continue;
 			IJavaProject javaProject = JavaCore.create(project);
-			if(javaProject == null)//|| javaProject.getElementName()=="RemoteSystemsTempFiles"
+			
+			if(javaProject == null )				
 				continue;
+			
 			removeAllASIDEMarkersOneProject(javaProject);
 		}   
 	}
 	public static void setAnnotationFromCSVFile(String markerType,String fileName,String markerStart,String highlightingLength){
+	
 		IProject[] allProjects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
+	
 		Set<IProject> activeProjects= new HashSet<IProject>();
+	
 		for (IProject p : allProjects){
-		    if(p.isOpen())// && p.getName()!="RemoteSystemsTempFiles"
+		    if(p.isOpen() && !p.getName().equalsIgnoreCase("RemoteSystemsTempFiles"))
 			        activeProjects.add(p);
 		}
 		for(IProject project : activeProjects){
 			if(project == null)
 				continue;
+		
 			IJavaProject javaProject = JavaCore.create(project);
+			
 			if(javaProject == null)
 				continue;
 			try{
-			IPackageFragment[] fragments = javaProject
+			
+				IPackageFragment[] fragments = javaProject
 					.getPackageFragments();
 			for (IPackageFragment fragment : fragments) {
+				
 				ICompilationUnit[] units = fragment.getCompilationUnits();
+				
 				for (ICompilationUnit unit : units) {
+			
 					if (unit.getElementName().equals(fileName))
 					{
 						IResource theResource = unit.getResource();
 						IMarker[] questionMarkers = theResource.findMarkers(
 								Plugin.ANNOTATION_QUESTION, false, IResource.DEPTH_ONE);
+					
 						System.out.println("Question Markers"+questionMarkers[0].getType());
+						
 						for (IMarker marker : questionMarkers) {
+						
 							int char_start = marker.getAttribute(IMarker.CHAR_START, -1);
 							System.out.println(char_start);
+							
 							int length = marker.getAttribute(IMarker.CHAR_END, -1) - char_start;
 							System.out.println(length);
+							
 							if (char_start == Integer.parseInt(markerStart) && length == Integer.parseInt(highlightingLength)) {
+							
 								marker.delete();
 								System.out.println("Not deleting");
+								
 								InterfaceUtil.createMarker(markerType, char_start, char_start+length, theResource);
 							}
 						}

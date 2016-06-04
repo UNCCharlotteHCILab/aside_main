@@ -221,8 +221,7 @@ public class Plugin extends AbstractUIPlugin {
 		}
 		
 		MakerManagement.removeAllASIDEMarkersInWorkspace();
-
-		 //MakerManagement.removeAllASIDEMarkersInWorkspace();
+		
 		 if (astMatcher == null) {
 				astMatcher = new ASTMatcher();
 			}
@@ -246,67 +245,70 @@ public class Plugin extends AbstractUIPlugin {
 			DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 			// get current date time with Date()
 			Date date = new Date();
-		 
+		 /*
 			IPath stateLocation = Plugin.getDefault().getStateLocation();
 			String fileName = stateLocation + "/"
 					+ Plugin.getAsideUseridFile(); // might have to be updated
 														// about "/"
-			File userIdFile = new File(fileName);
 			
+			File userIdFile = new File(fileName);
+			*/
 			System.out.println("Plugin.getDefault().isAllowed() = "
 					+ Plugin.getDefault().isAllowed());
 			if (Plugin.isAllowed()) {
-				if (userIdFile.exists()) {
-					try {
-						FileReader fr = new FileReader(userIdFile);
-						BufferedReader br = new BufferedReader(fr);
-						String userIdRead = br.readLine();
-						System.out.println("userId read from the file = "
-								+ userIdRead);
-						Plugin.getDefault().setUserId(userIdRead);
-						br.close();
-						fr.close();
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-
-					
-				} else {
-					// /////////////
-					// pop up consent form asking for id and consent
-					Display.getDefault().syncExec(new Runnable() {
-						public void run() {
-							ConsentForm.process();
-						}
-					});
-					
-					// System.out.println("userIdRead in Maunual =" + userIdRead);
-
-					boolean created = false;
-					try {
-						created = userIdFile.createNewFile();
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-					if (created) {
-						FileWriter fw = null;
-						try {
-							fw = new FileWriter(userIdFile);
-							BufferedWriter bw = new BufferedWriter(fw);
-							bw.write(userIDFromSystem);
-							bw.close();
-							fw.close();
-						} catch (IOException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-						Plugin.getDefault().setUserId(userIDFromSystem);
-					} else {
-						System.err.println("UserId file is not created properly!");
-					}
-				}
+				Plugin.getDefault().setUserId(userIDFromSystem);
+				
+//				if (userIdFile.exists()) {
+//					try {
+//						FileReader fr = new FileReader(userIdFile);
+//						BufferedReader br = new BufferedReader(fr);
+//						String userIdRead = br.readLine();
+//						System.out.println("userId read from the file = "
+//								+ userIdRead);
+//						Plugin.getDefault().setUserId(userIdRead);
+//						br.close();
+//						fr.close();
+//					} catch (IOException e) {
+//						// TODO Auto-generated catch block
+//						e.printStackTrace();
+//					}
+//
+//					
+//				} else {
+//					// /////////////
+//					// pop up consent form asking for id and consent
+//					Display.getDefault().syncExec(new Runnable() {
+//						public void run() {
+//							ConsentForm.process();
+//						}
+//					});
+//					
+//					// System.out.println("userIdRead in Maunual =" + userIdRead);
+//
+//					boolean created = false;
+//					try {
+//						created = userIdFile.createNewFile();
+//					} catch (IOException e) {
+//						// TODO Auto-generated catch block
+//						e.printStackTrace();
+//					}
+//					if (created) {
+//						FileWriter fw = null;
+//						try {
+//							fw = new FileWriter(userIdFile);
+//							BufferedWriter bw = new BufferedWriter(fw);
+//							bw.write(userIDFromSystem);
+//							bw.close();
+//							fw.close();
+//						} catch (IOException e) {
+//							// TODO Auto-generated catch block
+//							e.printStackTrace();s
+//						}
+//						Plugin.getDefault().setUserId(userIDFromSystem);
+//					} else {
+//						System.err.println("UserId file is not created properly!");
+//					}
+//				}
 				TestRunOnAllProjects testRunOnAllProjects = new TestRunOnAllProjects();
 				testRunOnAllProjects.runOnAllProjects();
 
