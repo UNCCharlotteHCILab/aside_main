@@ -50,8 +50,8 @@ public class ESAPIConfigurationJob extends Job {
 	private IProject fProject;
 	private IJavaProject javaProject;
 
-	public ESAPIConfigurationJob(String name, IProject project,
-			IJavaProject javaProject) {
+	public ESAPIConfigurationJob(String name, IProject project,	IJavaProject javaProject)
+	{
 		super(name);
 		this.fProject = project;
 		this.javaProject = javaProject;
@@ -83,6 +83,7 @@ public class ESAPIConfigurationJob extends Job {
 
 		Bundle bundle = Platform.getBundle(Plugin.PLUGIN_ID);
 		Path path = new Path(IPath.SEPARATOR + ESAPI_CONFIG_DIR_NAME);
+		
 		URL fileURL = FileLocator.find(bundle, path, null);
 		if (fileURL == null) {
 			System.out.println("cannot locate ESAPI directory");
@@ -96,21 +97,28 @@ public class ESAPIConfigurationJob extends Job {
 
 			String sourcePath = localFileURL.getFile();
 			File file = new File(sourcePath);
+			
 			if (file.exists() && file.isDirectory()) {
+				
 				File[] sourceFiles = file.listFiles();
 				monitor.beginTask("Configuring OWASP ESAPI for Java Project: "
 						+ fProject.getName(), IProgressMonitor.UNKNOWN);
+				
 				for (int i = 0; i < sourceFiles.length; i++) {
 
 					File target = sourceFiles[i];
 					String fileName = target.getName();
+					
 					monitor.subTask("Checking and Copying ESAPI library: "
 							+ fileName);
 
 					if (target.isFile()) {
+						
 						if (fileName.endsWith(".jar")) {
+							
 							is = new BufferedInputStream(new FileInputStream(
 									target.getAbsolutePath()));
+							
 							IFile destination = fProject
 									.getFile(IPath.SEPARATOR + PROJECT_LIB_PATH
 											+ IPath.SEPARATOR + fileName);
@@ -123,8 +131,10 @@ public class ESAPIConfigurationJob extends Job {
 								}
 							}
 						}else if(fileName.equals("log4j.properties")){ //copy the log4j.properties file
+							
 							is = new BufferedInputStream(new FileInputStream(
 									target.getAbsolutePath()));
+							
 							IFile destination = fProject
 									.getFile(IPath.SEPARATOR + PROJECT_WEBINF_PATH
 											+ IPath.SEPARATOR + fileName);
@@ -138,13 +148,18 @@ public class ESAPIConfigurationJob extends Job {
 							}
 						}
 					} else if (target.isDirectory()) {
+						
 						if (fileName.equalsIgnoreCase("esapi")
 								|| fileName.equalsIgnoreCase(".esapi")) {
+							
 							//IFolder destination = fProject.getFolder(fileName); // this one may need modification
 							//added Mar. 2
 							//IFolder tmp = fProject.getFolder(fileName);
+							
 							IFolder destination = fProject.getFolder(IPath.SEPARATOR + PROJECT_WEBINF_PATH + IPath.SEPARATOR + fileName);
+						
 							String tmp = IPath.SEPARATOR + PROJECT_WEBINF_PATH + IPath.SEPARATOR + fileName;
+							
 							//System.out.println("line 126 destination = " + destination + " tmp" + tmp);
 							/////
 							
@@ -227,8 +242,10 @@ public class ESAPIConfigurationJob extends Job {
 	}
 
 	private void setESAPIClasspathContainer(final IFolder lib) {
+		
 		final IPath containerPath = new Path(ASIDE_ESAPI_CONTAINER)
 				.append(fProject.getFullPath());
+		
 		IClasspathContainer esapiContainer = new IClasspathContainer() {
 
 			@Override
@@ -236,9 +253,13 @@ public class ESAPIConfigurationJob extends Job {
 				ArrayList<IClasspathEntry> entryList = new ArrayList<IClasspathEntry>();
 				try {
 					IResource[] members = lib.members();
+					
 					for (IResource resource : members) {
+						
 						if (IFile.class.isAssignableFrom(resource.getClass())) {
+							
 							if (resource.getName().endsWith(".jar")) {
+								
 								entryList.add(JavaCore.newLibraryEntry(
 										new Path(resource.getFullPath()
 												.toOSString()), null, new Path(
