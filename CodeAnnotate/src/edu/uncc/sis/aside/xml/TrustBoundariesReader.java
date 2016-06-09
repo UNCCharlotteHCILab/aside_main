@@ -7,10 +7,10 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import edu.uncc.aside.utils.Converter;
 import edu.uncc.sis.aside.domainmodels.NonReturnedTrustBoundary;
 import edu.uncc.sis.aside.domainmodels.ReturnedTrustBoundary;
 import edu.uncc.sis.aside.domainmodels.TrustBoundary;
-import edu.uncc.sis.aside.utils.Converter;
 
 public final class TrustBoundariesReader extends XMLReader {
 

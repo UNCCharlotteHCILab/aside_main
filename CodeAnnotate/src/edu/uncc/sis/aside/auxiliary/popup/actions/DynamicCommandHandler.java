@@ -24,9 +24,9 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.handlers.HandlerUtil;
 
-import edu.uncc.sis.aside.ast.ASTResolving;
+import edu.uncc.aside.ast.ASTResolving;
+import edu.uncc.aside.utils.ASIDEMarkerAndAnnotationUtil;
 import edu.uncc.sis.aside.auxiliary.core.CodeGenerator;
-import edu.uncc.sis.aside.utils.ASIDEMarkerAndAnnotationUtil;
 
 public class DynamicCommandHandler extends AbstractHandler {
 

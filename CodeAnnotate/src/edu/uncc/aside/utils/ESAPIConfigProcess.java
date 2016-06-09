@@ -1,4 +1,4 @@
-package edu.uncc.sis.aside.utils;
+package edu.uncc.aside.utils;
 
 import java.io.BufferedInputStream;
 import java.io.File;

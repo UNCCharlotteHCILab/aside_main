@@ -19,8 +19,8 @@ import org.eclipse.ui.browser.IWebBrowser;
 import org.eclipse.ui.browser.IWorkbenchBrowserSupport;
 
 import edu.uncc.aside.codeannotate.Plugin;
+import edu.uncc.aside.utils.ASIDEMarkerAndAnnotationUtil;
 import edu.uncc.sis.aside.AsidePlugin;
-import edu.uncc.sis.aside.utils.ASIDEMarkerAndAnnotationUtil;
 
 public class IgnoreMarkerResolution implements IMarkerResolution,
 		IMarkerResolution2 {

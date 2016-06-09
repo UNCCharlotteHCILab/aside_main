@@ -1,4 +1,4 @@
-package edu.uncc.sis.aside.utils;
+package edu.uncc.aside.utils;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.swt.widgets.Display;

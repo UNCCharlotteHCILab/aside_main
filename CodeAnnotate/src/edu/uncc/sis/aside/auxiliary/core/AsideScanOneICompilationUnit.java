@@ -28,10 +28,10 @@ import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
 
 import edu.uncc.aside.codeannotate.Plugin;
+import edu.uncc.aside.utils.Converter;
 import edu.uncc.sis.aside.AsidePlugin;
 import edu.uncc.sis.aside.constants.PluginConstants;
 import edu.uncc.sis.aside.jobs.ESAPIConfigurationJob;
-import edu.uncc.sis.aside.utils.Converter;
 import edu.uncc.sis.aside.visitors.MethodDeclarationVisitor;
 
 /**

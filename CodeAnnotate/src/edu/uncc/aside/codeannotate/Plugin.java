@@ -56,12 +56,12 @@ import edu.uncc.sis.aside.logging.AsideLoggingManager;
 import edu.uncc.sis.aside.preferences.IPreferenceConstants;
 import edu.uncc.sis.aside.auxiliary.core.TestRunOnAllProjects;
 import edu.uncc.sis.aside.constants.PluginConstants;
-import edu.uncc.sis.aside.utils.AuthenCenter;
-import edu.uncc.sis.aside.utils.ConsentForm;
-import edu.uncc.sis.aside.utils.MakerManagement;
 import edu.uncc.aside.codeannotate.listeners.CodeAnnotateElementChangeListener;
 import edu.uncc.aside.codeannotate.models.Path;
 import edu.uncc.aside.codeannotate.presentations.AnnotationView;
+import edu.uncc.aside.utils.AuthenCenter;
+import edu.uncc.aside.utils.ConsentForm;
+import edu.uncc.aside.utils.MakerManagement;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
@@ -309,8 +309,8 @@ public class Plugin extends AbstractUIPlugin {
 //						System.err.println("UserId file is not created properly!");
 //					}
 //				}
-				TestRunOnAllProjects testRunOnAllProjects = new TestRunOnAllProjects();
-				testRunOnAllProjects.runOnAllProjects();
+			//	TestRunOnAllProjects testRunOnAllProjects = new TestRunOnAllProjects();
+				//testRunOnAllProjects.runOnAllProjects();
 
 			}else{
 				System.out.println("this user is not allowed");

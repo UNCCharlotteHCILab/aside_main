@@ -14,10 +14,10 @@ import org.eclipse.core.runtime.IPath;
 import org.w3c.dom.Document;
 
 import edu.uncc.aside.codeannotate.Plugin;
+import edu.uncc.aside.utils.DocumentWrapper;
 import edu.uncc.sis.aside.AsidePlugin;
 import edu.uncc.sis.aside.constants.PluginConstants;
 import edu.uncc.sis.aside.preferences.IPreferenceConstants;
-import edu.uncc.sis.aside.utils.DocumentWrapper;
 import edu.uncc.sis.aside.xml.ValidationRulesReader;
 import edu.uncc.sis.aside.xml.XMLFileUtil;
 

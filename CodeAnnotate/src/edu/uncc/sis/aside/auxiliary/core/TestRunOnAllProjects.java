@@ -28,10 +28,10 @@ import edu.uncc.aside.codeannotate.PathFinder;
 import edu.uncc.aside.codeannotate.Plugin;
 //import edu.uncc.aside.codeannotate.actions.ASIDECodeAnnotateHandler.MountListenerJob;
 import edu.uncc.aside.codeannotate.listeners.CodeAnnotateDocumentEditListener;
+import edu.uncc.aside.utils.ConsentForm;
 import edu.uncc.sis.aside.AsidePlugin;
 import edu.uncc.sis.aside.jobs.ESAPIConfigurationJob;
 import edu.uncc.sis.aside.popup.actions.ManuallyLaunchAsideOnTargetAction;
-import edu.uncc.sis.aside.utils.ConsentForm;
 
 public class TestRunOnAllProjects {
 	private static final Logger logger = Plugin.getLogManager().getLogger(
@@ -66,6 +66,7 @@ public class TestRunOnAllProjects {
 					continue;
 				}
 				IJavaProject javaProject = JavaCore.create(project);
+				
 				if(javaProject == null )
 					continue;
 			

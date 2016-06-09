@@ -1,4 +1,4 @@
-package edu.uncc.sis.aside.utils;
+package edu.uncc.aside.utils;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

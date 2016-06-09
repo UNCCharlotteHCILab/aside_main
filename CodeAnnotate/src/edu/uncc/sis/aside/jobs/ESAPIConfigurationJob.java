@@ -35,8 +35,8 @@ import org.eclipse.swt.widgets.Display;
 import org.osgi.framework.Bundle;
 
 import edu.uncc.aside.codeannotate.Plugin;
+import edu.uncc.aside.utils.ConsentForm;
 import edu.uncc.sis.aside.AsidePlugin;
-import edu.uncc.sis.aside.utils.ConsentForm;
 
 public class ESAPIConfigurationJob extends Job {
 
@@ -76,12 +76,15 @@ public class ESAPIConfigurationJob extends Job {
 		 */
 	
 		final IFolder lib = fProject.getFolder(PROJECT_LIB_PATH);
+		
 		if (!lib.exists()) {
+			
 			System.out.println("Cannot find: " + lib);
 			return Status.OK_STATUS;
 		}
 
 		Bundle bundle = Platform.getBundle(Plugin.PLUGIN_ID);
+		
 		Path path = new Path(IPath.SEPARATOR + ESAPI_CONFIG_DIR_NAME);
 		
 		URL fileURL = FileLocator.find(bundle, path, null);
@@ -101,6 +104,7 @@ public class ESAPIConfigurationJob extends Job {
 			if (file.exists() && file.isDirectory()) {
 				
 				File[] sourceFiles = file.listFiles();
+				
 				monitor.beginTask("Configuring OWASP ESAPI for Java Project: "
 						+ fProject.getName(), IProgressMonitor.UNKNOWN);
 				
@@ -212,7 +216,9 @@ public class ESAPIConfigurationJob extends Job {
 
 			String sub_basePath = basePath + IPath.SEPARATOR
 					+ subFile.getName();
+			
 			monitor.subTask("Copying file " + sub_basePath);
+			
 			if (subFile.isDirectory()) {
 
 				IFolder destination = fProject.getFolder(sub_basePath);
@@ -223,15 +229,21 @@ public class ESAPIConfigurationJob extends Job {
 						continue;
 					}
 				}
+				
 				copyDirectory(subFile, sub_basePath, is, monitor);
 
 			} else if (subFile.isFile()) {
+				
 				is = new BufferedInputStream(new FileInputStream(
 						subFile.getAbsolutePath()));
+				
 				IFile destination = fProject.getFile(sub_basePath);
+				
 				if (!destination.exists()) {
 					try {
+						
 						destination.create(is, false, null);
+						
 					} catch (CoreException e) {
 						continue;
 					}

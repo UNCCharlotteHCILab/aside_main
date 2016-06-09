@@ -15,9 +15,9 @@ import org.eclipse.jdt.core.dom.FieldDeclaration;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.SimpleName;
 
-import edu.uncc.sis.aside.ast.ASTResolving;
+import edu.uncc.aside.ast.ASTResolving;
+import edu.uncc.aside.utils.ASIDEMarkerAndAnnotationUtil;
 import edu.uncc.sis.aside.preferences.PreferencesSet;
-import edu.uncc.sis.aside.utils.ASIDEMarkerAndAnnotationUtil;
 
 /**
  * 

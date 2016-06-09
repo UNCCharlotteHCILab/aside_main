@@ -15,13 +15,13 @@ import org.eclipse.jdt.core.dom.StringLiteral;
 import org.w3c.dom.Document;
 
 import edu.uncc.aside.codeannotate.Plugin;
+import edu.uncc.aside.utils.ASIDEMarkerAndAnnotationUtil;
+import edu.uncc.aside.utils.Converter;
+import edu.uncc.aside.utils.Validator;
 import edu.uncc.sis.aside.AsidePlugin;
 import edu.uncc.sis.aside.constants.PluginConstants;
 import edu.uncc.sis.aside.preferences.IPreferenceConstants;
 import edu.uncc.sis.aside.preferences.PreferencesSet;
-import edu.uncc.sis.aside.utils.ASIDEMarkerAndAnnotationUtil;
-import edu.uncc.sis.aside.utils.Converter;
-import edu.uncc.sis.aside.utils.Validator;
 import edu.uncc.sis.aside.xml.TrustBoundariesReader;
 import edu.uncc.sis.aside.xml.XMLFileUtil;
 

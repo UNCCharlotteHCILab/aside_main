@@ -138,15 +138,16 @@ public  class InterfaceUtil
 		}
 	}
 	
-	public static void createMarker(String markerType, int charStart, int charEnd, IResource theResource)
+	public static void createMarker(String markerType, int charStart, int charEnd, IResource theResource, String message)
 	{
 		try
 		{
-			String message = "Where is the access control?";
+			//String message = "Where is the access control?";
 			if(markerType.equals("yellow.question"))
 			{
 				message = "Where is the access control?";
 			}
+			
 			IMarker theMarker = theResource.createMarker(markerType);
 			theMarker.setAttribute(IMarker.CHAR_START, charStart);
 		   	theMarker.setAttribute(IMarker.CHAR_END, charEnd);
@@ -187,8 +188,11 @@ public  class InterfaceUtil
 			lineNumber = theDocument.getLineOfOffset(charStart);
 			lineLength = theDocument.getLineLength(lineNumber);
 			theLineText = theDocument.get(charStart, lineLength);
+			
 			System.out.println("theLineText "+theLineText);
+			
 			trimmedText = theLineText.trim();
+			
 			System.out.println("trimmedText "+trimmedText);
 			
 			//save the marker index

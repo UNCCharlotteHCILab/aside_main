@@ -34,14 +34,14 @@ import org.eclipse.jdt.core.dom.StructuralPropertyDescriptor;
 import org.eclipse.jdt.core.dom.Type;
 import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
 
+import edu.uncc.aside.ast.ASTResolving;
 import edu.uncc.aside.codeannotate.Plugin;
+import edu.uncc.aside.utils.ASIDEMarkerAndAnnotationUtil;
+import edu.uncc.aside.utils.Converter;
 import edu.uncc.sis.aside.AsidePlugin;
-import edu.uncc.sis.aside.ast.ASTResolving;
 import edu.uncc.sis.aside.constants.PluginConstants;
 import edu.uncc.sis.aside.domainmodels.TrustBoundaryRepository;
 import edu.uncc.sis.aside.preferences.PreferencesSet;
-import edu.uncc.sis.aside.utils.ASIDEMarkerAndAnnotationUtil;
-import edu.uncc.sis.aside.utils.Converter;
 
 /**
  * 

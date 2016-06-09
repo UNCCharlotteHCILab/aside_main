@@ -1,4 +1,4 @@
-package edu.uncc.sis.aside.utils;
+package edu.uncc.aside.utils;
 
 import org.w3c.dom.Document;
 

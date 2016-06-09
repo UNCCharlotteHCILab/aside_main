@@ -7,9 +7,9 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import edu.uncc.aside.utils.DocumentWrapper;
 import edu.uncc.sis.aside.domainmodels.RuleType;
 import edu.uncc.sis.aside.domainmodels.ValidationRule;
-import edu.uncc.sis.aside.utils.DocumentWrapper;
 
 public final class ValidationRulesReader extends XMLReader {
 

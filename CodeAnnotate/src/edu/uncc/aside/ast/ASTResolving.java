@@ -1,4 +1,4 @@
-package edu.uncc.sis.aside.ast;
+package edu.uncc.aside.ast;
 
 import java.util.ArrayList;
 import java.util.List;

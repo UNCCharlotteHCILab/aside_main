@@ -25,9 +25,9 @@ import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 
+import edu.uncc.aside.ast.ASTBuilder;
 import edu.uncc.aside.codeannotate.Plugin;
 import edu.uncc.sis.aside.AsidePlugin;
-import edu.uncc.sis.aside.ast.ASTBuilder;
 import edu.uncc.sis.aside.constants.PluginConstants;
 import edu.uncc.sis.aside.visitors.MethodDeclarationVisitor;
 

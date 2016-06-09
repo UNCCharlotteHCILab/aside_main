@@ -48,14 +48,14 @@ import org.eclipse.ui.internal.WorkbenchWindow;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
+import edu.uncc.aside.utils.AuthenCenter;
+import edu.uncc.aside.utils.ConsentForm;
+import edu.uncc.aside.utils.MakerManagement;
+import edu.uncc.aside.utils.SendMailTLS;
 import edu.uncc.sis.aside.auxiliary.core.TestRunOnAllProjects;
 import edu.uncc.sis.aside.constants.PluginConstants;
 import edu.uncc.sis.aside.logging.AsideLoggingManager;
 import edu.uncc.sis.aside.preferences.IPreferenceConstants;
-import edu.uncc.sis.aside.utils.AuthenCenter;
-import edu.uncc.sis.aside.utils.ConsentForm;
-import edu.uncc.sis.aside.utils.MakerManagement;
-import edu.uncc.sis.aside.utils.SendMailTLS;
 
 /**
  * The activator class controls the plug-in life cycle

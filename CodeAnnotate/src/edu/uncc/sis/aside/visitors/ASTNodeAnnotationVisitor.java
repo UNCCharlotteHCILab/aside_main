@@ -7,7 +7,7 @@ import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.ASTVisitor;
 import org.eclipse.jface.text.source.Annotation;
 
-import edu.uncc.sis.aside.utils.ASIDEMarkerAndAnnotationUtil;
+import edu.uncc.aside.utils.ASIDEMarkerAndAnnotationUtil;
 
 public class ASTNodeAnnotationVisitor extends ASTVisitor {
 	

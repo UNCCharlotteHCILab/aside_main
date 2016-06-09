@@ -29,7 +29,7 @@ import org.eclipse.text.edits.TextEdit;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 
-import edu.uncc.sis.aside.ast.ASTResolving;
+import edu.uncc.aside.ast.ASTResolving;
 
 public class SemanticInputWizard extends Wizard implements INewWizard {
 	private SemanticInputWizardPage page;

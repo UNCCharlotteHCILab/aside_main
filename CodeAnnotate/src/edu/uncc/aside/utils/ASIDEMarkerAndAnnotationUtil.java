@@ -1,4 +1,4 @@
-package edu.uncc.sis.aside.utils;
+package edu.uncc.aside.utils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -97,6 +97,7 @@ public class ASIDEMarkerAndAnnotationUtil {
 			if (javaElement != null) {
 				IFile file = (IFile) javaElement.getCorrespondingResource();
 				marker = file.createMarker(PluginConstants.ASIDE_MARKER_TYPE);
+				
 				marker.setAttributes(markerAttributes);
 			}
 

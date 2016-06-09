@@ -56,14 +56,14 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.PartInitException;
 
+import edu.uncc.aside.ast.ASTBuilder;
+import edu.uncc.aside.ast.ASTResolving;
 import edu.uncc.aside.codeannotate.Plugin;
+import edu.uncc.aside.utils.ASIDEMarkerAndAnnotationUtil;
 import edu.uncc.sis.aside.AsidePlugin;
-import edu.uncc.sis.aside.ast.ASTBuilder;
-import edu.uncc.sis.aside.ast.ASTResolving;
 import edu.uncc.sis.aside.constants.PluginConstants;
 import edu.uncc.sis.aside.domainmodels.ASTRewriteAndTracking;
 import edu.uncc.sis.aside.domainmodels.ASTRewriteAndTryCatchFlag;
-import edu.uncc.sis.aside.utils.ASIDEMarkerAndAnnotationUtil;
 import edu.uncc.sis.aside.visitors.FindNodeListVisitor;
 
 public class CodeGenerator {

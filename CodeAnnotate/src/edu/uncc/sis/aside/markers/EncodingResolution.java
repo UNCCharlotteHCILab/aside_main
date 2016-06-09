@@ -40,13 +40,13 @@ import org.eclipse.ui.texteditor.AbstractTextEditor;
 import org.eclipse.ui.texteditor.IDocumentProvider;
 import org.eclipse.ui.texteditor.ITextEditor;
 
+import edu.uncc.aside.ast.ASTResolving;
 import edu.uncc.aside.codeannotate.Plugin;
+import edu.uncc.aside.utils.ASIDEMarkerAndAnnotationUtil;
 import edu.uncc.sis.aside.AsidePlugin;
-import edu.uncc.sis.aside.ast.ASTResolving;
 import edu.uncc.sis.aside.auxiliary.core.AsideScanOneICompilationUnit;
 import edu.uncc.sis.aside.auxiliary.core.CodeGenerator;
 import edu.uncc.sis.aside.constants.PluginConstants;
-import edu.uncc.sis.aside.utils.ASIDEMarkerAndAnnotationUtil;
 
 public class EncodingResolution implements IMarkerResolution,
 		IMarkerResolution2 {

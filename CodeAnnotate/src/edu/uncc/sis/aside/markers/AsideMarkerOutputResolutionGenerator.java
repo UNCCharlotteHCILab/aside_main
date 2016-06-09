@@ -19,10 +19,10 @@ import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.PartInitException;
 
 import edu.uncc.aside.codeannotate.Plugin;
+import edu.uncc.aside.utils.ASIDEMarkerAndAnnotationUtil;
+import edu.uncc.aside.utils.Converter;
 import edu.uncc.sis.aside.AsidePlugin;
 import edu.uncc.sis.aside.constants.PluginConstants;
-import edu.uncc.sis.aside.utils.ASIDEMarkerAndAnnotationUtil;
-import edu.uncc.sis.aside.utils.Converter;
 import edu.uncc.sis.aside.views.ExplanationView;
 
 public class AsideMarkerOutputResolutionGenerator implements

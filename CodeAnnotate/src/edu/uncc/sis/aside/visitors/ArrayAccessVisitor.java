@@ -16,10 +16,10 @@ import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.SimpleName;
 import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
 
+import edu.uncc.aside.ast.ASTResolving;
 import edu.uncc.aside.codeannotate.Plugin;
+import edu.uncc.aside.utils.ASIDEMarkerAndAnnotationUtil;
 import edu.uncc.sis.aside.AsidePlugin;
-import edu.uncc.sis.aside.ast.ASTResolving;
-import edu.uncc.sis.aside.utils.ASIDEMarkerAndAnnotationUtil;
 
 public class ArrayAccessVisitor extends ASTVisitor {
 

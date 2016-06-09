@@ -19,7 +19,7 @@
     <category
           description="Actions belong to ASIDE CodeAnnotate"
           id="ASIDE.codeannotate"
-          name="ASIDE CodeAnnotate">
+          name="ASIDE CodeAnnotate MM">
     </category>
     <!--
     <command
@@ -33,7 +33,7 @@
           categoryId="ASIDE.codeannotate"
           description="Annotate paths"
           id="annotatePath"
-          name="ASIDE Code Annotate">
+          name="ASIDE Code Annotate NN">
     </command>
 </extension>
 
@@ -76,9 +76,9 @@
             locationURI="popup:org.eclipse.ui.popup.any?after=additions">
             <command
                   commandId="annotatePath"
-                  label="ASIDE CodeAnnotate"
+                  label="ASIDE CodeAnnotate YY"
                   style="push"
-                  tooltip="Annotate paths"
+                  tooltip="Annotate paths2"
                   icon="icons/greenCheck.png">
             </command>
       </menuContribution>
@@ -185,7 +185,7 @@
     <extension
          point="org.eclipse.ui.views">
       <category
-            name="ASIDE CodeAnnotate"
+            name="ASIDE CodeAnnotate333"
             id="codeannotate">
          
       </category>

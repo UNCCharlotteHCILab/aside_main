@@ -1,4 +1,4 @@
-package edu.uncc.sis.aside.ast;
+package edu.uncc.aside.ast;
 
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.dom.AST;

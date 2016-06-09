@@ -1,4 +1,4 @@
-package edu.uncc.sis.aside.utils;
+package edu.uncc.aside.utils;
 
 import java.io.File;
 import java.text.DateFormat;
@@ -100,7 +100,7 @@ public class MakerManagement {
 								marker.delete();
 								System.out.println("Not deleting");
 								
-								InterfaceUtil.createMarker(markerType, char_start, char_start+length, theResource);
+								InterfaceUtil.createMarker(markerType, char_start, char_start+length, theResource, "");
 							}
 						}
 							
@@ -166,7 +166,7 @@ public class MakerManagement {
 			}
 			markers = resource.findMarkers("edu.uncc.sis.aside.AsideMarker", false, IResource.DEPTH_ONE);
 			System.out.println("Markers in " + unit.getElementName() + " is " + markers.length);
-		} catch (JavaModelException e) {
+		} catch (JavaModelExsception e) {
 			System.err.println("project.get3");
 			// TODO Auto-generated catch block
 			e.printStackTrace();

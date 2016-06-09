@@ -13,8 +13,8 @@ import org.eclipse.jdt.core.dom.ASTVisitor;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 
+import edu.uncc.aside.utils.ASIDEMarkerAndAnnotationUtil;
 import edu.uncc.sis.aside.preferences.PreferencesSet;
-import edu.uncc.sis.aside.utils.ASIDEMarkerAndAnnotationUtil;
 
 /**
  * 

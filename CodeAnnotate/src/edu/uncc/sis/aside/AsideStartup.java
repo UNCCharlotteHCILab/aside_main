@@ -16,9 +16,9 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IStartup;
 
+import edu.uncc.aside.utils.ConsentForm;
+import edu.uncc.aside.utils.MakerManagement;
 import edu.uncc.sis.aside.auxiliary.core.TestRunOnAllProjects;
-import edu.uncc.sis.aside.utils.ConsentForm;
-import edu.uncc.sis.aside.utils.MakerManagement;
 
 /**
  * 
