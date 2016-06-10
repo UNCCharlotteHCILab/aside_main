@@ -1,16 +1,23 @@
 package edu.uncc.aside.codeannotate;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaElement;
+import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IMember;
 import org.eclipse.jdt.core.IMethod;
+import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.core.dom.AST;
@@ -33,6 +40,127 @@ import edu.uncc.aside.codeannotate.asideInterface.InterfaceUtil;
  * Very useful utility class, currently copied from LapsePlus
  */
 public class Utils {
+	
+	public static class RetrievalImplementation 
+	{
+	  int n;
+	  boolean valueSet=false ;
+
+	   static void readFromCSVFile()
+	  {
+	    
+	    String csvFile = "AnnotationCSV.csv";
+		BufferedReader br = null;
+		String line = "";
+		String csvSplitBy = ",";
+		
+		
+			String fileName="AccountsServlet.java";
+			IResource theResource = null;
+		//	MakerManagement.setAnnotationFromCSVFile( Plugin.ANNOTATION_QUESTION,"AccountServlet.java", 1000,20);
+			for (IProject p : ResourcesPlugin.getWorkspace().getRoot().getProjects() ){
+				if(p.isOpen() && !p.getName().equalsIgnoreCase("RemoteSystemsTempFiles"))
+				{
+
+					IJavaProject javaProject = JavaCore.create(p);
+					if(javaProject == null)
+						continue;
+					try{
+						IPackageFragment[] fragments = javaProject
+								.getPackageFragments();
+
+						for (IPackageFragment fragment : fragments) {
+							//	ICompilationUnit[] units = fragment.getCompilationUnits();
+							for (ICompilationUnit unit : fragment.getCompilationUnits()) {
+								if (unit.getElementName().equals(fileName))
+								{
+									 theResource = unit.getResource();
+									break;
+								}
+							}
+						}
+					}
+					catch(Exception e)
+					{
+						e.printStackTrace();
+					}
+				}
+			}
+			InterfaceUtil.createMarker(Plugin.ANNOTATION_QUESTION, 1500, 1520, theResource,"");
+			
+			try {
+					
+				for (IProject p : ResourcesPlugin.getWorkspace().getRoot().getProjects() ){
+					if(p.isOpen() && !p.getName().equalsIgnoreCase("RemoteSystemsTempFiles"))
+					{
+						
+						br = new BufferedReader(new FileReader(p.getLocation().makeAbsolute() + "/"+ csvFile));
+						while ((line = br.readLine()) != null) {
+
+					        // use comma as separator
+						String[] annotation = line.split(csvSplitBy);
+
+						System.out.println("Annotation [annotationMarkerName= " + annotation[0] 
+								 				+ " , fileName=" + annotation[1]
+								 				+ " , markerStart=" + annotation[2]
+								 				+ " , highlightingLength =" + annotation[3]
+								 				+ " , annotatedText=" + annotation[4]
+								 			//	+ " , randomId=" + annotation[5] + "]"
+								 				);
+						
+						
+						IJavaProject javaProject = JavaCore.create(p);
+						if(javaProject == null)
+							continue;
+						try{
+							IPackageFragment[] fragments = javaProject
+									.getPackageFragments();
+
+							for (IPackageFragment fragment : fragments) {
+								//	ICompilationUnit[] units = fragment.getCompilationUnits();
+								for (ICompilationUnit unit : fragment.getCompilationUnits()) {
+									if (unit.getElementName().equals(annotation[1]))
+									{
+										 theResource = unit.getResource();
+										break;
+									}
+								}
+							}
+						}
+						catch(Exception e)
+						{
+							e.printStackTrace();
+						}
+						int Start = Integer.parseInt(annotation[2].trim());
+						int End= Start +  Integer.parseInt(annotation[3].trim());
+						
+						InterfaceUtil.createMarker(annotation[0], Start,End, theResource,"");
+					}
+						
+					
+				}
+				
+				//setAnnotationFromCSVFile(annotation[0],annotation[1],annotation[2],annotation[3],annotation[4],annotation[5]);
+			//	MakerManagement.setAnnotationFromCSVFile( annotation[0],annotation[1],annotation[2],annotation[3]);
+			}
+
+		
+				
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			
+			
+
+		System.out.println("Done");
+		
+		//valueSet = false;
+	  //  notify();
+	  }
+
+	 
+	}
 
 	public static class ExprUnitResource {
 		Expression expr;
@@ -194,17 +322,21 @@ public class Utils {
 
 	public static void markAccessor(MethodInvocation mi, IResource resource,
 			CompilationUnit cu) {
-
+		int char_start, length;
 		try {
 			// First, gotta check whether there is a marker for the method
 			// invocation
 			IMarker[] markers = resource.findMarkers(
 					Plugin.ANNOTATION_QUESTION, false, IResource.DEPTH_ONE);
-			int char_start, length;
+			
+			
 			for (IMarker marker : markers) {
+				
 				char_start = marker.getAttribute(IMarker.CHAR_START, -1);
+				
 				length = marker.getAttribute(IMarker.CHAR_END, -1) - char_start;
 				// Second, if there is one, then move on; if not, create one.
+				
 				if (char_start == mi.getStartPosition()
 						&& length == mi.getLength())
 					return;
@@ -219,6 +351,7 @@ public class Utils {
 					+ mi.getLength());
 			questionMarker.setAttribute(IMarker.MESSAGE,
 					"Where is the corresponding authentication process?");
+			
 			questionMarker.setAttribute(IMarker.LINE_NUMBER,
 					cu.getLineNumber(mi.getStartPosition()));
 			questionMarker.setAttribute(IMarker.SEVERITY,

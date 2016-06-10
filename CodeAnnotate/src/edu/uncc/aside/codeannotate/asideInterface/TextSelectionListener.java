@@ -19,6 +19,8 @@ public class TextSelectionListener implements ISelectionListener
 		if (VariablesAndConstants.isAnnotatingNow == true && theSelection instanceof ITextSelection) 
 		{
 			ITextSelection theTextSelection = (ITextSelection)theSelection;
+			
+			//Create New Marker using Highlighted (selected) text by user
 	        InterfaceUtil.processAnnotationChanges(theWorkbenchPart, theTextSelection);
 	    }
 	    

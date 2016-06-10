@@ -85,13 +85,38 @@
       
       
    </extension>  
+   <extension
+         point="org.eclipse.core.resources.markers" 
+         id="ASIDE.RootMarker" name="Root Marker">     
+       <super type="org.eclipse.core.resources.marker"/>
+         <persistent value="true"/>
+   </extension>
    
     <extension
          point="org.eclipse.core.resources.markers" 
-         id="annotationQuestionChecked" name="Sensitive Information Retrieval Points">
+         id="CodeAnnotate.annotationQuestion" 
+         name="Question Sensitive Information Retrieval Points">
       <!--   <super type="org.eclipse.core.resources.textmarker"/>	-->
        <super type="org.eclipse.core.resources.marker"/>
-         <persistent value="false"/>
+       <super type="ASIDE.RootMarker"/>
+         <persistent value="true"/>
+   </extension>
+    <extension
+         point="org.eclipse.core.resources.markers" 
+         id="CodeAnnotate.annotationQuestionChecked" 
+         name="Sensitive Information Retrieval Points">
+      <!--   <super type="org.eclipse.core.resources.textmarker"/>	-->
+       <super type="org.eclipse.core.resources.marker"/>
+         <persistent value="true"/>
+   </extension>
+  
+   <extension
+         point="org.eclipse.core.resources.markers" 
+         id="CodeAnnotate.annotationAnswer" 
+         name="Answer Sensitive Information Retrieval Points">
+      <!--   <super type="org.eclipse.core.resources.textmarker"/>	-->
+       <super type="org.eclipse.core.resources.marker"/>
+         <persistent value="true"/>
    </extension>
   
    <extension point="org.eclipse.ui.editors.annotationTypes">
@@ -111,16 +136,18 @@
 			annotationType="CodeAnnotate.annotationQuestionAnnotation"
 			colorPreferenceKey="questionColorPreference" colorPreferenceValue="255,192,203"
 			contributesToHeader="true" highlightPreferenceKey="questionHighlightPreference"
-			highlightPreferenceValue="true" icon="icons/red.jpeg"
+			highlightPreferenceValue="true" 
+			icon="icons/red.jpeg"
 			includeOnPreferencePage="true" isGoToNextNavigationTarget="true"
 			isGoToNextNavigationTargetKey="questionIsGoToNextNavigationTarget"
 			isGoToPreviousNavigationTarget="true"
 			isGoToPreviousNavigationTargetKey="questionIsGoToPreviousNavigationTarget"
-			label="AnnotationQuestion" overviewRulerPreferenceKey="questionOverviewRulerPreference"
+			label="AnnotationQuestion2" overviewRulerPreferenceKey="questionOverviewRulerPreference"
 			overviewRulerPreferenceValue="true" presentationLayer="8"
-			quickFixIcon="icons/red.jpeg" showInNextPrevDropdownToolbarAction="true"
+			quickFixIcon="icons/red.jpeg" 
+			showInNextPrevDropdownToolbarAction="true"
 			showInNextPrevDropdownToolbarActionKey="questionShowInNextPrevDropdownToolbarAction"
-			symbolicIcon="warning" textPreferenceKey="questionTextPreference"
+			symbolicIcon="error" textPreferenceKey="questionTextPreference"
 			textPreferenceValue="true" textStylePreferenceKey="questionTextStylePreference"
 			textStylePreferenceValue="BOX" verticalRulerPreferenceKey="questionVerticalRulerPreference"
 			verticalRulerPreferenceValue="true">
@@ -222,7 +249,7 @@
             id="CodeAnnotate.codeAnnotationCompilerParticipant">
       </compilationParticipant>
    </extension>
-         
+    <!--     
        <extension
          id="my.marker"
          name="Testing Marker"
@@ -266,7 +293,7 @@
          markerType="my.marker"
          class="edu.uncc.aside.codeannotate.asideInterface.InterfaceResolutionGenerator"/>
    </extension>
-    
+    -->
     <!-- WARNING All marker ids MUST be all lowercase and contain one peroid. If they do not, they will vanish as soon as the editor tab containing them is closed. -->
     <!-- All colorPreferenceKeys should be different. They can only be the same if the colorPreferenceValues are the same. -->
     <!-- to get a colored border around the text instead of highlighting, delete the highlightpreferencekey and highlightpreference value attributes and make sure that when the marker is used in code that it spans a lenght from char start to char finish rather than line number -->
@@ -329,7 +356,8 @@
          name="Green Diamond"
          point="org.eclipse.core.resources.markers">
          <super type="org.eclipse.core.resources.textmarker"/>
-         <persistent value="false"/>
+         <super type="ASIDE.RootMarker"/>
+         <persistent value="true"/>
    </extension>
    <extension
    		 id="greenDiamondAnnotationType"
@@ -382,6 +410,7 @@
          name="Red Flag"
          point="org.eclipse.core.resources.markers">
          <super type="org.eclipse.core.resources.textmarker"/>
+         <super type="ASIDE.RootMarker"/>
          <persistent value="false"/>
    </extension>
    <extension
@@ -431,6 +460,7 @@
          name="Red Question"
          point="org.eclipse.core.resources.markers">
          <super type="org.eclipse.core.resources.textmarker"/>
+         <super type="ASIDE.RootMarker"/>
          <persistent value="false"/>
    </extension>
    <extension
@@ -481,7 +511,8 @@
          name="Green Check"
          point="org.eclipse.core.resources.markers">
          <super type="org.eclipse.core.resources.textmarker"/>
-         <persistent value="false"/>
+         <super type="ASIDE.RootMarker"/>
+         <persistent value="true"/>
    </extension>
    <extension
    		 id="greenCheckAnnotationType"
@@ -532,6 +563,7 @@
          name="Yellow Question"
          point="org.eclipse.core.resources.markers">
          <super type="org.eclipse.core.resources.marker"/>
+         <super type="ASIDE.RootMarker"/>
          <persistent value="false"/>
    </extension>
    <extension
@@ -594,6 +626,7 @@
          name="Green Diamond"
          point="org.eclipse.core.resources.markers">
          <super type="org.eclipse.core.resources.textmarker"/>
+         <super type="ASIDE.RootMarker"/>
          <persistent value="false"/>
    </extension>
    <extension
@@ -645,6 +678,7 @@
          name="Red Flag"
          point="org.eclipse.core.resources.markers">
          <super type="org.eclipse.core.resources.textmarker"/>
+         <super type="ASIDE.RootMarker"/>
          <persistent value="false"/>
    </extension>
    <extension
@@ -694,7 +728,8 @@
          name="Green Check"
          point="org.eclipse.core.resources.markers">
          <super type="org.eclipse.core.resources.textmarker"/>
-         <persistent value="false"/>
+         <super type="ASIDE.RootMarker"/>
+         <persistent value="true"/>
    </extension>
    <extension
    		 id="greenCheckBoxAnnotationType"
@@ -743,7 +778,8 @@
          name="Yellow Question"
          point="org.eclipse.core.resources.markers">
          <super type="org.eclipse.core.resources.marker"/>
-         <persistent value="false"/>
+         <super type="ASIDE.RootMarker"/>
+         <persistent value="true"/>
    </extension>
    <extension
    		 id="yellowQuestionBoxAnnotationType"
@@ -755,13 +791,8 @@
       </type>
    </extension>
 	
-	
-	
-	<extension
-         point="org.eclipse.ui.editors.markerAnnotationSpecification"
+	<extension   point="org.eclipse.ui.editors.markerAnnotationSpecification"
          id="yellowQuestionBoxAnnotationSpec">
-        
-         
       <specification
             annotationType="yellowQuestionBoxAnnotationType"
             includeOnPreferencePage="true"
@@ -805,6 +836,7 @@
          name="Red Question"
          point="org.eclipse.core.resources.markers">
          <super type="org.eclipse.core.resources.textmarker"/>
+         <super type="ASIDE.RootMarker"/>
          <persistent value="false"/>
    </extension>
    <extension

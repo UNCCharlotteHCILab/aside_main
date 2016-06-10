@@ -127,7 +127,7 @@ public class AsidePlugin extends AbstractUIPlugin {
 			setAllowed(true);
 			
 		}
-		MakerManagement.removeAllASIDEMarkersInWorkspace();
+		MakerManagement.deleteWorkspaceMarkers("");
 		super.start(context);
 		plugin = this;
 		if (astMatcher == null) {

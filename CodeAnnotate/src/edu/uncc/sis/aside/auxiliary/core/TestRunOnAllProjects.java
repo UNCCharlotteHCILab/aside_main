@@ -55,7 +55,7 @@ public class TestRunOnAllProjects {
 
 			for(final IProject project : activeProjects){
 			
-				if(project == null|| project.getName().equalsIgnoreCase("RemoteSystemsTempFiles"))
+				if(project == null || project.getName().equalsIgnoreCase("RemoteSystemsTempFiles"))
 					continue;
 				
 				System.out.println("projectname = " + project.getName());

@@ -39,6 +39,8 @@ import org.eclipse.ui.texteditor.AnnotationPreferenceLookup;
 import org.eclipse.ui.texteditor.AnnotationTypeLookup;
 import org.eclipse.ui.texteditor.IDocumentProvider;
 
+import edu.uncc.aside.codeannotate.Plugin;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
@@ -61,61 +63,59 @@ public  class InterfaceUtil
 	public static String randomId=null;
 	
 	//changes a marker type, like a yellow question into a green check. markerType of 0 means it is an annotation request. markerType of 1 means it is an annotation
-	public static void changeMarker(String markerName, int theIndex, int markerType, int secondIndex)
+	public static void changeMarker(String targetMarkerName, int srcIndex, int srcMarkerType, int srcSecondIndex)
 	{
 		try
 		{
-		IMarker annotationMarker;
-		if(markerType == 0)
+		IMarker oldMarker;
+		if(srcMarkerType == 0)
 		{
-			annotationMarker = VariablesAndConstants.annotationRequestMarkers[theIndex];
+			oldMarker = VariablesAndConstants.annotationRequestMarkers[srcIndex];
 		}
 		else
 		{
-			System.out.println ("counters in change markers is " + VariablesAndConstants.annotationMarkerCounters[theIndex]);
-			System.out.println("changemarker is " + VariablesAndConstants.annotationMarkers[theIndex][VariablesAndConstants.annotationMarkerCounters[secondIndex]]);
-			annotationMarker = VariablesAndConstants.annotationMarkers[theIndex][VariablesAndConstants.annotationMarkerCounters[secondIndex]];
+			System.out.println ("counters in change markers is " + VariablesAndConstants.annotationMarkerCounters[srcIndex]);
+			System.out.println("changemarker is " + VariablesAndConstants.annotationMarkers[srcIndex][VariablesAndConstants.annotationMarkerCounters[srcSecondIndex]]);
+			oldMarker = VariablesAndConstants.annotationMarkers[srcIndex][VariablesAndConstants.annotationMarkerCounters[srcSecondIndex]];
 		}
 		
-		if(annotationMarker != null)
+		if(oldMarker != null)
 		{
-			int markerStart = annotationMarker.getAttribute(IMarker.CHAR_START, -1);
-			int markerEnd = annotationMarker.getAttribute(IMarker.CHAR_END, -1);
-			int markerIndex = annotationMarker.getAttribute("markerIndex", -1);
+			int markerStart = oldMarker.getAttribute(IMarker.CHAR_START, -1);
+			int markerEnd = oldMarker.getAttribute(IMarker.CHAR_END, -1);
+			int markerIndex = oldMarker.getAttribute("markerIndex", -1);
 			//if the marker attributes are not invalid
 			if(markerStart != -1 && markerEnd != -1 && markerIndex != -1)
 			{
 				//create new marker and delete the old one
-				IResource targetResource = annotationMarker.getResource();	
- 			    IMarker theMarker = targetResource.createMarker(markerName);
- 			   annotationMarkerName=markerName;
- 			    theMarker.setAttribute(IMarker.CHAR_START, markerStart);
- 			   	theMarker.setAttribute(IMarker.CHAR_END, markerEnd);
- 			   	theMarker.setAttribute("markerIndex", markerIndex);
- 			  	theMarker.setAttribute(IMarker.MESSAGE, "Access Control Plugin Marker");
- 			 	theMarker.setAttribute(IMarker.PRIORITY, IMarker.PRIORITY_HIGH);
- 				theMarker.setAttribute(IMarker.SEVERITY, IMarker.SEVERITY_ERROR);
+				IResource targetResource = oldMarker.getResource();	
+				
+ 			    IMarker newMarker = targetResource.createMarker(targetMarkerName);
+ 			   annotationMarkerName=targetMarkerName;
+ 			    newMarker.setAttribute(IMarker.CHAR_START, markerStart);
+ 			   	newMarker.setAttribute(IMarker.CHAR_END, markerEnd);
+ 			   	newMarker.setAttribute("markerIndex", markerIndex);
+ 			  	newMarker.setAttribute(IMarker.MESSAGE, "Access Control Plugin Marker");
+ 			 	newMarker.setAttribute(IMarker.PRIORITY, IMarker.PRIORITY_HIGH);
+ 				newMarker.setAttribute(IMarker.SEVERITY, IMarker.SEVERITY_ERROR);
  				
  				//System.out.println("Char_start is "+ theMarker.getAttribute(IMarker.CHAR_START));
  				//System.out.println("Char_end is "+ theMarker.getAttribute(IMarker.CHAR_END));
  				
  				//put the new marker back into the array
- 				if(markerType == 0)
+ 				if(srcMarkerType == 0)
  				{
- 					VariablesAndConstants.annotationRequestMarkers[theIndex] = theMarker;
+ 					VariablesAndConstants.annotationRequestMarkers[srcIndex] = newMarker;
  				}
  				else
  				{
  					//if it is an annotation, give it back its second index
- 					theMarker.setAttribute("secondIndex", secondIndex);
- 					VariablesAndConstants.annotationMarkers[theIndex][VariablesAndConstants.annotationMarkerCounters[secondIndex]] = theMarker;
+ 					newMarker.setAttribute("secondIndex", srcSecondIndex);
+ 					VariablesAndConstants.annotationMarkers[srcIndex][VariablesAndConstants.annotationMarkerCounters[srcSecondIndex]] = newMarker;
  				}
 				    
 	   			//now delete what used to be there
- 				annotationMarker.delete();
- 				
- 				
- 				
+ 				oldMarker.delete();
 				
 			}
 			else
@@ -180,8 +180,10 @@ public  class InterfaceUtil
 			String trimmedText = "";
 			
 			int charStart = theMarker.getAttribute(IMarker.CHAR_START, -1);
+			
 			IDocumentProvider provider = new TextFileDocumentProvider();
 			provider.connect(theFile);
+			
 			IDocument theDocument = provider.getDocument(theFile);
 			provider.disconnect(theFile);
 			
@@ -196,16 +198,16 @@ public  class InterfaceUtil
 			System.out.println("trimmedText "+trimmedText);
 			
 			//save the marker index
-			theMarker.setAttribute("markerIndex", VariablesAndConstants.count);
-			VariablesAndConstants.annotationRequestMarkers[VariablesAndConstants.count] = theMarker;
+			theMarker.setAttribute("markerIndex", VariablesAndConstants.annotationRequestsCount);
+			VariablesAndConstants.annotationRequestMarkers[VariablesAndConstants.annotationRequestsCount] = theMarker;
 			
 			//save the marker start 
-			VariablesAndConstants.markerStart[VariablesAndConstants.count] = theMarker.getAttribute(IMarker.CHAR_START, -1);
+			VariablesAndConstants.markerStart[VariablesAndConstants.annotationRequestsCount] = theMarker.getAttribute(IMarker.CHAR_START, -1);
 			
-			VariablesAndConstants.methodNames[VariablesAndConstants.count] = trimmedText;		
+			VariablesAndConstants.methodNames[VariablesAndConstants.annotationRequestsCount] = trimmedText;		
 			
 			//and advance the count
-			VariablesAndConstants.count++;	
+			VariablesAndConstants.annotationRequestsCount++;	
 			
 		}
 		catch(Exception e)
@@ -226,14 +228,14 @@ public  class InterfaceUtil
 		try
 		{
 			//save the marker index
-			theMarker.setAttribute("markerIndex", VariablesAndConstants.count);
-			VariablesAndConstants.annotationRequestMarkers[VariablesAndConstants.count] = theMarker;
+			theMarker.setAttribute("markerIndex", VariablesAndConstants.annotationRequestsCount);
+			VariablesAndConstants.annotationRequestMarkers[VariablesAndConstants.annotationRequestsCount] = theMarker;
 			
 			//save the marker start 
-			VariablesAndConstants.markerStart[VariablesAndConstants.count] = theMarker.getAttribute(IMarker.CHAR_START, -1);	
+			VariablesAndConstants.markerStart[VariablesAndConstants.annotationRequestsCount] = theMarker.getAttribute(IMarker.CHAR_START, -1);	
 			
 			//and advance the count
-			VariablesAndConstants.count++;	
+			VariablesAndConstants.annotationRequestsCount++;	
 			
 		}
 		catch(Exception e)
@@ -416,6 +418,7 @@ public  class InterfaceUtil
 			annotationFound = false;
 			missingAnnotationsCounter = 0;
 			missingAnnotations = new int[100];
+			
 			for(int r = 0; r < countersForR[i]; r++) //for every member of each group
 			{			
 				reference = matchingGroups[i][r]; //for simplicity
@@ -436,14 +439,16 @@ public  class InterfaceUtil
 			}
 			else
 			{
-				annotationType = "yellow.question.box";
+				annotationType = Plugin.ANNOTATION_QUESTION; //  "yellow.question.box";
 			}
 			//set all missing annotations to red flag or reset them to yellow question
 			for(int q = 0; q < missingAnnotationsCounter; q++) //for every missing annotation
 			{
 				int tempRef = missingAnnotations[q];
 				//System.out.println("Changing annotation. i is " + i + " q is " + q + " value is " + tempRef + " annotation request string is " + VariablesAndConstants.annotationRequestMarkers[tempRef]);	
+				
 				IMarker theMarker = VariablesAndConstants.annotationRequestMarkers[tempRef]; //grab the associated marker
+				
 				changeMarker(annotationType, theMarker.getAttribute("markerIndex", -1), 0, 0); //change it
 			}
 			
@@ -509,7 +514,7 @@ public  class InterfaceUtil
 			
 			boolean clickedMarkerWhileHighlighting = false;
 			
-			for(int i = 0; i < VariablesAndConstants.count; i++)
+			for(int i = 0; i < VariablesAndConstants.annotationRequestsCount; i++)
 			{
 				//if the starting point of this highlight is the same as the starting point of any saved request marker
 				if(char_start == VariablesAndConstants.markerStart[i])
@@ -519,9 +524,6 @@ public  class InterfaceUtil
 					break;
 				}
 			}
-			
-			
-			
 			
 			//if they just clicked to highlight
 			if(VariablesAndConstants.firstHighlight == true)
@@ -541,8 +543,9 @@ public  class InterfaceUtil
 				IMarker existingAnnotation = VariablesAndConstants.annotationMarkers[VariablesAndConstants.currentIndex][VariablesAndConstants.annotationMarkerCounters[VariablesAndConstants.currentIndex]];
 				if(existingAnnotation == null)
 				{
-					//no annotation exists yet, create one
+					//no annotation exists yet, create one based on Highlighted area= Annotation Answer
 					createAnnotation(char_start, highlightLength, iResource);
+					
 					//now change the annotation request
 					bindRequest();
 				}
@@ -566,9 +569,14 @@ public  class InterfaceUtil
 	{
 		try
 		{	
-			VariablesAndConstants.annotationMarkers[VariablesAndConstants.currentIndex][VariablesAndConstants.annotationMarkerCounters[VariablesAndConstants.currentIndex]].delete();
+			VariablesAndConstants.annotationMarkers[VariablesAndConstants.currentIndex]
+					[VariablesAndConstants.annotationMarkerCounters[VariablesAndConstants.currentIndex]]
+							.delete();
+			
 			createAnnotation(char_start, length, iResource);
+			
 			bindRequest();
+			
 			System.out.println("update " + VariablesAndConstants.annotationMarkerCounters[VariablesAndConstants.currentIndex]);
 			
 		}
@@ -584,17 +592,19 @@ public  class InterfaceUtil
 		try
 		{
 			int char_end = char_start + length;
-			IMarker greenDiamond = iResource.createMarker("green.diamond");
-			greenDiamond.setAttribute(IMarker.CHAR_START, char_start);
-			greenDiamond.setAttribute(IMarker.CHAR_END, char_end);
-			greenDiamond.setAttribute(IMarker.MESSAGE, "Access Control Plugin Marker");
-			greenDiamond.setAttribute(IMarker.PRIORITY, IMarker.PRIORITY_HIGH);
-	   		greenDiamond.setAttribute(IMarker.SEVERITY, IMarker.SEVERITY_ERROR);
-	   		greenDiamond.setAttribute("markerIndex", VariablesAndConstants.currentIndex);
-	   		greenDiamond.setAttribute("secondIndex", VariablesAndConstants.annotationMarkerCounters[VariablesAndConstants.currentIndex]);
+			IMarker marker = iResource.createMarker(Plugin.ANNOTATION_ANSWER); //"green.diamond");
+			
+			marker.setAttribute(IMarker.CHAR_START, char_start);
+			marker.setAttribute(IMarker.CHAR_END, char_end);
+			marker.setAttribute(IMarker.MESSAGE, "Access Control Plugin Marker");
+			marker.setAttribute(IMarker.PRIORITY, IMarker.PRIORITY_HIGH);
+	   		marker.setAttribute(IMarker.SEVERITY, IMarker.SEVERITY_ERROR);
+	   		marker.setAttribute("markerIndex", VariablesAndConstants.currentIndex);
+	   		marker.setAttribute("secondIndex", VariablesAndConstants.annotationMarkerCounters[VariablesAndConstants.currentIndex]);
 	   
 	   		//references the marker in the array, associated with the request
-	   		VariablesAndConstants.annotationMarkers[VariablesAndConstants.currentIndex][VariablesAndConstants.annotationMarkerCounters[VariablesAndConstants.currentIndex]] = greenDiamond;
+	   		VariablesAndConstants.annotationMarkers[VariablesAndConstants.currentIndex][VariablesAndConstants.annotationMarkerCounters[VariablesAndConstants.currentIndex]] = marker;
+	   		
 	   		System.out.println(VariablesAndConstants.annotationMarkerCounters[VariablesAndConstants.currentIndex]);
 	   		
 		}
@@ -607,8 +617,9 @@ public  class InterfaceUtil
 	//changes annotation requests
 	public static void bindRequest()
 	{
-		InterfaceUtil.changeMarker("green.check", VariablesAndConstants.currentIndex, 0, VariablesAndConstants.annotationMarkerCounters[VariablesAndConstants.currentIndex]);
-   		InterfaceUtil.checkForVulnerabilities();
+		InterfaceUtil.changeMarker(Plugin.ANNOTATION_QUESTION_CHECKED , VariablesAndConstants.currentIndex, 0, VariablesAndConstants.annotationMarkerCounters[VariablesAndConstants.currentIndex]);
+   		
+		InterfaceUtil.checkForVulnerabilities();
 	}
 	
 	public static void exitAnnotationMode()
@@ -665,7 +676,7 @@ public  class InterfaceUtil
 		}
 		
 		//first make everything a box instead of highlighted
-		for(int i = 0; i < VariablesAndConstants.count; i ++)
+		for(int i = 0; i < VariablesAndConstants.annotationRequestsCount; i ++)
 		{
 			tempRequestMarker = VariablesAndConstants.annotationRequestMarkers[i];
 			tempIndex = tempRequestMarker.getAttribute("markerIndex", -1);

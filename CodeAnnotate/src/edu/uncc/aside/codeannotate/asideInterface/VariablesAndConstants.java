@@ -28,7 +28,7 @@ public class VariablesAndConstants
 		public static int markerStart[] = new int[100];
 		
 		//count is total amount of annotation request markers;
-		public static int count = 0;
+		public static int annotationRequestsCount = 0;
 		public static int currentIndex = -1;
 		public static TextSelectionListener currentSelectionListener;
 		public static String previousText = "";

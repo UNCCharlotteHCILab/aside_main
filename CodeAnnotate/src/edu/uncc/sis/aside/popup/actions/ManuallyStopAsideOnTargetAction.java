@@ -68,7 +68,7 @@ public class ManuallyStopAsideOnTargetAction implements IObjectActionDelegate {
 		
 		if(Plugin.getDefault().isAllowed()){
 		
-			MakerManagement.removeAllASIDEMarkersInWorkspace();
+			MakerManagement.deleteWorkspaceMarkers("");
 			Plugin.getDefault().setAllowed(false);
 	}
 	}

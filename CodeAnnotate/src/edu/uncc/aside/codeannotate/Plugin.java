@@ -26,6 +26,7 @@ import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.JavaModelException;
+import org.eclipse.core.internal.resources.MarkerManager;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceDescription;
@@ -84,10 +85,10 @@ public class Plugin extends AbstractUIPlugin {
 	public static final String JAVA_WEB_APP_NATURE = "org.eclipse.jdt.core.javanature";
 
 	public static final String ANNOTATION_RELATIONSHIP_VIEW_ID = "relationships";
-
-	public static final String ANNOTATION_ANSWER = "CodeAnnotate.annotationAnswer";
-	public static final String ANNOTATION_QUESTION = "yellow.question.box";
-	public static final String ANNOTATION_QUESTION_CHECKED = "CodeAnnotate.annotationQuestionChecked";
+	public static final String ROOT_MARKER = "ASIDE.RootMarker";
+	public static final String ANNOTATION_ANSWER = "green.diamond"; //"CodeAnnotate.annotationAnswer";
+	public static final String ANNOTATION_QUESTION ="yellow.question.box"; // "CodeAnnotate.annotationQuestion"; //"yellow.question.box"; 
+	public static final String ANNOTATION_QUESTION_CHECKED = "green.check"; //"CodeAnnotate.annotationQuestionChecked";
 	public static final String SENSITIVE_ACCESSORS_CONFIG = "SensitiveInfoAccessors.xml";
 	
 	public static final String ASIDE_NODE_PROP_START = "aside_start";
@@ -154,6 +155,8 @@ public class Plugin extends AbstractUIPlugin {
 	 * )
 	 */
 	
+	
+	/*
 	public static Runnable readFromCSVFile() throws InterruptedException
 	{
 		String csvFile = "C:\\Users\\nnur\\Desktop\\AnnotationCSV.csv";
@@ -199,7 +202,7 @@ public class Plugin extends AbstractUIPlugin {
 		return null;
 	  }
 		
-	
+	*/
 	
 	public void start(BundleContext context) throws Exception {
 		
@@ -211,7 +214,7 @@ public class Plugin extends AbstractUIPlugin {
 		JavaCore.addElementChangedListener(CodeAnnotateElementChangeListener
 				 .getListener());
 		
-		
+		/* Permission Checking */	
 		setAllowed(false);
 		String userIDFromSystem = System.getProperty("user.name");
 		setUserId(userIDFromSystem);
@@ -220,7 +223,7 @@ public class Plugin extends AbstractUIPlugin {
 			
 		}
 		
-		MakerManagement.removeAllASIDEMarkersInWorkspace();
+		System.out.println("XXXXXXXXXXXXXXXX");
 		
 		 if (astMatcher == null) {
 				astMatcher = new ASTMatcher();
@@ -239,7 +242,8 @@ public class Plugin extends AbstractUIPlugin {
 				}
 			}
 
-			configure();
+			configureLog();
+			
 			System.out.println("Aside Plugin start print test");
 			
 			DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
@@ -309,8 +313,18 @@ public class Plugin extends AbstractUIPlugin {
 //						System.err.println("UserId file is not created properly!");
 //					}
 //				}
-			//	TestRunOnAllProjects testRunOnAllProjects = new TestRunOnAllProjects();
+				System.out.println("Removing Markers");
+				
+				MakerManagement.deleteWorkspaceMarkers(Plugin.ROOT_MARKER);
+				
+				TestRunOnAllProjects testRunOnAllProjects = new TestRunOnAllProjects();
 				//testRunOnAllProjects.runOnAllProjects();
+				
+			
+				
+				MakerManagement.restoreMarkersFromFile("markers.csv");
+				
+			//	Utils.RetrievalImplementation.readFromCSVFile();
 
 			}else{
 				System.out.println("this user is not allowed");
@@ -364,9 +378,11 @@ public class Plugin extends AbstractUIPlugin {
 			this.loggingManager.shutdown();
 			this.loggingManager = null;
 		}
+		MakerManagement.saveMarkersToFile(Plugin.ROOT_MARKER , "markers.csv");
+		
 		super.stop(context);
 	}
-	private void configure() {
+	private void configureLog() {
 
 		try {
 			this.END_DAY_SEND_LOGS = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").parse(PluginConstants.LOG_SEND_END_DATE);   //the date needs to be verified
@@ -646,7 +662,7 @@ public class Plugin extends AbstractUIPlugin {
 		return ASIDE_USERID_FILE;
 	}
 
-	
+	/*
 	class RetrievalImplementation 
 	{
 	  int n;
@@ -850,7 +866,7 @@ public class Plugin extends AbstractUIPlugin {
 	  }
 	}
 
-	
+*/	
 }
 
 
