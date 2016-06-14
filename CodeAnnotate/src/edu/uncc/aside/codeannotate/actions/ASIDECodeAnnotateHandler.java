@@ -1,6 +1,14 @@
 package edu.uncc.aside.codeannotate.actions;
 
 import java.util.ArrayList;
+import java.util.Date;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.HashSet;
+import java.util.Set;
+
+import org.apache.log4j.Logger;
+
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
@@ -29,33 +37,47 @@ import org.eclipse.ui.handlers.HandlerUtil;
 import edu.uncc.aside.codeannotate.PathFinder;
 import edu.uncc.aside.codeannotate.Plugin;
 import edu.uncc.aside.codeannotate.listeners.CodeAnnotateDocumentEditListener;
+import edu.uncc.aside.utils.MakerManagement;
+import edu.uncc.sis.aside.auxiliary.core.TestRunOnAllProjects;
 
 /**
  * 
  * @author Jing Xie (jxie2 at uncc dot edu)
- * 
+ * @Modified by Mahmoud ( mmoham12 at uncc dot edu )
  */
 public class ASIDECodeAnnotateHandler extends AbstractHandler {
-
+	
+	private static final Logger logger = Plugin.getLogManager().getLogger(
+			TestRunOnAllProjects.class.getName());
+	
 	private IWorkbenchPart targetPart;
 	IProject selectProject = null;
 
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
+		
 		targetPart = HandlerUtil.getActivePart(event);
 		
 		IWorkbenchPartSite site = targetPart.getSite();
 		ISelectionProvider selectionProvider = site.getSelectionProvider();
+		
 		if (selectionProvider == null)
 			return null;
+		
 		ISelection selection = selectionProvider.getSelection();
+		
 		if (selection == null)
 			return null;
+		
 		if (selection instanceof IStructuredSelection) {
+
 			IStructuredSelection sSelection = (IStructuredSelection) selection;
+
 			if (sSelection.isEmpty())
 				return null;
+
 			Object fElement = sSelection.getFirstElement();
+
 			if (fElement != null && fElement instanceof IResource) {
 				IResource element = (IResource) fElement;
 				selectProject = element.getProject();
@@ -70,6 +92,25 @@ public class ASIDECodeAnnotateHandler extends AbstractHandler {
 		if (selectProject == null)
 			return null;
 
+		if( Plugin.ASIDE_ANALYSIS_STATUS.equalsIgnoreCase("on")){
+			
+			//Turn ASIDE Off after asking from the developer
+			//Removing All Markers and annotation and keep the inserted code
+			
+			IJavaProject javaProject = JavaCore.create(selectProject);
+			
+			MakerManagement.deleteProjectMarkers(javaProject ,Plugin.ROOT_MARKER);
+			
+			Plugin.ASIDE_ANALYSIS_STATUS ="Off";
+			
+			 //get current date time with Date()
+			DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+			
+		    logger.info(dateFormat.format(new Date()) + " : " + Plugin.getUserId() + " turned ASIDE off and ALL markers removed in the project " + 
+		    		javaProject.getElementName().toUpperCase() +". Inserted codes are kept unchanged.");
+
+			return null;
+		}
 		/*
 		 * Use a Job to attach a {@link CodeAnnotateDocumentEditListener} to
 		 * each and every IDocument that is related to a ICompilationUnit in the
@@ -78,6 +119,7 @@ public class ASIDECodeAnnotateHandler extends AbstractHandler {
 		 */
 		Job job = new MountListenerJob("Mount listener to Java file",
 				JavaCore.create(selectProject));
+		
 		job.setPriority(Job.INTERACTIVE);
 		job.schedule();
 
@@ -92,6 +134,7 @@ public class ASIDECodeAnnotateHandler extends AbstractHandler {
 
 								@Override
 								public void run() {
+									
 									PathFinder.getInstance(selectProject).run(monitor);
 								}
 
@@ -118,7 +161,9 @@ public class ASIDECodeAnnotateHandler extends AbstractHandler {
 		public MountListenerJob(String name, IJavaProject project) {
 			super(name);
 			projectOfInterest = project;
+			
 			listener = new CodeAnnotateDocumentEditListener();
+			
 			totalUnits = new ArrayList<ICompilationUnit>();
 		}
 
@@ -165,6 +210,7 @@ public class ASIDECodeAnnotateHandler extends AbstractHandler {
 			int count = 0;
 			IPackageFragment[] fragments = projectOfInterest
 					.getPackageFragments();
+			
 			for (IPackageFragment fragment : fragments) {
 				ICompilationUnit[] units = fragment.getCompilationUnits();
 				for (ICompilationUnit unit : units) {

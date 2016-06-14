@@ -161,11 +161,14 @@ public class PathFinder {
 				System.err.println("expression is not a method invocation");
 				return;
 			}
+			
 			MethodInvocation mi = (MethodInvocation) expr;
 			MethodDeclaration enclosingMethodDeclaration = Utils
 					.getParentMethodDeclaration(expr);
+			
 			IMethodBinding methodBinding = enclosingMethodDeclaration
 					.resolveBinding();
+			
 			if (methodBinding == null) {
 				System.err.println("bindings cannot be resolved");
 				return;
@@ -211,6 +214,7 @@ public class PathFinder {
 			 * Servlet, the statement that has Expr should be marked
 			 */
 			if (Utils.isEntranceMethod(method.getElementName())) {
+				
 				Utils.markAccessor(mi, resource, pair.getCompilationUnit());
 				/*
 				 * build a path from the entrance method to caller, but first,

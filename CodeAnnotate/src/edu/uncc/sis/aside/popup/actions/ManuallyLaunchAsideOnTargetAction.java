@@ -65,106 +65,112 @@ public class ManuallyLaunchAsideOnTargetAction implements IObjectActionDelegate 
 
 	@Override
 	public void run(IAction action) {
-		
-		
+
+
 		String userIDFromSystem = System.getProperty("user.name");
+
 		if(AuthenCenter.hasPermission(userIDFromSystem)){
 			Plugin.getDefault().setAllowed(true);
 		}
-		
+
 		if(Plugin.getDefault().isAllowed()){
-		System.out.println("manually run ASIDE");
-		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-		 //System.out.println("in Manuallylsdfjalsj");
-	    //get current date time with Date()
-		Date date = new Date();
-	    logger.info(dateFormat.format(date)+ " " + "User clicked Run ASIDE from the context menu to launch ASIDE");
+			System.out.println("manually run ASIDE");
+			DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+			//System.out.println("in Manuallylsdfjalsj");
+			//get current date time with Date()
+			Date date = new Date();
+			logger.info(dateFormat.format(date)+ " " + "User clicked Run ASIDE from the context menu to launch ASIDE");
 
-		// scan the selected target's project presentation
-		if (targetWorkbench == null) {
-			return;
-		}
-
-		ISelectionProvider selectionProvider = targetWorkbench.getSite()
-				.getSelectionProvider();
-
-		if (selectionProvider == null) {
-			return;
-		}
-
-		ISelection selection = selectionProvider.getSelection();
-
-		if (selection != null && !selection.isEmpty()
-				&& selection instanceof IStructuredSelection) {
-			IStructuredSelection structuredSelection = (IStructuredSelection) selection;
-
-			Object firstElement = structuredSelection.getFirstElement();
-
-			try {
-				IProject project = null;
-				IJavaProject javaProject = null;
-				if (firstElement != null && firstElement instanceof IResource) {
-					IResource resource = (IResource) firstElement;
-					project = resource.getProject();
-					javaProject = JavaCore.create(project);
-				} else if (firstElement != null
-						&& firstElement instanceof IJavaElement) {
-					IResource resource = (IResource) ((IJavaElement) firstElement)
-							.getAdapter(IResource.class);
-					if (resource != null) {
-						project = resource.getProject();
-						javaProject = JavaCore.create(project);
-					}
-				}
-				if (project != null && javaProject != null) {
-					
-					
-					// setup a new Job thread
-					Plugin.getDefault().setProject(project);
-					
-					ESAPIConfigurationJob job = new ESAPIConfigurationJob(
-							"ESAPI Configuration", project, javaProject);
-					job.scheduleInteractive();
-					inspectOnProject(javaProject);
-					
-				}
-			} catch (JavaModelException e) {
-				e.printStackTrace();
-			} catch (CoreException e) {
-				e.printStackTrace();
+			// scan the selected target's project presentation
+			if (targetWorkbench == null) {
+				return;
 			}
 
-		}
+			ISelectionProvider selectionProvider = targetWorkbench.getSite()
+					.getSelectionProvider();
 
-		// At last, set the CompliationParticipant active
-		if (!Plugin.getDefault().getSignal()) {
-			Plugin.getDefault().setSignal(true);
+			if (selectionProvider == null) {
+				return;
+			}
+
+			ISelection selection = selectionProvider.getSelection();
+
+			if (selection != null && !selection.isEmpty()
+					&& selection instanceof IStructuredSelection) {
+				IStructuredSelection structuredSelection = (IStructuredSelection) selection;
+
+				Object firstElement = structuredSelection.getFirstElement();
+
+				try {
+					IProject project = null;
+					IJavaProject javaProject = null;
+					
+					if (firstElement != null && firstElement instanceof IResource) {
+						
+						IResource resource = (IResource) firstElement;
+						project = resource.getProject();
+						javaProject = JavaCore.create(project);
+						
+					} else if (firstElement != null
+							&& firstElement instanceof IJavaElement) {
+						IResource resource = (IResource) ((IJavaElement) firstElement)
+								.getAdapter(IResource.class);
+						if (resource != null) {
+							project = resource.getProject();
+							javaProject = JavaCore.create(project);
+						}
+					}
+					if (project != null && javaProject != null) {
+
+
+						// setup a new Job thread
+						Plugin.getDefault().setProject(project);
+
+						ESAPIConfigurationJob job = new ESAPIConfigurationJob(
+								"ESAPI Configuration", project, javaProject);
+						job.scheduleInteractive();
+						
+						inspectOnProject(javaProject);
+
+					}
+				} catch (JavaModelException e) {
+					e.printStackTrace();
+				} catch (CoreException e) {
+					e.printStackTrace();
+				}
+
+			}
+
+			// At last, set the CompliationParticipant active
+			if (!Plugin.getDefault().getSignal()) {
+				Plugin.getDefault().setSignal(true);
+			}
+			System.out.println("Manually launch aside finished!");
 		}
-		//System.out.println("Manually launch aside finished!");
-	}
 	}
 	public static void inspectOnProject(IJavaProject project)
 			throws JavaModelException, CoreException {
 
-		if (project == null) { // || project.getElementName()=="RemoteSystemsTempFiles"
+		if (project == null || project.getElementName().equalsIgnoreCase("RemoteSystemsTempFiles"))
 			return;
-		}
 		
+
 		System.out.println("project.getElementName()==" +project.getElementName());
+		
 		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-		  
-	    //get current date time with Date()
+
+		//get current date time with Date()
 		Date date = new Date();
-	    logger.info(dateFormat.format(date) + " " + Plugin.getUserId() + " ASIDE is inspecting project: " + project.getElementName());
-        if(project != null){ // && project.getElementName()!="RemoteSystemsTempFiles"
-        	try{
-		        project.getCorrespondingResource().deleteMarkers(
-				PluginConstants.ASIDE_MARKER_TYPE, false,
-				IResource.DEPTH_INFINITE);
-        }catch(Exception e){
-        	e.printStackTrace();
-        }
-        }
+		logger.info(dateFormat.format(date) + " : " + Plugin.getUserId() + " ASIDE is inspecting project: " + project.getElementName());
+		if(project != null){ // && project.getElementName()!="RemoteSystemsTempFiles"
+			try{
+				project.getCorrespondingResource().deleteMarkers(
+						Plugin.ROOT_MARKER, true,
+						IResource.DEPTH_INFINITE);
+			}catch(Exception e){
+				e.printStackTrace();
+			}
+		}
 		projectMarkerMap = Plugin.getDefault().getMarkerIndex(project);
 
 		if (projectMarkerMap == null) {
@@ -173,11 +179,13 @@ public class ManuallyLaunchAsideOnTargetAction implements IObjectActionDelegate 
 
 		IPackageFragment[] packageFragmentsInProject = project
 				.getPackageFragments();
+		
 		for (IPackageFragment fragment : packageFragmentsInProject) {
 			ICompilationUnit[] units = fragment.getCompilationUnits();
 			for (ICompilationUnit unit : units) {
 
 				Map<MethodDeclaration, ArrayList<IMarker>> fileMap = inspectOnJavaFile(unit);
+				
 				projectMarkerMap.put(unit, fileMap);
 			}
 		}
@@ -194,13 +202,14 @@ public class ManuallyLaunchAsideOnTargetAction implements IObjectActionDelegate 
 		  
 	    //get current date time with Date()
 		Date date = new Date();
-	    logger.info(dateFormat.format(date) + " " + Plugin.getUserId() + " ASIDE starts inspecting java file: " + unit.getElementName());
+	    logger.info(dateFormat.format(date) + " : " + Plugin.getUserId() + " ASIDE starts inspecting java file: " + unit.getElementName());
 
 		CompilationUnit astRoot = Converter.parse(unit);
 		// PreferencesSet set = new PreferencesSet(true, true, false, new
 		// String[0]);
 		MethodDeclarationVisitor declarationVisitor = new MethodDeclarationVisitor(
 				astRoot, null, unit, null);
+		
 		return declarationVisitor.process();
 
 	}

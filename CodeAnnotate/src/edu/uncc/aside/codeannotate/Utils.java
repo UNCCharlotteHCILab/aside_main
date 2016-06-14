@@ -40,7 +40,7 @@ import edu.uncc.aside.codeannotate.asideInterface.InterfaceUtil;
  * Very useful utility class, currently copied from LapsePlus
  */
 public class Utils {
-	
+/*	
 	public static class RetrievalImplementation 
 	{
 	  int n;
@@ -161,7 +161,7 @@ public class Utils {
 
 	 
 	}
-
+*/
 	public static class ExprUnitResource {
 		Expression expr;
 		CompilationUnit cu;
@@ -327,7 +327,7 @@ public class Utils {
 			// First, gotta check whether there is a marker for the method
 			// invocation
 			IMarker[] markers = resource.findMarkers(
-					Plugin.ANNOTATION_QUESTION, false, IResource.DEPTH_ONE);
+					Plugin.ROOT_MARKER, true, IResource.DEPTH_INFINITE);
 			
 			
 			for (IMarker marker : markers) {
@@ -339,9 +339,27 @@ public class Utils {
 				
 				if (char_start == mi.getStartPosition()
 						&& length == mi.getLength())
-					return;
+				{
+					if(marker.getType().equalsIgnoreCase(Plugin.ANNOTATION_QUESTION) ||
+							marker.getType().equalsIgnoreCase(Plugin.ANNOTATION_QUESTION_CHECKED)||
+							marker.getType().equalsIgnoreCase("green.check.box"))
+						return;
+				}
+					
 			}
 
+			IMarker questionMarker= InterfaceUtil.createMarker(
+					resource
+					,Plugin.ANNOTATION_QUESTION
+					,mi.getStartPosition() 
+					,mi.getStartPosition()+ mi.getLength() 
+					,cu.getLineNumber(mi.getStartPosition())
+					,IMarker.SEVERITY_WARNING
+					,IMarker.PRIORITY_HIGH
+					,"Where is the corresponding authentication process?", "0", "0"										
+					);
+			
+			/*
 			IMarker questionMarker = resource
 					.createMarker(Plugin.ANNOTATION_QUESTION);
 
@@ -350,16 +368,18 @@ public class Utils {
 			questionMarker.setAttribute(IMarker.CHAR_END, mi.getStartPosition()
 					+ mi.getLength());
 			questionMarker.setAttribute(IMarker.MESSAGE,
-					"Where is the corresponding authentication process?");
+					);
 			
 			questionMarker.setAttribute(IMarker.LINE_NUMBER,
 					cu.getLineNumber(mi.getStartPosition()));
+			
 			questionMarker.setAttribute(IMarker.SEVERITY,
 					IMarker.SEVERITY_WARNING);
 			questionMarker
 					.setAttribute(IMarker.PRIORITY, IMarker.PRIORITY_HIGH);
-			
-			InterfaceUtil.prepareAnnotationRequest(questionMarker, resource);
+			*/
+			if( questionMarker != null)
+				InterfaceUtil.prepareAnnotationRequest(questionMarker, resource);
 
 		} catch (CoreException e) {
 			e.printStackTrace();

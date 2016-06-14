@@ -14,6 +14,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IProject;
@@ -32,30 +33,31 @@ import org.eclipse.jdt.launching.sourcelookup.containers.JavaProjectSourceContai
 import edu.uncc.aside.codeannotate.Plugin;
 import edu.uncc.aside.codeannotate.asideInterface.InterfaceUtil;
 import edu.uncc.sis.aside.AsidePlugin;
+import edu.uncc.sis.aside.auxiliary.core.TestRunOnAllProjects;
 import edu.uncc.sis.aside.constants.PluginConstants;
 
 public class MakerManagement {
+	private static final Logger logger = Plugin.getLogManager().getLogger(
+			TestRunOnAllProjects.class.getName());
+	
 	public static void deleteWorkspaceMarkers(String markerType){
-		
+		IJavaProject javaProject ;
 		IProject[] allProjects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
-		Set<IProject> activeProjects= new HashSet<IProject>();
 		
-		for (IProject p : allProjects){
-			
-		    if(p.isOpen() && !p.getName().equalsIgnoreCase("RemoteSystemsTempFiles"))
-			        activeProjects.add(p);
+
+		for(IProject project : allProjects){
+			if(project.isOpen() && !project.getName().equalsIgnoreCase("RemoteSystemsTempFiles"))
+			{
+				javaProject= null;
+				javaProject = JavaCore.create(project);  
+
+				if(javaProject == null )				
+					continue;
+
+				deleteProjectMarkers(javaProject, markerType);
+			}
 		}
-		
-		for(IProject project : activeProjects){
-			if(project == null || project.getName().equalsIgnoreCase("RemoteSystemsTempFiles"))
-				continue;
-			IJavaProject javaProject = JavaCore.create(project);
-			
-			if(javaProject == null )				
-				continue;
-			
-			deleteProjectMarkers(javaProject, markerType);
-		}   
+
 	}
 	
 	public static void deleteProjectMarkers(IJavaProject project, String markerType){
@@ -129,12 +131,31 @@ public class MakerManagement {
 						writer.append(marker.getType());
 						writer.append(',');
 						writer.append(marker.getResource().getProjectRelativePath().toString());
+						
 						writer.append(',');
 						writer.append(marker.getAttribute(IMarker.CHAR_START).toString());
+						
 						writer.append(',');
 						writer.append(marker.getAttribute(IMarker.CHAR_END).toString());
+						
 						writer.append(',');
-						writer.append(marker.getAttribute(IMarker.MESSAGE).toString());						
+						writer.append(marker.getAttribute(IMarker.LINE_NUMBER).toString());
+						
+						writer.append(',');
+						writer.append(marker.getAttribute(IMarker.SEVERITY).toString());
+						
+						writer.append(',');
+						writer.append(marker.getAttribute(IMarker.PRIORITY).toString());
+						
+						writer.append(',');
+						writer.append(marker.getAttribute(IMarker.MESSAGE).toString());	
+						
+						writer.append(',');
+						writer.append( marker.getAttribute("creationTime").toString());	
+						
+						writer.append(',');
+						writer.append( marker.getAttribute("userID").toString());
+						
 						writer.append('\n');
 					}
 					writer.flush();
@@ -176,7 +197,8 @@ public class MakerManagement {
 										
 					while ((line = bufferedReader.readLine()) != null) {
 
-						fields = line.split(",");
+						fields = line.trim().split(",");
+						if( (fields== null) || (fields.length < 10)) continue;
 						//ResourcesPlugin.getWorkspace().getRoot().get
 						IJavaProject javaProject = JavaCore.create(p);
 						IResource resource;
@@ -189,8 +211,16 @@ public class MakerManagement {
 								
 								if(fields[1].equalsIgnoreCase(name))
 								{
-									InterfaceUtil.createMarker(fields[0],Integer.parseInt(fields[2]) ,
-											Integer.parseInt(fields[3]), unit.getResource(),fields[4]);
+									InterfaceUtil.createMarker(unit.getResource(),fields[0] ,
+											Integer.parseInt(fields[2]) //Start
+											, Integer.parseInt(fields[3]) //End
+											,Integer.parseInt(fields[4]) //Line Number
+											,Integer.parseInt(fields[5]) //Severity
+											,Integer.parseInt(fields[6]) //Priority
+											, fields[7] //message
+											,fields[8]  //Creation Time
+											,fields[9]  //UserId
+													); //message
 									/*
 									resource = unit.getResource();
 									marker=resource.createMarker(fields[0]);

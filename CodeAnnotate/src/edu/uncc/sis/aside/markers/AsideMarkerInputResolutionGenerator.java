@@ -30,6 +30,8 @@ import edu.uncc.sis.aside.constants.PluginConstants;
 import edu.uncc.sis.aside.domainmodels.VulnerabilityKnowledge;
 import edu.uncc.sis.aside.views.ExplanationView;
 
+import org.eclipse.ui.texteditor.MarkerUtilities;
+
 
 
 public class AsideMarkerInputResolutionGenerator implements
@@ -102,7 +104,7 @@ public class AsideMarkerInputResolutionGenerator implements
 	    //get current date time with Date()
 		Date hoverDate = new Date();
 	    logger.info(dateFormat.format(hoverDate) + " " + Plugin.getUserId() +" hovers over the marker or clicks on the marker of input validation warning at Line "
-				+ marker.getAttribute(IMarker.LINE_NUMBER, -1)
+				+ MarkerUtilities.getLineNumber(marker) // marker.getl getAttribute(IMarker.LINE_NUMBER, -1)
 				+ " in java file <<"
 				+ fCompilationUnit.getElementName()
 				+ ">> in Project ["

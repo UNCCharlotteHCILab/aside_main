@@ -94,6 +94,10 @@ public class Plugin extends AbstractUIPlugin {
 	public static final String ASIDE_NODE_PROP_START = "aside_start";
 	public static final String ASIDE_NODE_PROP_END = "aside_end";
 	
+	public static  String ASIDE_ANALYSIS_STATUS = "On"; // To turn on and off the aside analysis
+//	public static final String ASIDE_MARKERS_STATUS = "Show"; // To show or hide the aside markers
+	
+	
 	// The shared instance
 	private static Plugin plugin;
 
@@ -109,7 +113,7 @@ public class Plugin extends AbstractUIPlugin {
 	
 	public static Date END_DAY_SEND_LOGS;
 	
-	private static String userId;
+	public static String userId;
 
 	private static final String LOG_PROPERTIES_FILE = "logger.properties";
 	
@@ -209,7 +213,7 @@ public class Plugin extends AbstractUIPlugin {
 		super.start(context);
 		plugin = this;
 		
-		
+		ASIDE_ANALYSIS_STATUS ="on";
 		
 		JavaCore.addElementChangedListener(CodeAnnotateElementChangeListener
 				 .getListener());
@@ -223,7 +227,7 @@ public class Plugin extends AbstractUIPlugin {
 			
 		}
 		
-		System.out.println("XXXXXXXXXXXXXXXX");
+		//System.out.println("XXXXXXXXXXXXXXXX");
 		
 		 if (astMatcher == null) {
 				astMatcher = new ASTMatcher();
@@ -259,6 +263,7 @@ public class Plugin extends AbstractUIPlugin {
 			*/
 			System.out.println("Plugin.getDefault().isAllowed() = "
 					+ Plugin.getDefault().isAllowed());
+			
 			if (Plugin.isAllowed()) {
 				Plugin.getDefault().setUserId(userIDFromSystem);
 				
@@ -317,12 +322,14 @@ public class Plugin extends AbstractUIPlugin {
 				
 				MakerManagement.deleteWorkspaceMarkers(Plugin.ROOT_MARKER);
 				
+				MakerManagement.deleteWorkspaceMarkers(PluginConstants.ASIDE_MARKER_TYPE);
+				
 				TestRunOnAllProjects testRunOnAllProjects = new TestRunOnAllProjects();
-				//testRunOnAllProjects.runOnAllProjects();
+			//	testRunOnAllProjects.runOnAllProjects();
 				
 			
 				
-				MakerManagement.restoreMarkersFromFile("markers.csv");
+			//	MakerManagement.restoreMarkersFromFile("markers.csv");
 				
 			//	Utils.RetrievalImplementation.readFromCSVFile();
 
@@ -378,7 +385,8 @@ public class Plugin extends AbstractUIPlugin {
 			this.loggingManager.shutdown();
 			this.loggingManager = null;
 		}
-		MakerManagement.saveMarkersToFile(Plugin.ROOT_MARKER , "markers.csv");
+		
+	//	MakerManagement.saveMarkersToFile(Plugin.ROOT_MARKER , "markers.csv");
 		
 		super.stop(context);
 	}

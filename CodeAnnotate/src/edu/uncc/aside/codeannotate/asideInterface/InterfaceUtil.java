@@ -3,7 +3,9 @@ package edu.uncc.aside.codeannotate.asideInterface;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Array;
+import java.sql.Date;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Random;
 
@@ -25,6 +27,7 @@ import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.viewers.ISelection;
 //import org.eclipse.php.internal.core.ast.nodes.ITypeBinding;
 import org.eclipse.swt.graphics.RGB;
+import org.eclipse.swt.widgets.DateTime;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IFileEditorInput;
@@ -45,6 +48,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 
+import javax.mail.search.DateTerm;
 import javax.print.DocFlavor.URL;
 
 //import edu.uncc.aside.codeannotate.NodeFinder;
@@ -95,7 +99,7 @@ public  class InterfaceUtil
  			    newMarker.setAttribute(IMarker.CHAR_START, markerStart);
  			   	newMarker.setAttribute(IMarker.CHAR_END, markerEnd);
  			   	newMarker.setAttribute("markerIndex", markerIndex);
- 			  	newMarker.setAttribute(IMarker.MESSAGE, "Access Control Plugin Marker");
+ 			  	newMarker.setAttribute(IMarker.MESSAGE, "Change Marker: " + srcMarkerType + " To " + targetMarkerName);
  			 	newMarker.setAttribute(IMarker.PRIORITY, IMarker.PRIORITY_HIGH);
  				newMarker.setAttribute(IMarker.SEVERITY, IMarker.SEVERITY_ERROR);
  				
@@ -138,7 +142,7 @@ public  class InterfaceUtil
 		}
 	}
 	
-	public static void createMarker(String markerType, int charStart, int charEnd, IResource theResource, String message)
+	public static IMarker createMarker(IResource theResource, String markerType, int charStart, int charEnd, int lineNumber, int severity, int priority, String message, String creationTime, String userID)
 	{
 		try
 		{
@@ -149,19 +153,33 @@ public  class InterfaceUtil
 			}
 			
 			IMarker theMarker = theResource.createMarker(markerType);
+			
 			theMarker.setAttribute(IMarker.CHAR_START, charStart);
 		   	theMarker.setAttribute(IMarker.CHAR_END, charEnd);
 		   	//not setting marker index in this function
 		   	//theMarker.setAttribute("markerIndex", markerIndex);
+		   	theMarker.setAttribute(IMarker.LINE_NUMBER, lineNumber);
 		  	theMarker.setAttribute(IMarker.MESSAGE, message);
-		 	theMarker.setAttribute(IMarker.PRIORITY, IMarker.PRIORITY_HIGH);
-			theMarker.setAttribute(IMarker.SEVERITY, IMarker.SEVERITY_ERROR);
+		 	theMarker.setAttribute(IMarker.PRIORITY, (priority == 0)? IMarker.PRIORITY_HIGH:priority);
+			theMarker.setAttribute(IMarker.SEVERITY, (severity == 0)? IMarker.SEVERITY_WARNING:severity);
 			
-			InterfaceUtil.prepareAnnotationRequest(theMarker, theResource);
+			Calendar cal = Calendar.getInstance();		    
+			theMarker.setAttribute("creationTime",
+					creationTime.equals("0") ? Long.toString(cal.getTimeInMillis()): creationTime);			
+			    
+			theMarker.setAttribute("userID",
+					creationTime.equals("0") ? Plugin.userId: userID);			
+
+			
+			
+			//InterfaceUtil.prepareAnnotationRequest(theMarker, theResource);
+			
+			return theMarker;
 		}
 		catch(Exception e)
 		{
 			System.out.println("Exception creating marker in createMarker");
+			return null;
 		}
 	}
 	
@@ -596,7 +614,7 @@ public  class InterfaceUtil
 			
 			marker.setAttribute(IMarker.CHAR_START, char_start);
 			marker.setAttribute(IMarker.CHAR_END, char_end);
-			marker.setAttribute(IMarker.MESSAGE, "Access Control Plugin Marker");
+			marker.setAttribute(IMarker.MESSAGE, Plugin.ANNOTATION_ANSWER + " Access Control Plugin Marker");
 			marker.setAttribute(IMarker.PRIORITY, IMarker.PRIORITY_HIGH);
 	   		marker.setAttribute(IMarker.SEVERITY, IMarker.SEVERITY_ERROR);
 	   		marker.setAttribute("markerIndex", VariablesAndConstants.currentIndex);
@@ -729,14 +747,15 @@ public  class InterfaceUtil
 		try {
 			String markerName=callingMarker.getType();
 			System.out.println("MarkerNameCheck"+markerName);
+			
 			if(markerName.equals("yellow.question.box") == true)
 				annotationMarkerName="green.check.box";
+			
 			else if(markerName.equals("red.question.box") == true)
 				annotationMarkerName="red.flag.box";
-			saveAnnotationsToCSV();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			
+		//	saveAnnotationsToCSV();
+			
 		} catch (CoreException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -812,7 +831,8 @@ public  class InterfaceUtil
 						System.out.println("Annotation changed at position i" + i);
 						System.out.println("i is " + i);
 						System.out.println("Selected marker index is " + selectedMarkerSecondIndex);
-						saveAnnotationsToCSV();
+						
+						// saveAnnotationsToCSV();
 						}
 						catch(Exception e)
 						{

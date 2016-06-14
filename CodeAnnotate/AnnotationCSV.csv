@@ -35,3 +35,5 @@ green.diamond.box,AccountsServlet.java,2668,44,logger.info("Updating account inf
 green.check.box,AccountsServlet.java,2937,56,null,9215
 null,AccountsServlet.java,2937,56,null,4745
 green.diamond.box,AccountsServlet.java,2877,44,logger.info("Updating account information");,4745
+green.check.box,AccountsServlet.java,2937,56,null,6243
+green.check.box,AccountsServlet.java,2937,56,null,10404

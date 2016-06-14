@@ -76,20 +76,21 @@
             locationURI="popup:org.eclipse.ui.popup.any?after=additions">
             <command
                   commandId="annotatePath"
-                  label="ASIDE CodeAnnotate YY"
+                  label="Turn ESIDE On/Off"
                   style="push"
                   tooltip="Annotate paths2"
-                  icon="icons/greenCheck.png">
+                  >                  
             </command>
       </menuContribution>
+      <!-- icon="icons/greenCheck.png"> -->
       
       
    </extension>  
    <extension
          point="org.eclipse.core.resources.markers" 
-         id="ASIDE.RootMarker" name="Root Marker">     
+         id="ASIDE.RootMarker" name="ASIDE Root Marker">     
        <super type="org.eclipse.core.resources.marker"/>
-         <persistent value="true"/>
+         <persistent value="false"/>
    </extension>
    
     <extension
@@ -99,7 +100,7 @@
       <!--   <super type="org.eclipse.core.resources.textmarker"/>	-->
        <super type="org.eclipse.core.resources.marker"/>
        <super type="ASIDE.RootMarker"/>
-         <persistent value="true"/>
+         <persistent value="false"/>
    </extension>
     <extension
          point="org.eclipse.core.resources.markers" 
@@ -107,7 +108,8 @@
          name="Sensitive Information Retrieval Points">
       <!--   <super type="org.eclipse.core.resources.textmarker"/>	-->
        <super type="org.eclipse.core.resources.marker"/>
-         <persistent value="true"/>
+       <super type="ASIDE.RootMarker"/>
+         <persistent value="false"/>
    </extension>
   
    <extension
@@ -116,7 +118,8 @@
          name="Answer Sensitive Information Retrieval Points">
       <!--   <super type="org.eclipse.core.resources.textmarker"/>	-->
        <super type="org.eclipse.core.resources.marker"/>
-         <persistent value="true"/>
+       <super type="ASIDE.RootMarker"/>
+         <persistent value="false"/>
    </extension>
   
    <extension point="org.eclipse.ui.editors.annotationTypes">
@@ -357,7 +360,7 @@
          point="org.eclipse.core.resources.markers">
          <super type="org.eclipse.core.resources.textmarker"/>
          <super type="ASIDE.RootMarker"/>
-         <persistent value="true"/>
+         <persistent value="false"/>
    </extension>
    <extension
    		 id="greenDiamondAnnotationType"
@@ -512,7 +515,7 @@
          point="org.eclipse.core.resources.markers">
          <super type="org.eclipse.core.resources.textmarker"/>
          <super type="ASIDE.RootMarker"/>
-         <persistent value="true"/>
+         <persistent value="false"/>
    </extension>
    <extension
    		 id="greenCheckAnnotationType"
@@ -623,7 +626,7 @@
     
      <extension
          id="green.diamond.box"
-         name="Green Diamond"
+         name="Green Diamond Box"
          point="org.eclipse.core.resources.markers">
          <super type="org.eclipse.core.resources.textmarker"/>
          <super type="ASIDE.RootMarker"/>
@@ -675,7 +678,7 @@
     
    <extension
          id="red.flag.box"
-         name="Red Flag"
+         name="Red Flag Box"
          point="org.eclipse.core.resources.markers">
          <super type="org.eclipse.core.resources.textmarker"/>
          <super type="ASIDE.RootMarker"/>
@@ -725,11 +728,11 @@
     
    <extension
          id="green.check.box"
-         name="Green Check"
+         name="Green Check Box"
          point="org.eclipse.core.resources.markers">
          <super type="org.eclipse.core.resources.textmarker"/>
          <super type="ASIDE.RootMarker"/>
-         <persistent value="true"/>
+         <persistent value="false"/>
    </extension>
    <extension
    		 id="greenCheckBoxAnnotationType"
@@ -775,11 +778,11 @@
     
    <extension
          id="yellow.question.box"
-         name="Yellow Question"
+         name="Yellow Question Box "
          point="org.eclipse.core.resources.markers">
          <super type="org.eclipse.core.resources.marker"/>
          <super type="ASIDE.RootMarker"/>
-         <persistent value="true"/>
+         <persistent value="false"/>
    </extension>
    <extension
    		 id="yellowQuestionBoxAnnotationType"
@@ -833,7 +836,7 @@
    
    <extension
          id="red.question.box"
-         name="Red Question"
+         name="Red Question Box"
          point="org.eclipse.core.resources.markers">
          <super type="org.eclipse.core.resources.textmarker"/>
          <super type="ASIDE.RootMarker"/>
