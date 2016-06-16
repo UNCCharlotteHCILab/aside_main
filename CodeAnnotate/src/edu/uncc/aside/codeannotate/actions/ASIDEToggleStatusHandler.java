@@ -1,3 +1,5 @@
+
+
 package edu.uncc.aside.codeannotate.actions;
 
 import java.util.ArrayList;
@@ -11,6 +13,7 @@ import org.apache.log4j.Logger;
 
 
 import org.eclipse.core.commands.AbstractHandler;
+import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IProject;
@@ -42,33 +45,38 @@ import edu.uncc.sis.aside.auxiliary.core.TestRunOnAllProjects;
 
 /**
  * 
- * @author Jing Xie (jxie2 at uncc dot edu)
- * @Modified by Mahmoud ( mmoham12 at uncc dot edu )
+ * @author Mahmoud  (mmoham12 at uncc dot edu)
+ * 
  */
-public class ASIDECodeAnnotateHandler extends AbstractHandler {
+public class ASIDEToggleStatusHandler extends AbstractHandler {
 	
 	private static final Logger logger = Plugin.getLogManager().getLogger(
 			TestRunOnAllProjects.class.getName());
-	
+
 	private IWorkbenchPart targetPart;
 	IProject selectProject = null;
 
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
-		
+
+		Command command = event.getCommand();
+	     boolean oldValue = HandlerUtil.toggleCommandState(command);
+	     
+	     
 		targetPart = HandlerUtil.getActivePart(event);
-		
+
 		IWorkbenchPartSite site = targetPart.getSite();
-		ISelectionProvider selectionProvider = site.getSelectionProvider();
 		
+		ISelectionProvider selectionProvider = site.getSelectionProvider();
+
 		if (selectionProvider == null)
 			return null;
-		
+
 		ISelection selection = selectionProvider.getSelection();
-		
+
 		if (selection == null)
 			return null;
-		
+
 		if (selection instanceof IStructuredSelection) {
 
 			IStructuredSelection sSelection = (IStructuredSelection) selection;
@@ -92,68 +100,34 @@ public class ASIDECodeAnnotateHandler extends AbstractHandler {
 		if (selectProject == null)
 			return null;
 
-		if( Plugin.isAllowed() ){ // ASIDE is going to be turned OFF
+		if(  oldValue ){ // ASIDE is going to be turned OFF
 			
-			//Turn ASIDE Off after asking from the developer
-			//Removing All Markers and annotation and keep the inserted code
-			
-			IJavaProject javaProject = JavaCore.create(selectProject);
-			
-			MakerManagement.deleteProjectMarkers(javaProject ,Plugin.ROOT_MARKER);
-			
-			// Turn ASIDE Off- Upon Turning On, all markers will be removed and all projects will be analysed from scratch
+			// Turn ASIDE Off.
 			Plugin.setAllowed(false);
+
+			//Turn ASIDE Off after asking from the developer
+			//Removing All Markers and annotation and only keep the inserted code
+
+			IJavaProject javaProject = JavaCore.create(selectProject);
+
+			MakerManagement.deleteProjectMarkers(javaProject ,Plugin.ROOT_MARKER);
+
 			
-			 //get current date time with Date()
+
+			//get current date time with Date()
 			DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-			
-		    logger.info(dateFormat.format(new Date()) + " : " + Plugin.getUserId() + " turned ASIDE off and ALL markers removed in the project " + 
-		    		javaProject.getElementName().toUpperCase() +". Inserted codes are kept unchanged.");
+
+			logger.info(dateFormat.format(new Date()) + " : " + Plugin.getUserId() + " turned ASIDE off and ALL markers removed in the project " + 
+					javaProject.getElementName().toUpperCase() +". Inserted codes are kept unchanged.");
 
 			return null;
 		}
 		else { // ASIDE is going to be turned ON
-		/*
-		 * Use a Job to attach a {@link CodeAnnotateDocumentEditListener} to
-		 * each and every IDocument that is related to a ICompilationUnit in the
-		 * selected project
-		 * I visit Mahmoud
-		 */
-		Job job = new MountListenerJob("Mount listener to Java file",
-				JavaCore.create(selectProject));
-		
-		job.setPriority(Job.INTERACTIVE);
-		job.schedule();
 
-		/* Delegates all heavy lifting to {@link PathFinder} */
-		Job heavy_job = new Job("Finding paths in Project: " + selectProject.getName()) {
 
-			@Override
-			protected IStatus run(final IProgressMonitor monitor) {
-				try{
-					Plugin.getDefault().getWorkbench().getDisplay()
-							.asyncExec(new Runnable() {
+			Plugin.setAllowed(true);
 
-								@Override
-								public void run() {
-									
-									PathFinder.getInstance(selectProject).run(monitor);
-								}
-
-							});
-				}finally{
-					monitor.done();
-				}
-				return Status.OK_STATUS;
-			}
-
-		};
-		heavy_job.setPriority(Job.LONG);
-		heavy_job.schedule();
-
-		Plugin.setAllowed(true);
-		
-		return null;
+			return null;
 		}
 	}
 

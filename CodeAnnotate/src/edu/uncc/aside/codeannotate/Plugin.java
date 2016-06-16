@@ -26,7 +26,6 @@ import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.JavaModelException;
-import org.eclipse.core.internal.resources.MarkerManager;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceDescription;
@@ -50,8 +49,21 @@ import org.eclipse.ui.IViewReference;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PlatformUI;
+
+import org.eclipse.core.commands.Command;
+import org.eclipse.core.commands.AbstractHandler;
+import org.eclipse.core.commands.ExecutionEvent;
+import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.commands.IHandler;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
+
+import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.IWorkbenchWindowActionDelegate;
+import org.eclipse.ui.commands.ICommandService;
+import org.eclipse.ui.handlers.IHandlerService;
+
 
 import edu.uncc.sis.aside.logging.AsideLoggingManager;
 import edu.uncc.sis.aside.preferences.IPreferenceConstants;
@@ -211,21 +223,27 @@ public class Plugin extends AbstractUIPlugin {
 	public void start(BundleContext context) throws Exception {
 		
 		super.start(context);
-		plugin = this;
 		
-		ASIDE_ANALYSIS_STATUS ="on";
+		plugin = this;
 		
 		JavaCore.addElementChangedListener(CodeAnnotateElementChangeListener
 				 .getListener());
 		
+		
+		ICommandService cmdServ = (ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
+		 
+		Command command = cmdServ
+				.getCommand("ToggleAside");
+		
 		/* Permission Checking */	
-		setAllowed(false);
+		
+		setAllowed((Boolean)command.getState("org.eclipse.ui.commands.toggleState").getValue());
 		String userIDFromSystem = System.getProperty("user.name");
 		setUserId(userIDFromSystem);
-		if(AuthenCenter.hasPermission(userIDFromSystem)){
-			setAllowed(true);
+	//	if(AuthenCenter.hasPermission(userIDFromSystem)){
+		//	setAllowed(true);
 			
-		}
+		//}
 		
 		//System.out.println("XXXXXXXXXXXXXXXX");
 		
@@ -265,7 +283,7 @@ public class Plugin extends AbstractUIPlugin {
 					+ Plugin.getDefault().isAllowed());
 			
 			if (Plugin.isAllowed()) {
-				Plugin.getDefault().setUserId(userIDFromSystem);
+			//	Plugin.getDefault().setUserId(userIDFromSystem);
 				
 //				if (userIdFile.exists()) {
 //					try {
