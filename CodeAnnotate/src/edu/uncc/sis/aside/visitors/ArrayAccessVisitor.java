@@ -84,6 +84,7 @@ public class ArrayAccessVisitor extends ASTVisitor {
 
 		Expression arrayExpression = node.getArray();
 		if (arrayExpression instanceof SimpleName) {
+			
 			SimpleName expressionName = (SimpleName) arrayExpression;
 			String name = expressionName.getIdentifier();
 			int charStart = node.getStartPosition();

@@ -92,17 +92,17 @@ public class ASIDECodeAnnotateHandler extends AbstractHandler {
 		if (selectProject == null)
 			return null;
 
-		if( Plugin.ASIDE_ANALYSIS_STATUS.equalsIgnoreCase("on")){
+		if( Plugin.isAllowed()){
 			
 			//Turn ASIDE Off after asking from the developer
 			//Removing All Markers and annotation and keep the inserted code
+			Plugin.setAllowed(false);
 			
 			IJavaProject javaProject = JavaCore.create(selectProject);
 			
-			MakerManagement.deleteProjectMarkers(javaProject ,Plugin.ROOT_MARKER);
+			MakerManagement.deleteWorkspaceMarkers(Plugin.ROOT_MARKER);
 			
-			Plugin.ASIDE_ANALYSIS_STATUS ="Off";
-			
+					
 			 //get current date time with Date()
 			DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 			

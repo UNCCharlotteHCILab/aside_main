@@ -94,7 +94,7 @@ public class Plugin extends AbstractUIPlugin {
 	public static final String ASIDE_NODE_PROP_START = "aside_start";
 	public static final String ASIDE_NODE_PROP_END = "aside_end";
 	
-	public static  String ASIDE_ANALYSIS_STATUS = "On"; // To turn on and off the aside analysis
+	//public static  String ASIDE_ANALYSIS_STATUS = "On"; // To turn on and off the aside analysis
 //	public static final String ASIDE_MARKERS_STATUS = "Show"; // To show or hide the aside markers
 	
 	
@@ -213,15 +213,17 @@ public class Plugin extends AbstractUIPlugin {
 		super.start(context);
 		plugin = this;
 		
-		ASIDE_ANALYSIS_STATUS ="on";
+	//	ASIDE_ANALYSIS_STATUS ="on";
 		
 		JavaCore.addElementChangedListener(CodeAnnotateElementChangeListener
 				 .getListener());
 		
 		/* Permission Checking */	
 		setAllowed(false);
+		
 		String userIDFromSystem = System.getProperty("user.name");
 		setUserId(userIDFromSystem);
+		
 		if(AuthenCenter.hasPermission(userIDFromSystem)){
 			setAllowed(true);
 			
