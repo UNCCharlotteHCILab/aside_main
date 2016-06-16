@@ -35,6 +35,24 @@
           id="annotatePath"
           name="ASIDE Code Annotate NN">
     </command>
+    
+    <command
+          categoryId="ASIDE.codeannotate"
+          description="Turn ASIDE Off"
+          id="ToggleAside"
+          name="ToggleAside NN">
+          <state
+         class="org.eclipse.ui.handlers.RegistryToggleState"
+         id="org.eclipse.ui.commands.toggleState">
+         <class
+                  class="org.eclipse.ui.handlers.RegistryToggleState">
+               <parameter
+                     name="persisted"
+                     value="true">
+               </parameter>
+            </class>
+   </state>
+    </command>
 </extension>
 
 <extension
@@ -45,8 +63,14 @@
       
     </handler>
     <handler
+          class="edu.uncc.aside.codeannotate.actions.ASIDEToggleStatusHandler"
+          commandId="ToggleAside">
+      
+    </handler>
+    <handler
           class="edu.uncc.aside.codeannotate.actions.ASIDECodeAnnotateHandler"
           commandId="annotatePath">
+          <!--
            <activeWhen>
              <with variable="selection">
              <count value="1" />
@@ -55,6 +79,7 @@
              </iterate>
             </with>
   </activeWhen>
+  -->
     </handler>
 </extension>
 <extension
@@ -76,14 +101,26 @@
             locationURI="popup:org.eclipse.ui.popup.any?after=additions">
             <command
                   commandId="annotatePath"
-                  label="Turn ESIDE On/Off"
+                  label="Run ASIDE"
                   style="push"
                   tooltip="Annotate paths2"
                   >                  
             </command>
       </menuContribution>
-      <!-- icon="icons/greenCheck.png"> -->
+      <menuContribution 
+      	locationURI="popup:org.eclipse.ui.popup.any?after=additions">
       
+      <!-- icon="icons/greenCheck.png"> -->
+     
+            <command
+                  commandId="ToggleAside"
+                  label="Turn ASIDE On/Off"
+                 
+                  style="toggle"
+                  tooltip="Turn ESIDE On/Off"
+                  >                  
+            </command>
+      </menuContribution>
       
    </extension>  
    <extension
@@ -1037,14 +1074,14 @@
    
 
 	<extension id="AsideMarker" point="org.eclipse.core.resources.markers"
-		name="Bad Security Practice">
-		<attribute name="type">
-		</attribute>
-		<persistent value="false">
-		</persistent>
+		name="Bad Security Practice" >
+          <super type="ASIDE.RootMarker"/>
+         <persistent value="false"/>		
 		<super type="org.eclipse.core.resources.textmarker">
 		</super>
 		<super type="org.eclipse.core.resources.problemmarker"></super>
+		<attribute name="type">
+		</attribute>
 		<attribute name="edu.uncc.sis.aside.marker.flow">
 		</attribute>
 		<attribute name="edu.uncc.sis.aside.marker.validationType">

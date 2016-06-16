@@ -106,7 +106,7 @@ public class AsideCompilationParticipant extends CompilationParticipant {
 							new ByteArrayInputStream(description.getBytes()),
 							false, null);
 					ResourceAttributes asideInfoAttributes = new ResourceAttributes();
-					asideInfoAttributes.setHidden(true);
+					asideInfoAttributes.setHidden(false);
 					asideInfoAttributes.setReadOnly(false);
 					aside_detection.setResourceAttributes(asideInfoAttributes);
 				}

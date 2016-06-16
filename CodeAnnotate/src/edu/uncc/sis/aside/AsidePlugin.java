@@ -214,7 +214,7 @@ public class AsidePlugin extends AbstractUIPlugin {
 								}
 							}
 							TestRunOnAllProjects testRunOnAllProjects = new TestRunOnAllProjects();
-							testRunOnAllProjects.runOnAllProjects();
+						//	testRunOnAllProjects.runOnAllProjects();
 
 						}else{
 							System.out.println("this user is not allowed");
