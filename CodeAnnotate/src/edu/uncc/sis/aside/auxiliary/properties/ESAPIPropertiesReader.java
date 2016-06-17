@@ -129,7 +129,7 @@ public class ESAPIPropertiesReader {
 		if (properties != null) {
 
 			Set<Object> keys = properties.keySet();
-
+// EXtracting properties starting with Validator.
 			for (Object key : keys) {
 				String sKey = (String) key;
 
@@ -145,6 +145,8 @@ public class ESAPIPropertiesReader {
 
 			}
 
+			// Adding more validation properties from "validation.properties" file 
+			
 			String validationPropFileName = getESAPIProperty(properties,
 					VALIDATION_PROPERTIES, "validation.properties");
 			Properties validationProperties = null;

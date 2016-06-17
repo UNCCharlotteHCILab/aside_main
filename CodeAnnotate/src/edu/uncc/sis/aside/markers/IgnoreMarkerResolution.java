@@ -64,8 +64,8 @@ public class IgnoreMarkerResolution implements IMarkerResolution,
 	@Override
 	public String getLabel() {
 		String start = "10";
-		String label = " - Disable Warning";
-		return start + this.rankNum + label;
+		String label = "Disable Warning "; // - 
+		return label; //start + this.rankNum + label;
 	}
 
 	@Override

@@ -75,6 +75,7 @@ public class ASTResolving {
 
 
 	public static CompilationUnit findParentCompilationUnit(ASTNode node) {
+		
 		return (CompilationUnit) findAncestor(node, ASTNode.COMPILATION_UNIT);
 	}
 
@@ -149,6 +150,7 @@ public class ASTResolving {
 	}
     //even if the node is TryStatement itself, it continues to find its parent TryStatement, rather than itself
 	public static TryStatement findParentTryStatement(ASTNode node) {
+		
 		while (node != null) {
 			node = node.getParent();
 			if(node instanceof TryStatement){
@@ -165,6 +167,7 @@ public class ASTResolving {
 	}
 
 	public static boolean isInsideConstructorInvocation(MethodDeclaration methodDeclaration, ASTNode node) {
+		
 		if (methodDeclaration.isConstructor()) {
 			Statement statement= ASTResolving.findParentStatement(node);
 			if (statement instanceof ConstructorInvocation || statement instanceof SuperConstructorInvocation) {
@@ -175,6 +178,7 @@ public class ASTResolving {
 	}
 	
 	public static ASTNode findParent(ASTNode node, StructuralPropertyDescriptor[][] pathes) {
+	
 		for (int p= 0; p < pathes.length; p++) {
 			StructuralPropertyDescriptor[] path= pathes[p];
 			ASTNode current= node;
@@ -238,8 +242,10 @@ public class ASTResolving {
 	}
 	
 	public static ITypeBinding getEnclosingType(ASTNode node) {
+		
 		while(node != null) {
 			if (node instanceof AbstractTypeDeclaration) {
+				
 				return ((AbstractTypeDeclaration)node).resolveBinding();
 			} else if (node instanceof AnonymousClassDeclaration) {
 				return ((AnonymousClassDeclaration)node).resolveBinding();
@@ -251,16 +257,21 @@ public class ASTResolving {
 	
 	public static CompilationUnit createQuickFixAST(ICompilationUnit compilationUnit, IProgressMonitor monitor) {
 		ASTParser astParser= ASTParser.newParser(AST.JLS3);
+		
 		astParser.setSource(compilationUnit);
 		astParser.setResolveBindings(true);
 		astParser.setStatementsRecovery(true);
 		astParser.setBindingsRecovery(true);
+		
 		return (CompilationUnit) astParser.createAST(monitor);
 	}
 	//newly added
 	public static ArrayList<SimpleName> getSimpleNameListForFieldDeclaration(FieldDeclaration fd){
+	
 		List<VariableDeclarationFragment> vdfList = (List<VariableDeclarationFragment>) fd.fragments();
+		
 		ArrayList<SimpleName> nameList = new ArrayList<SimpleName>();
+		
 		for(int i=0;i<vdfList.size();i++){
 			nameList.add(vdfList.get(i).getName());
 		}

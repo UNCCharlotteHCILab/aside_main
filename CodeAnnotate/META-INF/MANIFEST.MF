@@ -1,10 +1,10 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: CodeAnnotate
-Bundle-SymbolicName: CodeAnnotate; singleton:=true
+Bundle-Name: ESIDE CodeAnnotate
+Bundle-SymbolicName: CodeAnnotate;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: edu.uncc.aside.codeannotate.Plugin
-Bundle-Vendor: Jing Xie
+Bundle-Vendor: UNCC
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.eclipse.core.resources,
@@ -20,4 +20,36 @@ Require-Bundle: org.eclipse.ui,
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Import-Package: edu.uncc.sis.aside.logging,
+ javax.mail;version="1.4.0",
+ javax.mail.internet;version="1.4.0",
  org.eclipse.jdt.internal.corext.refactoring.structure
+Export-Package: edu,
+ edu.uncc,
+ edu.uncc.aside,
+ edu.uncc.aside.ast,
+ edu.uncc.aside.codeannotate,
+ edu.uncc.aside.codeannotate.actions,
+ edu.uncc.aside.codeannotate.asideInterface,
+ edu.uncc.aside.codeannotate.interactive,
+ edu.uncc.aside.codeannotate.jobs,
+ edu.uncc.aside.codeannotate.listeners,
+ edu.uncc.aside.codeannotate.models,
+ edu.uncc.aside.codeannotate.presentations,
+ edu.uncc.aside.codeannotate.visitors,
+ edu.uncc.aside.utils,
+ edu.uncc.sis.aside,
+ edu.uncc.sis.aside.auxiliary.core,
+ edu.uncc.sis.aside.auxiliary.popup.actions,
+ edu.uncc.sis.aside.auxiliary.properties,
+ edu.uncc.sis.aside.builder,
+ edu.uncc.sis.aside.constants,
+ edu.uncc.sis.aside.decorators,
+ edu.uncc.sis.aside.domainmodels,
+ edu.uncc.sis.aside.jobs,
+ edu.uncc.sis.aside.markers,
+ edu.uncc.sis.aside.popup.actions,
+ edu.uncc.sis.aside.preferences,
+ edu.uncc.sis.aside.views,
+ edu.uncc.sis.aside.visitors,
+ edu.uncc.sis.aside.wizards,
+ edu.uncc.sis.aside.xml

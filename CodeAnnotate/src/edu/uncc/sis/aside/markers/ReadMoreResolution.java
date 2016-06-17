@@ -59,15 +59,20 @@ IMarkerResolution2{
 	public String getDescription() {
 		String instruction = "", description = "", moreInfo = "";
 		String content = "";
-		
+		// First Option : Read more examples
 		if(this.readMoreType.equals("input")){
+			description ="This line of code reads untrusted data. If the input is not validated before it is used, attackers can potentially insert malicious code into the program. This can lead to Cross Site Scripting or other security problems.";
+			instruction ="";
+			moreInfo =" Use the options below to insert code that validates this input, or Read More for more information about this vulnerability and how to fix it.";
+			/*
 			instruction = "-- Double click the \"Input Validation: Explanations and Examples\" link for an in-depth review of these issues";
 		description = "Security issues occur when malicious characters make their way into applications, programs, systems and databases (to name a few). Therefore, it is imperative to validate anything that is externally obtained prior to doing anything with the external input.";
 		moreInfo = "Follow the \"Input Validation: Explanations and Examples\" link for more info about why this method invocation needs validation.";
+		*/
 		content = instruction + "<p><p>" + description + "<p><p>" + moreInfo;
 		}else if(this.readMoreType.equals("output")){
 			instruction = "-- Double click the \"Output Encoding: Explanations and Examples\" link for an in-depth review of these issues.";
-			description = "Security issues occur when malicious characters make their way into the output. Therefore, it is imperative to encode anything that is externally obtained prior to sending it to a browser.";
+			description = " MM Security issues occur when malicious characters make their way into the output. Therefore, it is imperative to encode anything that is externally obtained prior to sending it to a browser.";
 			moreInfo = "Follow the \"Output Encoding: Explanations and Examples\" link for more info about why this method invocation needs encoding.";
 			content = instruction + "<p><p>" + description + "<p><p>" + moreInfo;
 		}else{
@@ -80,19 +85,19 @@ IMarkerResolution2{
 	public Image getImage() {
         
         
-		return Plugin.getImageDescriptor("devil.png")
+		return Plugin.getImageDescriptor("devil.png") 
 				.createImage();
 	}
 
 	@Override
 	public String getLabel() {
 		if(this.readMoreType.equals("input")){
-			return "101 - Input Validation: Explanations and Examples";
+			return  "- ESIDE Unvalidated Input Vulnerability"; //"101 - Input Validation: Explanations and Examples";
 			}
 		else if(this.readMoreType.equals("output")){
 			return "101 - Output Encoding: Explanations and Examples";
 		}else
-			return "101 - Input Validation: Explanations and Examples";
+			return "1011 - ESIDE Unvalidated Input Vulnerability"; //"101 - Input Validation: Explanations and Examples";
 	}
 
 	@Override
@@ -160,6 +165,8 @@ IMarkerResolution2{
 	    }else
 	    urlStr = queryUrlStr + ruleTypeUrlParam + ".jsp?userName=" + userID;
 	    //System.out.println("urlStr = " + urlStr);
+	    
+	    /// Make Them Offline. Changing the URLl to load from local
 	    if(this.readMoreType.equals("output")){
 			 url = new URL("https://bf01edb9cef99332ecbb51e2b7d6bd6e0ea6e715.googledrive.com/host/0B_sYP_Y3om2XaVVManJKcU1xVHc/ASIDE_Output_Encoding.html");
 		 }else if(this.readMoreType.equals("input")){

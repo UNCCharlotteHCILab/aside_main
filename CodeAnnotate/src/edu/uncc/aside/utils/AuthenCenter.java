@@ -16,10 +16,10 @@ import java.util.*;
 import javax.mail.*;
 import javax.mail.Flags.Flag;
 import javax.mail.internet.*;
-
+/*
 import com.sun.mail.imap.IMAPFolder;
 import com.sun.mail.imap.IMAPMessage;
-
+*/
 import edu.uncc.sis.aside.AsidePlugin;
 import edu.uncc.sis.aside.constants.PluginConstants;
 

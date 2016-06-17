@@ -75,8 +75,8 @@ public class SyntacticValidationResolution implements IMarkerResolution,
 	public String getDescription() {
 		String instruction, description = "", info = "", content = "";
 		String end = "";
-		instruction = "-- Double click selection to auto-generate validation code --";
-		end = "Follow the \"Input Validation: Explanations and Examples\" link for more info about why this method invocation needs validation.";
+		instruction = "--Double click this option to insert code--"; //"-- Double click selection to auto-generate validation code --";
+		end =""; // "Follow the \"Input Validation: Explanations and Examples\" link for more info about why this method invocation needs validation.";
 		//title = "Selection of this rule will add the following validation routine to your code:";
 		if (fInputType == null){
 			description = "Description about this rule is not available";
@@ -84,13 +84,18 @@ public class SyntacticValidationResolution implements IMarkerResolution,
 		}
 		StringBuffer buf = new StringBuffer();
 		if(fInputType.equals("SafeString")){
-		    description = "getParameter(value) is typically used to obtain external user data which is quite vulnerable to exploitations through the use of questionable entries. Use this method to limit input from an outside source to alphabetical characters and numbers only.";
+		    description ="This quick fix will insert code to ensure that the input data only contains letters and numbers. All other characters will throw an exception.";
+		    // "getParameter(value) is typically used to obtain external user data which is quite vulnerable to exploitations through the use of questionable entries. Use this method to limit input from an outside source to alphabetical characters and numbers only.";
 		    // info = "Note, special characters are not allowed (&gt;.@&, etc) and if they are entered, an exception will be thrown that must be handled by the developer (e.g., place in the validation catch response.sendRedirect(\"Login.jsp\"); and an accompanying message to the user that their attempt was unsuccessful)."; 
-		    info = "Note, if a non-valid character is entered (>.@&, etc), an exception is thrown which should be handled by the developer in the catch block (e.g., response.sendRedirect(\"Login.jsp\"); and a message to the user that their login attempt was unsuccessful).";
+		    //ScreenShot
+		    info ="The generated code uses the getValidInput method from the Enterprise Security API (ESAPI). Go to Read More for more information on this and other ways to fix this vulnerability.";
+		    //"Note, if a non-valid character is entered (>.@&, etc), an exception is thrown which should be handled by the developer in the catch block (e.g., response.sendRedirect(\"Login.jsp\"); and a message to the user that their login attempt was unsuccessful).";
 		    content = instruction + "<p><p>" + description + "<p><p>" + info + "<p><p>" + end;    
 		}else if(fInputType.equals("HTTPParameterValue")){
-			description = "getParameter(value) is typically used to obtain external user data which can be exploited with malicious injections. Use this method to ensure that input to be used in HTTP code is limited to alphanumeric characters and the special characters .-/+=_ !$*?@.";
-			info = "Note, if a non-valid character is entered, an exception is thrown which should be handled by the developer in the catch block (e.g., response.sendRedirect(\"Login.jsp\"); and a message to the user that their login attempt was unsuccessful).";
+			description = "This quick fix will insert code to ensure that the input data only contains characters used in HTTP code: alphanumeric and special characters .-/=_!$*?@. All other characters will throw an exception."; 
+			//"getParameter(value) is typically used to obtain external user data which can be exploited with malicious injections. Use this method to ensure that input to be used in HTTP code is limited to alphanumeric characters and the special characters .-/+=_ !$*?@.";
+			info = "The generated code uses the getValidInput method from the Enterprise Security API (ESAPI). Go to Read More for more information on this and other ways to fix this vulnerability.";
+			//"Note, if a non-valid character is entered, an exception is thrown which should be handled by the developer in the catch block (e.g., response.sendRedirect(\"Login.jsp\"); and a message to the user that their login attempt was unsuccessful).";
 			content = instruction + "<p><p>" + description + "<p><p>" + info + "<p><p>" + end;
 		}
 	/*	else if(fInputType.equals("HTTPServletPath")){
@@ -113,6 +118,10 @@ public class SyntacticValidationResolution implements IMarkerResolution,
 		description = "SSN Validation will only allow numbers in the form of xxx-xx-xxxx. Anything else will throw an exception that must be handled by the developer (e.g., place in the validation catch response.sendRedirect(\"Login.jsp\"); and an accompanying message to the user that their attempt was unsuccessful).";
 		content = instruction + "<p><p>" + description + "<p><p>" + end;
 	}
+	else if(fInputType.equals("FileName")){
+		description = "File Name Validation will only allow file names having name, dot and an extension.";
+		content = instruction + "<p><p>" + description + "<p><p>" + end;
+	}
 		
 		buf.append(content);
 		return buf.toString();
@@ -120,14 +129,14 @@ public class SyntacticValidationResolution implements IMarkerResolution,
 
 	@Override
 	public Image getImage() {
-
+/*
 		if (fInputType.equalsIgnoreCase("URL")
 				|| fInputType.equalsIgnoreCase("email")) {
 			return Plugin.getImageDescriptor("devil.png")
 					.createImage();
 		}
-
-		return Plugin.getImageDescriptor("devil.png")
+*/
+		return Plugin.getImageDescriptor("redCheckmark.png")
 				.createImage();
 	}
 
@@ -135,19 +144,21 @@ public class SyntacticValidationResolution implements IMarkerResolution,
 	public String getLabel() {
 		String labelStr = "Filter HttpServletPath";
 		if(fInputType.equals("SafeString"))
-			labelStr= "102 - Allow Alphabetical Characters and Numbers";
+			labelStr= "Allow Only Alphabetical Characters and Numbers"; //102 - 
 	/*	else if(fInputType.equals("HttpServletPath"))
 			labelStr= "Filter HttpServletPath";*/
 		else if(fInputType.equals("HTTPParameterValue"))
-			labelStr= "103 - Allow Minimal HTTP Characters";
+			labelStr= "Allow Only Minimal HTTP Characters"; //103 - 
 		else if(fInputType.equals("URL"))
-			labelStr= "104 - Allow URL Characters";
+			labelStr= "Allow Only URL Characters"; //104 - 
 		else if(fInputType.equals("CreditCard"))
-			labelStr= "105 - Allow Credit Card Numbers";
+			labelStr= "Allow Only Credit Card Numbers"; //105 - 
 		else if(fInputType.equals("Email"))
-			labelStr= "106 - Allow Email Addresses";
+			labelStr= "Allow Only Email Addresses"; //106 - 
 		else if(fInputType.equals("SSN"))
-			labelStr= "107 - Allow Social Security Number";
+			labelStr= "Allow Only Social Security Number"; //107 - 
+		else if(fInputType.equals("FileName"))
+			labelStr= "Allow Only Valid File Names"; //107 - 
 		return labelStr;
 	}
 
@@ -218,8 +229,10 @@ public class SyntacticValidationResolution implements IMarkerResolution,
 				///////////
 //				ITrackedNodePosition replacementPositionTracking = null;
 				ASIDEMarkerAndAnnotationUtil.deleteMarkerAtPosition(marker);
+				
 				boolean result = CodeGenerator.getInstance().generateSpecialOutputValidationCode(document,
 						astRoot, fImportRewrite, ast, node, fInputType, returnTypeOfMethodDeclarationStr);
+				
 				if(result==false){
 					System.out.println("generateSpecialOutputValidationCode does not run properly!");
 				}

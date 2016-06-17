@@ -48,7 +48,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 
-import javax.mail.search.DateTerm;
+import javax.mail.*;
 import javax.print.DocFlavor.URL;
 
 //import edu.uncc.aside.codeannotate.NodeFinder;

@@ -53,8 +53,8 @@ import edu.uncc.sis.aside.visitors.MethodInvocationVisitor;
  */
 public class AsideCompilationParticipant extends CompilationParticipant {
 
-/*	private static final Logger logger = Plugin.getLogManager().getLogger(
-			AsideCompilationParticipant.class.getName());*/
+	private static final Logger logger = Plugin.getLogManager().getLogger(
+			AsideCompilationParticipant.class.getName());
 
 	private static CompilationUnit compilationUnitASTBeforeReconcile = null;
 
@@ -138,13 +138,13 @@ public class AsideCompilationParticipant extends CompilationParticipant {
 		// if (counter == 0 && !Plugin.getDefault().getSignal()) {
 		// return;
 		// }
-if(Plugin.getDefault().isAllowed()){
+if(Plugin.isAllowed()){
 
 		counter++;
 		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 		// get current date time with Date()
 		Date date = new Date();
-	//	logger.info(dateFormat.format(date) + " " + Plugin.getUserId() + " ASIDE starts RECONCILING... " + counter);
+		logger.info(dateFormat.format(date) + " " + Plugin.getUserId() + " ASIDE starts RECONCILING... " + counter);
 
 		try {
 
@@ -256,6 +256,7 @@ if(Plugin.getDefault().isAllowed()){
 					if (astMatcher.match(compilationUnitASTBeforeReconcile,
 							compilationUnitASTAfterReconcile)) {
 						// no change on the structure of the ICompilationUnit
+						// When a file is opened for the second time there is no change in its AST structure
 						return;
 					}
 

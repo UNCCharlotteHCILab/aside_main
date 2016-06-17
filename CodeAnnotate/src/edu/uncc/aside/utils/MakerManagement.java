@@ -64,7 +64,7 @@ public class MakerManagement {
 		
 	    if(project != null){
 	    	try{
-
+	    		IMarker[] markers = project.getCorrespondingResource().findMarkers(markerType, true, IResource.DEPTH_INFINITE);
 	    		project.getCorrespondingResource().deleteMarkers( //PluginConstants.ASIDE_MARKER_TYPE
 	    				markerType, true,
 	    				IResource.DEPTH_INFINITE);

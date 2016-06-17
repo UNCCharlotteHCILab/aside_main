@@ -1073,7 +1073,7 @@
    </extension>
    
 
-	<extension id="AsideMarker" point="org.eclipse.core.resources.markers"
+	<extension id="edu.uncc.sis.aside.AsideMarker" point="org.eclipse.core.resources.markers"
 		name="Bad Security Practice" >
           <super type="ASIDE.RootMarker"/>
          <persistent value="false"/>		

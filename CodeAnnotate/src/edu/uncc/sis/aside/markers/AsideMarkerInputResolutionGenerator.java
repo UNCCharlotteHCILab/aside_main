@@ -118,15 +118,17 @@ public class AsideMarkerInputResolutionGenerator implements
 		ArrayList<String> definedInputTypeList = ASIDEMarkerAndAnnotationUtil.filterValidationTypes(tmpList);
 		///////
 		//for test use
+		// First Option in Menu of Righ click on markers. ReadMore information with Devil icon
 		IMarkerResolution readMoreResolution = new ReadMoreResolution(
 				fCompilationUnit, marker, project, "input");
+		
 		resolutionSet.add(readMoreResolution);
 		
 //		for (String inputType : definedInputTypeList) {
 //			System.out.println("-"+inputType);
 //		}
 		//
-
+//Adding other menu items from definedInputTypeList
 		if (validationType.equals("String")) {
 
 			if (definedInputTypeList.isEmpty()) {
@@ -134,9 +136,12 @@ public class AsideMarkerInputResolutionGenerator implements
 			}
 
 			SyntacticValidationResolution resolution = null;
+			
 			for (String inputType : definedInputTypeList) {
+				
 				resolution = new SyntacticValidationResolution(
 						fCompilationUnit, marker, inputType, project);
+				
 				resolutionSet.add(resolution);
 			}
 		} else if (validationType.equals("int")) {
@@ -145,6 +150,7 @@ public class AsideMarkerInputResolutionGenerator implements
 					fCompilationUnit);
 
 			resolutionSet.add(singleResolution);
+			
             Date resolutionDate = new Date();
 			logger.info(Plugin.getUserId() + dateFormat.format(resolutionDate)+" Obtained " + resolutionSet.size() + "Resolutions.");
 		} else {
@@ -158,7 +164,9 @@ public class AsideMarkerInputResolutionGenerator implements
 		//newly added
 		IMarkerResolution noticeResolution = new NoticeResolution(
 				fCompilationUnit, PluginConstants.INPUT_NOTICE_LABEL_RANK_NUM);
-		resolutionSet.add(noticeResolution);
+		
+		//Temporary didable the last option: Below ASIDE...
+		//resolutionSet.add(noticeResolution);
 		
 		return resolutionSet
 				.toArray(new IMarkerResolution[resolutionSet.size()]);
@@ -197,6 +205,7 @@ public class AsideMarkerInputResolutionGenerator implements
 			}
 
 			String[] result = Converter.stringToStringArray(flow);
+			
 			for (int i = 0; i < result.length; i++) {
 				if (result[i].equals("input")) {
 					return true;

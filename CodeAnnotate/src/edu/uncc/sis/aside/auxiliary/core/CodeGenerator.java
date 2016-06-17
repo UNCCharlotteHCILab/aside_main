@@ -1682,6 +1682,7 @@ ListRewrite fListRewrite = fASTRewrite.getListRewrite(
 		MethodDeclaration methodDeclarationStayIn = null;
 		String esapi_comment = "";
 		try{
+			
 		Map<ITrackedNodePosition, ArrayList<ASTNode>> annotatedStatementsMap = new HashMap<ITrackedNodePosition, ArrayList<ASTNode>>();
         Object ob;
         
@@ -1696,9 +1697,11 @@ ListRewrite fListRewrite = fASTRewrite.getListRewrite(
         	   esapi_comment = PluginConstants.ESAPI_SIMPLE_COMMENT;
         }*/
         esapi_comment = PluginConstants.ESAPI_SIMPLE_COMMENT;
+        
 		replacementPositionTracking = generateSpecialOutputValidationRoutine(document,
 				astRoot,fImportRewrite, ast,
 				node, inputType);   //passed the node into it for my implementation
+		
 		if(replacementPositionTracking == null){
 			System.out.println("replacementPositionTracking == null in generateSpecialOutputValidationCode");
 			return false;
@@ -1737,7 +1740,9 @@ ListRewrite fListRewrite = fASTRewrite.getListRewrite(
 					IDocument doc = JavaUI.getDocumentProvider()
 							.getDocument(input);
 				   try {
+					   
 					doc.replace(tmpOffset, 0, esapi_comment);
+					
 				} catch (BadLocationException e) {
 					e.printStackTrace();
 				}
@@ -1748,6 +1753,7 @@ ListRewrite fListRewrite = fASTRewrite.getListRewrite(
 							fCompilationUnit, null);
 		//find the statementStayIn after inserting the esapi comment
 		NodeFinder nodeFinder = new NodeFinder(newAstRoot, theEsapiNode.getStartPosition() + esapiCommentLength, theEsapiNode.getLength());
+	
 		ASTNode esapiNode = nodeFinder.perform(newAstRoot, theEsapiNode.getStartPosition() + esapiCommentLength, theEsapiNode.getLength());
 		//System.out.println("EsapiNode"+esapiNode);
 		if(esapiNode == null){
@@ -1774,7 +1780,7 @@ ListRewrite fListRewrite = fASTRewrite.getListRewrite(
 		//1(no need to generate neither), 2(need to generate ValidationException), 3(need to generate IntrusionException)
 		int inWhichException = 2;
 		if(esapiNode instanceof MethodInvocation)
-		inWhichException = inWhichExceptionTryCatch((MethodInvocation)esapiNode);
+			inWhichException = inWhichExceptionTryCatch((MethodInvocation)esapiNode);
 		if(inWhichException == 0)
 		    hasGeneratedWhichException = 1;
 		else if(inWhichException == 2)
@@ -1792,14 +1798,21 @@ ListRewrite fListRewrite = fASTRewrite.getListRewrite(
 			ASTRewrite secondfASTRewrite = ASTRewrite.create(secondAst);
 		
 		methodDeclarationStayIn = ASTResolving.findParentMethodDeclaration(esapiNode);    
+		
 		astRewriteAndTracking = generateTry(document, fCompilationUnit,secondfASTRewrite, secondAst,
 				inputType, esapiNode, returnTypeOfMethodDeclarationStr, hasGeneratedWhichException);
+		
 		validationReturnPostion = astRewriteAndTracking.getFirstNodePosition();
+		
 		intrusionReturnPosition = astRewriteAndTracking.getSecondNodePosition();
+		
 		if(hasGeneratedWhichException == 1 || hasGeneratedWhichException == 2){
+			
 			returnStartPosition = validationReturnPostion.getStartPosition();
 			returnLength = validationReturnPostion.getLength();
+			
 		}else if(hasGeneratedWhichException == 3){
+			
 			returnStartPosition = intrusionReturnPosition.getStartPosition();
 			returnLength = intrusionReturnPosition.getLength();
 		}
@@ -1835,6 +1848,7 @@ ListRewrite fListRewrite = fASTRewrite.getListRewrite(
 					| TextEdit.UPDATE_REGIONS);
 
 			int importLength = importEdits.getLength();
+			
 			CompilationUnit newRoot = ASTBuilder.getASTBuilder().parse(
 					document);
 		   }catch(Exception e){
@@ -1852,6 +1866,7 @@ ListRewrite fListRewrite = fASTRewrite.getListRewrite(
 		   
 		   CompilationUnit astRootForReturn = ASTResolving.createQuickFixAST(
 					fCompilationUnit, null);
+		   
 		   AST ast = astRootForReturn.getAST();
 		   ASTRewrite fASTRewrite = ASTRewrite.create(ast);
 			NodeFinder nodeFinderForReturn = new NodeFinder(astRootForReturn, returnStartPosition, returnLength);
