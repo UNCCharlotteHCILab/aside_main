@@ -46,7 +46,10 @@ import edu.uncc.aside.codeannotate.models.Point;
  * 
  * @author Jing Xie (jxie2 at uncc dot edu)
  * 
+ * 
  */
+
+//This class manages and shows the ASIDE view in Eclipse 
 public class AnnotationView extends ViewPart implements PropertyChangeListener {
 
 	private TreeViewer viewer;
@@ -86,6 +89,7 @@ public class AnnotationView extends ViewPart implements PropertyChangeListener {
 		viewer.setContentProvider(contentProvider);
 		labelProvider = new AnnotationTreeLabelProvider();
 		viewer.setLabelProvider(labelProvider);
+		
 		getSite().setSelectionProvider(viewer);
 		listener = new ProjectSelectionListener(viewer);
 		getSite().getPage().addSelectionListener(listener);
@@ -99,6 +103,7 @@ public class AnnotationView extends ViewPart implements PropertyChangeListener {
 		layoutData.grabExcessHorizontalSpace = true;
 		layoutData.horizontalAlignment = GridData.FILL;
 		layoutData.verticalAlignment = GridData.FILL;
+		
 		viewer.getControl().setLayoutData(layoutData);
 
 		viewer.addSelectionChangedListener(new ISelectionChangedListener() {
@@ -106,6 +111,7 @@ public class AnnotationView extends ViewPart implements PropertyChangeListener {
 			@Override
 			public void selectionChanged(SelectionChangedEvent event) {
 				ISelection selection = event.getSelection();
+				
 				if (selection == null || selection.isEmpty()) {
 					styledText.setText("");
 				} else {
@@ -137,13 +143,14 @@ public class AnnotationView extends ViewPart implements PropertyChangeListener {
 			protected void activate(ISelection selection) {
 
 			}
-
+// MM Needs to be modified. Not Synced with code changes
 			protected void linkToEditor(ISelection selection) {
 				try {
 					if (selection instanceof ITreeSelection) {
 						ITreeSelection tSelection = (ITreeSelection) selection;
 						TreePath[] paths = tSelection.getPaths();
 						Object elementOfInterest = paths[0].getFirstSegment();
+						
 						if (elementOfInterest instanceof Path) {
 							Path pathOfInterest = (Path) elementOfInterest;
 							Point accessor = pathOfInterest.getAccessor();
@@ -151,11 +158,14 @@ public class AnnotationView extends ViewPart implements PropertyChangeListener {
 									.getNode();
 							IFile file = (IFile) accessor.getResource();
 							IEditorPart part = EditorUtility.openInEditor(file);
+							
 							if (part == null)
 								return;
+							
 							int startOffset = -1;
 							Object startProperty = node
 									.getProperty(Plugin.ASIDE_NODE_PROP_START);
+							
 							if (startProperty == null) {
 								startOffset = node.getStartPosition();
 							} else {
@@ -171,19 +181,23 @@ public class AnnotationView extends ViewPart implements PropertyChangeListener {
 							ASTNode node = check.getNode();
 							IFile file = (IFile) check.getResource();
 							IEditorPart part = EditorUtility.openInEditor(file);
+							
 							if (part == null)
 								return;
 							int startOffset = -1;
 							Object startProperty = node
 									.getProperty(Plugin.ASIDE_NODE_PROP_START);
+							
 							if (startProperty == null) {
 								startOffset = node.getStartPosition();
 							} else {
 								startOffset = Integer.parseInt(startProperty
 										.toString());
+								
 							}
 							EditorUtility.revealInEditor(part, startOffset,
 									node.getLength());
+							
 						} else {
 							// do nothing
 							System.err.println(elementOfInterest.getClass()
@@ -241,13 +255,19 @@ public class AnnotationView extends ViewPart implements PropertyChangeListener {
 
 		public void showSelection(IWorkbenchPart sourcePart,
 				ISelection selection) {
+			
 			setContentDescription(sourcePart.getTitle() + " ("
 					+ selection.getClass().getName() + ")");
+			
 			if (selection instanceof IStructuredSelection) {
+				
 				IStructuredSelection sSelection = (IStructuredSelection) selection;
+				
 				if (sSelection.isEmpty())
 					return;
+				
 				Object fElement = sSelection.getFirstElement();
+				
 				if (fElement != null && fElement instanceof IResource) {
 					IResource element = (IResource) fElement;
 					IProject selectProject = element.getProject();
@@ -256,6 +276,7 @@ public class AnnotationView extends ViewPart implements PropertyChangeListener {
 							+ selectProject.getName());
 					PathCollector root = ModelRegistry
 							.getPathCollectorForProject(selectProject);
+					
 					if (root == null) {
 						root = new PathCollector(selectProject);
 					}
@@ -289,10 +310,13 @@ public class AnnotationView extends ViewPart implements PropertyChangeListener {
 		}
 
 		if (source instanceof Path) {
+			
 			final Path path = (Path) source;
 			PathCollector parent = (PathCollector) path.getParent();
+			
 			final PathCollector collector = ModelRegistry
 					.getPathCollectorForProject(parent.getProject());
+			
 			Plugin.getDefault().getWorkbench().getDisplay()
 					.asyncExec(new Runnable() {
 

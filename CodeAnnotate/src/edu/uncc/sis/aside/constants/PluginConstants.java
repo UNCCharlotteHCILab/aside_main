@@ -7,7 +7,7 @@ import org.eclipse.core.runtime.IPath;
 
 public class PluginConstants {
 
-	public static final String PLUGIN_ID = "CodeAnnotate";
+	//public static final String PLUGIN_ID = "CodeAnnotate";
 	//edu.uncc.sis.aside
 	public static final String TRUST_BOUNDARIES_FILE = "aside-trust-boundaries.xml";
 	public static final String VALIDATION_RULES_FILE = "aside-valiation-rules.xml";

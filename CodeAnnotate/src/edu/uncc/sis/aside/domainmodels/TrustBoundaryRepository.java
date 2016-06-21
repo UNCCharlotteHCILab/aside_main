@@ -46,21 +46,29 @@ public final class TrustBoundaryRepository {
 	// When to update this inventory and how? see ASTView
 
 	private TrustBoundaryRepository(IProject project, PreferencesSet prefSet) {
-    //System.out.println("TRUST_BOUNDARY_RULESET_PATH " + TRUST_BOUNDARY_RULESET_PATH);
+    System.out.println("TRUST_BOUNDARY_RULESET_PATH " + TRUST_BOUNDARY_RULESET_PATH);
 		fProject = project;
 
 		if (inventory == null || prefSet != null) {
 
 			inventory = new LinkedList<TrustBoundary>();
+			
 			boundaryFileDocuments.clear();
+			
+		//	System.out.println("MM checkTrustBoundaryPreferences");
 			checkTrustBoundaryPreferences(prefSet);
+			
 			Iterator<Document> iterator = boundaryFileDocuments.iterator();
+			
 			while (iterator.hasNext()) {
 				Document boundaryFileDocument = iterator.next();
+				
 				LinkedList<TrustBoundary> boundaries = TrustBoundariesReader
 						.getInstance().getTrustBoundaries(boundaryFileDocument);
+				
 				inventory.addAll(boundaries);
 			}
+			//System.out.println("MM AfterWhile");
 
 		}
 	}
@@ -87,10 +95,13 @@ public final class TrustBoundaryRepository {
 		// TODO repeatedly build repository while prefSet is not null, severely
 		// decreases performance
 		if (handler == null){
+			//System.out.println("MM handler == null");
 			handler = new TrustBoundaryRepository(project, prefSet);
 		}else if (prefSet != null) {
+			//System.out.println("MM prefSet != null");
 			handler = new TrustBoundaryRepository(project, prefSet);
 		}
+		//System.out.println("MM return handler");
 		return handler;
 	}
 
@@ -135,6 +146,7 @@ public final class TrustBoundaryRepository {
 							String entryName = _entry.getMethodName();
 							String entryClass = _entry.getDeclarationClass();
 							String entryReturn = _entry.getReturnClass();
+							
 							if (entryName.equals(methodName)
 									&& Validator.validate(entryClass,
 											declarationClass)
@@ -155,15 +167,20 @@ public final class TrustBoundaryRepository {
 				// output encoding trust boundaries, or PreparedStatement.setXX() (the later one needs validation)
 				synchronized (inventory) {
 					Iterator<TrustBoundary> iterator = inventory.iterator();
+					
 					while (iterator.hasNext()) {
+						
 						TrustBoundary entry = iterator.next();
+						
 						if (entry instanceof NonReturnedTrustBoundary
 								&& entry.getMethodType().equals(
 										"MethodInvocation")) {
+							
 							NonReturnedTrustBoundary _entry = (NonReturnedTrustBoundary) entry;
 							String entryName = _entry.getMethodName();
 							String entryClass = _entry.getDeclarationClass();
 							int[] argumentIndice = _entry.getArgumentIndice();
+							
 							if (argumentIndice.length == 0)
 								continue;
 
@@ -178,6 +195,7 @@ public final class TrustBoundaryRepository {
 							
 							if (Validator
 									.validate(entryClass, declarationClass)) {
+								
 								attrTypes = entry.getAttrTypes();
 								arguments = argumentIndice;
 								//Feb. 16, in current version, only one attriType for each rule.

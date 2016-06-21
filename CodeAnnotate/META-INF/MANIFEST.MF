@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: ESIDE CodeAnnotate
-Bundle-SymbolicName: CodeAnnotate;singleton:=true
+Bundle-SymbolicName: ESIDE;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: edu.uncc.aside.codeannotate.Plugin
 Bundle-Vendor: UNCC

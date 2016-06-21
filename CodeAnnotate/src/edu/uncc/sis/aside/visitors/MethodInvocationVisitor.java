@@ -110,6 +110,7 @@ public class MethodInvocationVisitor extends ASTVisitor {
 	public ArrayList<IMarker> process() {
 		if (acceptor != null)
 			acceptor.accept(this);
+		
 		return asideMarkers;
 	}
 
@@ -121,6 +122,7 @@ public class MethodInvocationVisitor extends ASTVisitor {
 		
 		IMethodBinding methodBinding = node.resolveMethodBinding();
 
+	//	System.out.println("MM visit(MethodInvocation");
 		if (methodBinding == null) {
 			return false;
 		}
@@ -136,15 +138,26 @@ public class MethodInvocationVisitor extends ASTVisitor {
 		}
 		String qualifiedName = returnTypeBinding.getQualifiedName();
 		boolean isMethodInvocation = true;
+		
+		//System.out.println("MM TrustBoundaryRepository 1");
+		
 		boolean tainted_as_defined_by_trust_boundary = TrustBoundaryRepository
 				.getHandler(project, prefSet).isExist(methodBinding,
 						isMethodInvocation, qualifiedName);
+		
+		//System.out.println("MM TrustBoundaryRepository 2");
 		String[] attrTypes = TrustBoundaryRepository.getHandler(project,
 				prefSet).getAttrTypes();
+		
+		//System.out.println("MM TrustBoundaryRepository 3");
 		 String ruleNameBelongTo =  TrustBoundaryRepository.getHandler(project,
 					prefSet).getRuleNameBelongTo();
+		 
+		// System.out.println("MM TrustBoundaryRepository 4 ");
 		 String typeNameBelongTo =  TrustBoundaryRepository.getHandler(project,
 					prefSet).getTypeNameBelongTo(); 
+		 
+		// System.out.println("MM findParentStatement");
 		Statement parentStatement = ASTResolving.findParentStatement(node);
 
 		/* the marker to be created and attached to the corresponding node */
@@ -161,9 +174,12 @@ public class MethodInvocationVisitor extends ASTVisitor {
 		
 		
 		markerAttributes.put(IMarker.SEVERITY, IMarker.SEVERITY_WARNING);
+		
 		markerAttributes.put(IMarker.LINE_NUMBER, lineNumber);
+		
 		markerAttributes.put("edu.uncc.sis.aside.marker.flow",
 				Converter.arrayToString(attrTypes));
+		
 	    //the trustboundary rule that the methodInvocation belongs to, 
 		markerAttributes.put("edu.uncc.sis.aside.marker.ruleNameBelongTo", ruleNameBelongTo);
 		markerAttributes.put("edu.uncc.sis.aside.marker.typeNameBelongTo", typeNameBelongTo);
@@ -173,7 +189,10 @@ public class MethodInvocationVisitor extends ASTVisitor {
 				
 		markerAttributes.put("edu.uncc.sis.aside.marker.returnTypeOfMethodDeclarationBelongTo", returnTypeStr);
 		
+		//System.out.println("MM Before tainted_as_defined_by_trust_boundary" );
 		if (tainted_as_defined_by_trust_boundary) {
+			
+		//	System.out.println("MM After tainted_as_defined_by_trust_boundary" );
 			/*
 			 * The method invocation under examination matches one of the trust
 			 * boundary, next, check the location of this method invocation
@@ -217,6 +236,7 @@ public class MethodInvocationVisitor extends ASTVisitor {
 			 */
 
 			if (qualifiedName.equals("java.lang.String")) {
+				
 				if(!ASIDEMarkerAndAnnotationUtil.isDirectlyEmbracedByValidationMethodInvocation(node))
 				{
 				int start = node.getStartPosition();
@@ -241,6 +261,7 @@ public class MethodInvocationVisitor extends ASTVisitor {
 				marker = ASIDEMarkerAndAnnotationUtil.addMarker(astRoot,
 						markerAttributes);
 
+				System.out.println("MM Before Add Marker");
 				asideMarkers.add(marker);
 				  
 			    //get current date time with Date()

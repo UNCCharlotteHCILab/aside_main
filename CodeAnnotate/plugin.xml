@@ -38,7 +38,7 @@
     
     <command
           categoryId="ASIDE.codeannotate"
-          description="Turn ASIDE Off"
+          description="Turn ASIDE Off/On"
           id="ToggleAside"
           name="ToggleAside NN">
           <state
@@ -57,11 +57,13 @@
 
 <extension
        point="org.eclipse.ui.handlers">
+       <!--
     <handler
           class="edu.uncc.aside.codeannotate.actions.ASIDELogicControlAnnotateHandler"
           commandId="annotateLogic">
       
     </handler>
+    -->
     <handler
           class="edu.uncc.aside.codeannotate.actions.ASIDEToggleStatusHandler"
           commandId="ToggleAside">
@@ -96,7 +98,7 @@
             </command>        
       </menuContribution>
       -->
-      
+      <!--
       <menuContribution
             locationURI="popup:org.eclipse.ui.popup.any?after=additions">
             <command
@@ -107,6 +109,7 @@
                   >                  
             </command>
       </menuContribution>
+      -->
       <menuContribution 
       	locationURI="popup:org.eclipse.ui.popup.any?after=additions">
       
@@ -1181,7 +1184,7 @@
         markerType="edu.uncc.sis.aside.AsideMarker">
   </markerResolutionGenerator>
 	</extension>
-
+<!--
 	<extension
        id="AsideCompilationParticipant"
        point="org.eclipse.jdt.core.compilationParticipant">
@@ -1191,11 +1194,12 @@
 			modifiesEnvironment="true" requiredSourceLevel="1.5">
 		</compilationParticipant>
 	</extension>
-	
+-->
+<!--	
 <extension
        id="AsideStartup"
        point="org.eclipse.ui.startup">
     <startup class="edu.uncc.sis.aside.AsideStartup"/>
  </extension>
-   
+   -->
 </plugin>

@@ -66,7 +66,7 @@ import edu.uncc.sis.aside.preferences.IPreferenceConstants;
 public class AsidePlugin extends AbstractUIPlugin {
 
 	// The plug-in ID
-	public static final String PLUGIN_ID = "CodeAnnotate";
+	public static final String PLUGIN_ID = "ESIDE";
 	//edu.uncc.sis.aside
     
 	public static Date END_DAY_SEND_LOGS;

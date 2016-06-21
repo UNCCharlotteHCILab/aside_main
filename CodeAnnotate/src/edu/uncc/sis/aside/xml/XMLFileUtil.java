@@ -16,6 +16,7 @@ import org.osgi.framework.Bundle;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
+import edu.uncc.aside.codeannotate.Plugin;
 import edu.uncc.sis.aside.constants.PluginConstants;
 
 /**
@@ -28,13 +29,16 @@ public class XMLFileUtil {
 
 	/*
 	 * READ XML CONTENT
+	 * XML files contain validation rules, trust boundaries and knowledge base.
+	 * Path = root/default_rule_pack
 	 */
 
 	public static Document getDefaultRuleSetDocument(int type) {
 
-		Bundle bundle = Platform.getBundle(PluginConstants.PLUGIN_ID);
+		Bundle bundle = Platform.getBundle(Plugin.PLUGIN_ID);
 		Path path = null;
 		Document doc = null;
+		//System.out.println("MM getDefaultRuleSetDocument");
 		switch (type) {
 		case 1:
 
@@ -57,9 +61,14 @@ public class XMLFileUtil {
 		}
 		try {
 			URL fileURL = FileLocator.find(bundle, path, null);
+			
+			//System.out.println("MM FileLocator.find");
+			
 			if (fileURL != null) {
 				InputStream in;
+				
 				in = fileURL.openStream();
+				
 				if (in != null) {
 					doc = getDocument(in);
 				}

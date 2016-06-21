@@ -56,7 +56,7 @@ public class AsideCompilationParticipant extends CompilationParticipant {
 	private static final Logger logger = Plugin.getLogManager().getLogger(
 			AsideCompilationParticipant.class.getName());
 
-	private static CompilationUnit compilationUnitASTBeforeReconcile = null;
+	private static CompilationUnit cuAST_BeforeReconcile = null;
 
 	private static ASTMatcher astMatcher = null;
 
@@ -106,7 +106,7 @@ public class AsideCompilationParticipant extends CompilationParticipant {
 							new ByteArrayInputStream(description.getBytes()),
 							false, null);
 					ResourceAttributes asideInfoAttributes = new ResourceAttributes();
-					asideInfoAttributes.setHidden(false);
+					asideInfoAttributes.setHidden(true);
 					asideInfoAttributes.setReadOnly(false);
 					aside_detection.setResourceAttributes(asideInfoAttributes);
 				}
@@ -138,7 +138,7 @@ public class AsideCompilationParticipant extends CompilationParticipant {
 		// if (counter == 0 && !Plugin.getDefault().getSignal()) {
 		// return;
 		// }
-if(Plugin.isAllowed()){
+		if(Plugin.isAllowed()){
 
 		counter++;
 		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
@@ -147,48 +147,51 @@ if(Plugin.isAllowed()){
 		logger.info(dateFormat.format(date) + " " + Plugin.getUserId() + " ASIDE starts RECONCILING... " + counter);
 
 		try {
-
+			// javaElementDelta = List of Changes in AST 
 			IJavaElementDelta javaElementDelta = context.getDelta();
 
 			if (javaElementDelta == null) {
 				System.out
-						.println("javaElementDelta == null in AsideCompilationParticipant");
+				.println("javaElementDelta == null in AsideCompilationParticipant");
 				return;
 			}
 			IJavaProject project = javaElementDelta.getElement()
 					.getJavaProject();
-			
+
 
 			if (project == null) {
 				System.out
-						.println("project == null in AsideCompilationParticipant");
+				.println("project == null in AsideCompilationParticipant");
 				return;
 			}
 
-			
+
 			//newly added April 9
 			String compatible_resourceDirectory =  "src" + IPath.SEPARATOR + "esapi";
+
 			String resourceDirectory = ".esapi"; 
-			IProject resourceProject = (IProject) project
-					.getAdapter(IProject.class);
+
+			IProject resourceProject = (IProject) project.getAdapter(IProject.class);
+
 			if (resourceProject != null) {
 
-			IFolder folder = resourceProject.getFolder(compatible_resourceDirectory);
-			URI locationUri = null;
-			if (folder.exists()) {
-				locationUri = folder.getRawLocationURI();
-			} else {
-				folder = resourceProject.getFolder(resourceDirectory);
+				IFolder folder = resourceProject.getFolder(compatible_resourceDirectory);
+
+				URI locationUri = null;
 				if (folder.exists()) {
 					locationUri = folder.getRawLocationURI();
+				} else {
+					folder = resourceProject.getFolder(resourceDirectory);
+					if (folder.exists()) {
+						locationUri = folder.getRawLocationURI();
+					}
 				}
-			}
-			if(locationUri == null){
-				ESAPIConfigProcess esapiConfig = new ESAPIConfigProcess(
-					"ESAPI Configuration", resourceProject, project);
-			esapiConfig.run();
-			
-			}
+				if(locationUri == null){
+					ESAPIConfigProcess esapiConfig = new ESAPIConfigProcess(
+							"ESAPI Configuration", resourceProject, project);
+					esapiConfig.run();
+
+				}
 			}
 			/////////////////
 			
@@ -202,38 +205,41 @@ if(Plugin.isAllowed()){
 
 			/* consider changes on one java file only */
 			if (kind != IJavaElementDelta.CHANGED) {
-				// System.out.println("kind != IJavaElementDelta.CHANGED in AsideCompilationParticipant");
+				 System.out.println("kind != IJavaElementDelta.CHANGED in AsideCompilationParticipant");
 				return;
 			}
 
 			int flags = javaElementDelta.getFlags();
 			if ((flags & IJavaElementDelta.F_CONTENT) != 0
 					|| (flags & IJavaElementDelta.F_AST_AFFECTED) != 0) {
+				
+				System.out.println("MM After F_AST_AFFECTED");
+				
+				CompilationUnit cuAST_AfterReconcile = context.getAST3();
 
-				CompilationUnit compilationUnitASTAfterReconcile = context
-						.getAST3();
-
-				if (compilationUnitASTAfterReconcile == null) {
+				if (cuAST_AfterReconcile == null) {
 					return;
 				}
 
-				ICompilationUnit cu = (ICompilationUnit) compilationUnitASTAfterReconcile
+				ICompilationUnit cu = (ICompilationUnit) cuAST_AfterReconcile
 						.getJavaElement().getPrimaryElement();
 
 				Map<MethodDeclaration, ArrayList<IMarker>> markersMap = projectMarkerMap
 						.get(cu);
 
-				if (compilationUnitASTBeforeReconcile == null) {
+				if (cuAST_BeforeReconcile == null) {
 					// inspect on this compilation unit AST
-
+					System.out.println("MM cuAST_BeforeReconcile");
+					
 					MethodDeclarationVisitor methodDeclarationVisitor = new MethodDeclarationVisitor(
-							compilationUnitASTAfterReconcile, markersMap, cu,
+							cuAST_AfterReconcile, markersMap, cu,
 							null);
 					markersMap = methodDeclarationVisitor.process();
 
 					if (markersMap == null) {
 						System.out
 								.println("markersMap == null in AsideCompilationParticipant");
+						
 						markersMap = new HashMap<MethodDeclaration, ArrayList<IMarker>>();
 					}
 
@@ -244,7 +250,7 @@ if(Plugin.isAllowed()){
 					 * reconcile
 					 */
 
-					compilationUnitASTBeforeReconcile = compilationUnitASTAfterReconcile;
+					cuAST_BeforeReconcile = cuAST_AfterReconcile;
 
 					Plugin.getDefault().setMarkerIndex(project,
 							projectMarkerMap);
@@ -253,10 +259,11 @@ if(Plugin.isAllowed()){
 
 				} else {
 
-					if (astMatcher.match(compilationUnitASTBeforeReconcile,
-							compilationUnitASTAfterReconcile)) {
+					if (astMatcher.match(cuAST_BeforeReconcile,	cuAST_AfterReconcile)) {
 						// no change on the structure of the ICompilationUnit
 						// When a file is opened for the second time there is no change in its AST structure
+						// Two ASTs : cuAST_BeforeReconcile and cuAST_AfterReconcile are equal
+						
 						return;
 					}
 
@@ -265,8 +272,7 @@ if(Plugin.isAllowed()){
 					 * method declaration within which the change happened
 					 */
 
-					List<TypeDeclaration> types = compilationUnitASTAfterReconcile
-							.types();
+					List<TypeDeclaration> types = cuAST_AfterReconcile.types();
 
 					if (types.isEmpty()) {
 						// return; ?
@@ -292,8 +298,12 @@ if(Plugin.isAllowed()){
 								markersMap.remove(member);
 
 							} else if (member == null) {
+								
 								MethodInvocationVisitor methodInvocationVisitor = new MethodInvocationVisitor(
 										matchee, null, cu, null);
+								
+								System.out.println("MM Before process ");
+								
 								ArrayList<IMarker> markers = methodInvocationVisitor
 										.process();
 
@@ -326,7 +336,7 @@ if(Plugin.isAllowed()){
 					 * store the AST after this reconcile process for next round
 					 * reconcile
 					 */
-					compilationUnitASTBeforeReconcile = compilationUnitASTAfterReconcile;
+					cuAST_BeforeReconcile = cuAST_AfterReconcile;
 				}
 
 			}

@@ -80,7 +80,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class Plugin extends AbstractUIPlugin {
 
 	// The plug-in ID
-	public static final String PLUGIN_ID = "CodeAnnotate"; //$NON-NLS-1$
+	public static final String PLUGIN_ID = "ESIDE"; //$NON-NLS-1$
 
 	public static final String JAVA_WEB_APP_NATURE = "org.eclipse.jdt.core.javanature";
 
@@ -213,8 +213,6 @@ public class Plugin extends AbstractUIPlugin {
 		super.start(context);
 		plugin = this;
 		
-	//	ASIDE_ANALYSIS_STATUS ="on";
-		
 		JavaCore.addElementChangedListener(CodeAnnotateElementChangeListener
 				 .getListener());
 		
@@ -322,9 +320,9 @@ public class Plugin extends AbstractUIPlugin {
 //				}
 				System.out.println("Removing Markers");
 				
-				MakerManagement.deleteWorkspaceMarkers(Plugin.ROOT_MARKER);
+		//		MakerManagement.deleteWorkspaceMarkers(Plugin.ROOT_MARKER);
 				
-				MakerManagement.deleteWorkspaceMarkers(PluginConstants.ASIDE_MARKER_TYPE);
+		//		MakerManagement.deleteWorkspaceMarkers(PluginConstants.ASIDE_MARKER_TYPE);
 				
 				TestRunOnAllProjects testRunOnAllProjects = new TestRunOnAllProjects();
 			//	testRunOnAllProjects.runOnAllProjects();
@@ -403,9 +401,12 @@ public class Plugin extends AbstractUIPlugin {
 			if (propertiesInputStream != null) {
 				//System.out.println("configure log run.......................");
 				Properties props = new Properties();
+				
 				props.load(propertiesInputStream);
 				propertiesInputStream.close();
+				
 				this.loggingManager = new AsideLoggingManager(this, props);
+				
 				this.loggingManager.hookPlugin(Plugin.getDefault()
 						.getBundle().getSymbolicName(), Plugin
 						.getDefault().getLog());
@@ -489,10 +490,16 @@ public class Plugin extends AbstractUIPlugin {
 		String iconPath = "icons/";
 		try {
 			URL installURL = getDefault().getBundle().getEntry("/");
+			System.out.println("MM 1" +name + " : " + installURL.toString());
 			URL url = new URL(installURL, iconPath + name);
+			
+			System.out.println("MM 2" +name + " : " + url.toString());
+			
 			return ImageDescriptor.createFromURL(url);
+			
 		} catch (MalformedURLException e) {
 			// should not happen
+			System.out.println("MM should not happen" );;
 			return ImageDescriptor.getMissingImageDescriptor();
 		}
 	}

@@ -89,6 +89,8 @@ public class MethodDeclarationVisitor extends ASTVisitor {
 			methodInvocationVisitor = new MethodInvocationVisitor(node, null,
 					cu, prefSet);
 
+			System.out.println("MM methodInvocationVisitor.process before asideMarkers");
+			
 			asideMarkers = methodInvocationVisitor.process();
 
 			/*
@@ -111,6 +113,8 @@ public class MethodDeclarationVisitor extends ASTVisitor {
 
 				methodInvocationVisitor = new MethodInvocationVisitor(node,
 						existingMarkers, cu, prefSet);
+				
+				System.out.println("MM else_methodInvocationVisitor.process");
 				asideMarkers = methodInvocationVisitor.process();
 
 				/*

@@ -29,10 +29,12 @@ import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchPartSite;
 import org.eclipse.ui.handlers.HandlerUtil;
@@ -100,7 +102,26 @@ public class ASIDEToggleStatusHandler extends AbstractHandler {
 		if (selectProject == null)
 			return null;
 
-		if(  oldValue ){ // ASIDE is going to be turned OFF
+		if(  oldValue ){ // ASIDE is ON and is going to be turned OFF
+			
+			// create a dialog with ok and cancel buttons and a question icon
+			/*MessageBox dialog = 
+			  new MessageBox(shell, SWT.ICON_QUESTION | SWT.OK| SWT.CANCEL);
+			dialog.setText("All Markers will be removed!! ");
+			dialog.setMessage("Do you really want to do this?");
+*/
+			// open dialog and await user selection
+		//	returnCode = dialog.open(); 
+			
+			boolean result = 
+					  MessageDialog.openConfirm(null, "Confirm", 
+							  "All Markers will be removed!! "+
+									  "Do you really want to do this?");
+
+			if (! result){
+				return null;
+			} 
+
 			
 			// Turn ASIDE Off.
 			Plugin.setAllowed(false);
@@ -120,13 +141,19 @@ public class ASIDEToggleStatusHandler extends AbstractHandler {
 			logger.info(dateFormat.format(new Date()) + " : " + Plugin.getUserId() + " turned ASIDE off and ALL markers removed in the project " + 
 					javaProject.getElementName().toUpperCase() +". Inserted codes are kept unchanged.");
 
+			MessageDialog.openInformation(null, "Info", "All Markers removed. ESIDE is now OFF.");
 			return null;
 		}
 		else { // ASIDE is going to be turned ON
 
 
 			Plugin.setAllowed(true);
+			
+			TestRunOnAllProjects testRunOnAllProjects = new TestRunOnAllProjects();
+			testRunOnAllProjects.runOnAllProjects();
 
+			MessageDialog.openInformation(null, "Info", "ESIDE is now ON.");
+			
 			return null;
 		}
 	}
