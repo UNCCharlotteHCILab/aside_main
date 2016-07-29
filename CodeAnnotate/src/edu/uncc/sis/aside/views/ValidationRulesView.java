@@ -64,11 +64,6 @@ public class ValidationRulesView extends ViewPart implements
 	private static final Logger logger = Plugin.getLogManager()
 	.getLogger(ValidationRulesView.class.getName());
 	
-	/**
-	 * The ID of the view as specified by the extension.
-	 */
-	public static final String VIEW_ID = "edu.uncc.sis.aside.views.ValidationRulesView";
-
 	private TableViewer viewer;
 	private Action addRow;
 	private Action deleteSelectedRow;

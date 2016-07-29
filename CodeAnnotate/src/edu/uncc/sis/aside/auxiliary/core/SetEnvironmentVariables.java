@@ -12,7 +12,7 @@ import org.eclipse.jdt.launching.JavaRuntime;
 
 public class SetEnvironmentVariables {
 	private final static String ESAPI_VM_ARG = "-Dorg.owasp.esapi.resources";
-	private final static String ESAPI_CONFIG_DIR_NAME = "ASIDE-ESAPI";
+	private final static String ESAPI_CONFIG_DIR_NAME = "ESAPI-Lib";
 	private final static String ASIDE_ESAPI_CONTAINER = "ESAPI Libraries";
 	private final static String PROJECT_LIB_PATH = "WebContent"
 			+ IPath.SEPARATOR + "WEB-INF" + IPath.SEPARATOR + "lib";

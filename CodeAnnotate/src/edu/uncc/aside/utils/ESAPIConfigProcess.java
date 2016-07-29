@@ -28,17 +28,10 @@ import org.eclipse.jdt.launching.AbstractVMInstall;
 import org.eclipse.jdt.launching.JavaRuntime;
 import org.osgi.framework.Bundle;
 
-import edu.uncc.aside.codeannotate.Plugin;
+import edu.uncc.aside.codeannotate.PluginConstants;
 import edu.uncc.sis.aside.AsidePlugin;
 
 public class ESAPIConfigProcess{
-
-	private final static String ESAPI_CONFIG_DIR_NAME = "ASIDE-ESAPI";
-	private final static String ASIDE_ESAPI_CONTAINER = "ESAPI Libraries";
-	private final static String PROJECT_LIB_PATH = "WebContent"
-			+ IPath.SEPARATOR + "WEB-INF" + IPath.SEPARATOR + "lib";
-	private final static String PROJECT_WEBINF_PATH = "src" ;//"WebContent" + IPath.SEPARATOR + "WEB-INF";
-	private final static String ESAPI_VM_ARG = "-Dorg.owasp.esapi.resources";
 
 	private IProject fProject;
 	private IJavaProject javaProject;
@@ -57,15 +50,15 @@ public class ESAPIConfigProcess{
 		 * dynamic web project structure defined by Eclipse
 		 */
 	
-		final IFolder lib = fProject.getFolder(PROJECT_LIB_PATH);
+		final IFolder lib = fProject.getFolder(PluginConstants.PROJECT_LIB_PATH);
 		if (!lib.exists()) {
 			System.out.println("Cannot find: " + lib);
 			return ;
 		}
 
-		Bundle bundle = Platform.getBundle(Plugin.PLUGIN_ID);
-		Path path = new Path(IPath.SEPARATOR + ESAPI_CONFIG_DIR_NAME);
-		URL fileURL = FileLocator.find(bundle, path, null);
+		Bundle bundle = Platform.getBundle(PluginConstants.PLUGIN_ID);
+		Path internalPath = new Path(IPath.SEPARATOR + PluginConstants.ESAPI_CONFIG_DIR_NAME);
+		URL fileURL = FileLocator.find(bundle, internalPath, null);
 		if (fileURL == null) {
 			System.out.println("cannot locate ESAPI directory");
 			return;
@@ -74,23 +67,26 @@ public class ESAPIConfigProcess{
 		InputStream is = null;
 		try {
 
-			URL localFileURL = FileLocator.toFileURL(fileURL);
+		//	URL localFileURL = FileLocator.toFileURL(fileURL);
 
-			String sourcePath = localFileURL.getFile();
-			File file = new File(sourcePath);
-			if (file.exists() && file.isDirectory()) {
-				File[] sourceFiles = file.listFiles();
-				for (int i = 0; i < sourceFiles.length; i++) {
+		//	String sourcePath = localFileURL.getFile();
+			File localURL = new File(FileLocator.toFileURL(fileURL).getFile());
+			if (localURL.exists() && localURL.isDirectory()) {
+				//Get list of ESAPI jar files
+				File[] sourceFiles = localURL.listFiles();
+				for (File file : sourceFiles) {
+									
+			//	for (int i = 0; i < sourceFiles.length; i++) {
 
-					File target = sourceFiles[i];
-					String fileName = target.getName();
+				//	File file = sourceFiles[i];
+					String fileName = file.getName();
 
-					if (target.isFile()) {
+					if (file.isFile()) {
 						if (fileName.endsWith(".jar")) {
 							is = new BufferedInputStream(new FileInputStream(
-									target.getAbsolutePath()));
+									file.getAbsolutePath()));
 							IFile destination = fProject
-									.getFile(IPath.SEPARATOR + PROJECT_LIB_PATH
+									.getFile(IPath.SEPARATOR + PluginConstants.PROJECT_LIB_PATH
 											+ IPath.SEPARATOR + fileName);
 							
 							if (!destination.exists()) {
@@ -102,9 +98,9 @@ public class ESAPIConfigProcess{
 							}
 						}else if(fileName.equals("log4j.properties")){ //copy the log4j.properties file
 							is = new BufferedInputStream(new FileInputStream(
-									target.getAbsolutePath()));
+									file.getAbsolutePath()));
 							IFile destination = fProject
-									.getFile(IPath.SEPARATOR + PROJECT_WEBINF_PATH
+									.getFile(IPath.SEPARATOR + PluginConstants.PROJECT_WEBINF_PATH
 											+ IPath.SEPARATOR + fileName);
 							
 							if (!destination.exists()) {
@@ -115,14 +111,14 @@ public class ESAPIConfigProcess{
 								}
 							}
 						}
-					} else if (target.isDirectory()) {
+					} else if (file.isDirectory()) {
 						if (fileName.equalsIgnoreCase("esapi")
 								|| fileName.equalsIgnoreCase(".esapi")) {
 							//IFolder destination = fProject.getFolder(fileName); // this one may need modification
 							//added Mar. 2
 							//IFolder tmp = fProject.getFolder(fileName);
-							IFolder destination = fProject.getFolder(IPath.SEPARATOR + PROJECT_WEBINF_PATH + IPath.SEPARATOR + fileName);
-							String tmp = IPath.SEPARATOR + PROJECT_WEBINF_PATH + IPath.SEPARATOR + fileName;
+							IFolder destination = fProject.getFolder(IPath.SEPARATOR + PluginConstants.PROJECT_WEBINF_PATH + IPath.SEPARATOR + fileName);
+							String tmp = IPath.SEPARATOR + PluginConstants.PROJECT_WEBINF_PATH + IPath.SEPARATOR + fileName;
 							//System.out.println("line 126 destination = " + destination + " tmp" + tmp);
 							/////
 							
@@ -133,7 +129,7 @@ public class ESAPIConfigProcess{
 									continue;
 								}
 							}
-							copyDirectory(target, tmp, is);
+							copyDirectory(file, tmp, is);
 						}
 					}
 				}
@@ -197,7 +193,7 @@ public class ESAPIConfigProcess{
 	}
 
 	private void setESAPIClasspathContainer(final IFolder lib) {
-		final IPath containerPath = new Path(ASIDE_ESAPI_CONTAINER)
+		final IPath containerPath = new Path(PluginConstants.ASIDE_ESAPI_CONTAINER)
 				.append(fProject.getFullPath());
 		IClasspathContainer esapiContainer = new IClasspathContainer() {
 
@@ -227,7 +223,7 @@ public class ESAPIConfigProcess{
 
 			@Override
 			public String getDescription() {
-				return "ASIDE ESAPI Libraries";
+				return "ESAPI Libraries";
 			}
 
 			@Override
@@ -282,7 +278,7 @@ public class ESAPIConfigProcess{
 
 	private void setESAPIResourceLocation() {
 		URI locationUri = null;
-		IFolder folder = fProject.getFolder(PROJECT_WEBINF_PATH + IPath.SEPARATOR + "esapi"); //here may need changes
+		IFolder folder = fProject.getFolder(PluginConstants.PROJECT_WEBINF_PATH + IPath.SEPARATOR + "esapi"); //here may need changes
 
 		if (folder.exists()) {
 			//System.out.println("setESAPIResourceLocation class--folder.exists()="+locationUri);
@@ -305,14 +301,16 @@ public class ESAPIConfigProcess{
 		}
 		//String path = ESAPI_VM_ARG + "=\"" + locationUri.getPath().substring(1) + "\""; just added for test Feb. 28
 		
-		String path = ESAPI_VM_ARG + "=\"" + "/" + locationUri.getPath().substring(1) + "\"";
+		String path = PluginConstants.ESAPI_VM_ARG + "=\"" + "/" + locationUri.getPath().substring(1) + "\"";
 		
         //System.out.println("Line 307 Path = " + path);
 		try {
 			AbstractVMInstall vminstall = (AbstractVMInstall) JavaRuntime
 					.getVMInstall(javaProject);
+			
 			if (vminstall != null) {
 				String[] vmargs = vminstall.getVMArguments();
+				
 				if (vmargs == null) {
 					vminstall.setVMArguments(new String[] { path });
 				    System.out.println("vmargs == null, and it is reseted, Line 315 Path = " + path);

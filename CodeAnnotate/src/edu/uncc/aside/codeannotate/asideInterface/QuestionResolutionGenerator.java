@@ -10,45 +10,58 @@ import java.util.List;
 import java.util.Random;
 
 import org.eclipse.core.resources.IMarker;
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.ICompilationUnit;
-import org.eclipse.swt.custom.StyledText;
-import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IMarkerResolution;
 import org.eclipse.ui.IMarkerResolutionGenerator;
 import org.eclipse.ui.IMarkerResolutionGenerator2;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.PartInitException;
 
+import edu.uncc.aside.codeannotate.Plugin;
+import edu.uncc.aside.codeannotate.PluginConstants;
+import edu.uncc.aside.utils.MarkerAndAnnotationUtil;
+import edu.uncc.sis.aside.markers.*;
+//MM For Annotation Request Marker
 	public class QuestionResolutionGenerator  implements
 			IMarkerResolutionGenerator, IMarkerResolutionGenerator2
 	{
-		public IMarkerResolution[] getResolutions(IMarker mk) 
+		public IMarkerResolution[] getResolutions(IMarker marker) 
+		
 		{
 			Random rand = new Random();
 			int  n = rand.nextInt(9999) + 1000;
 			String randomId=Integer.toString(n);
 			
+			ICompilationUnit fCompilationUnit = MarkerAndAnnotationUtil.getCompilationUnit(marker);
+			
 			//handle highlighting
-			InterfaceUtil.clearAndSetHighlighting(2, mk,randomId);
+			InterfaceUtil.clearAndSetHighlighting(2, marker,randomId);
 			
 			//fake vulnerabilities
 			InterfaceUtil.fakeVulnerabilities();
 			
 			
 		       try {
-		          Object problem = mk.getAttribute("WhatsUp");
+		          Object problem = marker.getAttribute("WhatsUp");
 		          //making "problem" an empty string. normally it would be from the marker
 		          problem = "";
 		          
+		          //MM Not all item required. Based on the marker type this list should be changed. 
 		          return new IMarkerResolution[] 
 		        {
-		             //new QuestionTitleResolution("**********ASIDE Annotation Request**********"+problem),
-		             new QuestionResolution("302-Delete Annotation"+problem),
-		             new QuestionResolution("303-Modify Annotation"+problem),
-		             new AnnotationRequestReadMore("304-Read More"+problem),
-		             new AnnotateNowResolution("301-Annotate Now"+problem, "yellow.question",randomId),
+		             //new QuestionTitleResolution("**********" + Plugin.pluginName + " Annotation Request**********"+problem),
+		        	new ReadMoreResolution(marker, "annotation", ""+ problem),		        	
+		        	
+		        	new AnnotateNowResolution("41-Add Annotation", "yellow.question",randomId),
+		        //	new QuestionResolution("42-Delete Annotation"+problem),
+		        	
+		        	new IgnoreMarkerResolution(
+		    				fCompilationUnit, PluginConstants.INPUT_IGNORE_RANK_NUM, "annotation")
+		        	
+		         //    new QuestionResolution("403-Modify Annotation"+problem),
+		         //    new AnnotationRequestReadMore("404-Read More"+problem),
+		             
 		          };
 		       }
 		       catch (CoreException e) 

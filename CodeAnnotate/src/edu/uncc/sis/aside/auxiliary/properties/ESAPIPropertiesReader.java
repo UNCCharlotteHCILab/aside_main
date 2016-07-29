@@ -18,14 +18,10 @@ import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 
 import edu.uncc.aside.codeannotate.Plugin;
+import edu.uncc.aside.codeannotate.PluginConstants;
 import edu.uncc.sis.aside.AsidePlugin;
 
 public class ESAPIPropertiesReader {
-	/*
-	 * Absolute path to the user.home. No longer includes the ESAPI portion as
-	 * it used to.
-	 */
-	private static final String userHome = System.getProperty("user.home");
 	/*
 	 * Absolute path to the customDirectory
 	 */// DISCUSS: Implicit assumption here that there is no SecurityManager
@@ -48,13 +44,6 @@ public class ESAPIPropertiesReader {
 	 //modified Mar. 3rd
 	private String compatible_resourceDirectory =  "src" + IPath.SEPARATOR + "esapi";//"WebContent" + IPath.SEPARATOR + "WEB-INF" + IPath.SEPARATOR + "esapi"; 
    
-	/** The name of the ESAPI property file */
-	public static final String RESOURCE_FILE = "ESAPI.properties";
-
-	public static final String VALIDATION_PROPERTIES = "Validator.ConfigurationFile";
-
-	public static final String VALIDATOR_KEY_WORD = "Validator";
-
 	private IProject fProject;
 	private static URI locationUri;
 	private static ESAPIPropertiesReader instance = null;
@@ -95,7 +84,7 @@ public class ESAPIPropertiesReader {
 					| SWT.ICON_WARNING);
 			messageBox.setText("FYI:");
 			messageBox
-					.setMessage("ASIDE cannot locate [esapi] folder under the current project directory, ASIDE encounters some issues this time. Please right click on your project, and choose \"Run ASIDE\" to manually start AISDE. Thanks!");
+					.setMessage( Plugin.PLUGIN_NAME + " cannot locate [esapi] folder under the current project directory, " + Plugin.PLUGIN_NAME + " encounters some issues this time. Please right click on your project, and choose \"Run ASIDE\" to manually start " + Plugin.PLUGIN_NAME + ". Thanks!");
 			messageBox.open();
 			
 			return definedInputTypes;
@@ -113,14 +102,14 @@ public class ESAPIPropertiesReader {
 		Properties properties = null;
 		try {
 			// first attempt file IO loading of properties
-			InputStream is = getResourceStream(RESOURCE_FILE);
+			InputStream is = getResourceStream(PluginConstants.RESOURCE_FILE);
 			properties = loadPropertiesFromStream(is);
 
 		} catch (Exception iae) {
 			iae.printStackTrace();
 			// if file I/O loading fails, attempt classpath based loading next
 			try {
-				properties = loadConfigurationFromClasspath(RESOURCE_FILE);
+				properties = loadConfigurationFromClasspath(PluginConstants.RESOURCE_FILE);
 			} catch (Exception e) {
 				iae.printStackTrace();
 			}
@@ -137,7 +126,7 @@ public class ESAPIPropertiesReader {
 
 				if (dotIndex != -1) {
 					String subKey = sKey.substring(0, dotIndex);
-					if (subKey.equals(VALIDATOR_KEY_WORD)) {
+					if (subKey.equals(PluginConstants.VALIDATOR_KEY_WORD)) {
 						String inputType = sKey.substring(dotIndex + 1);
 						definedInputTypes.add(inputType);
 					}
@@ -148,7 +137,7 @@ public class ESAPIPropertiesReader {
 			// Adding more validation properties from "validation.properties" file 
 			
 			String validationPropFileName = getESAPIProperty(properties,
-					VALIDATION_PROPERTIES, "validation.properties");
+					PluginConstants.VALIDATION_PROPERTIES, "validation.properties");
 			Properties validationProperties = null;
 
 			try {
@@ -176,7 +165,7 @@ public class ESAPIPropertiesReader {
 
 					if (dotIndex != -1) {
 						String subKey = sKey.substring(0, dotIndex);
-						if (subKey.equals(VALIDATOR_KEY_WORD)) {
+						if (subKey.equals(PluginConstants.VALIDATOR_KEY_WORD)) {
 							String inputType = sKey.substring(dotIndex + 1);
 							definedInputTypes.add(inputType);
 						}
@@ -327,7 +316,7 @@ public class ESAPIPropertiesReader {
 		messageBox
 				.setMessage("Cannot find File: "
 						+ filename
-						+ "\n ASIDE encounters some issues this time. Please right click on your project, and choose \"Run ASIDE\" to manually start AISDE. Thanks!");
+						+ "\n " + Plugin.PLUGIN_NAME + " encounters some issues this time. Please right click on your project, and choose \"Turn " + Plugin.PLUGIN_NAME + " On\" to manually start " + Plugin.PLUGIN_NAME + ". Thanks!");
 		messageBox.open();
 		return null;
 
@@ -371,7 +360,7 @@ public class ESAPIPropertiesReader {
 		// userHome + "/.esapi" and secondly under
 		// userHome + "/esapi"
 		// We look in that order because of backward compatibility issues.
-		String homeDir = userHome;
+		String homeDir = PluginConstants.userHome;
 
 		if (homeDir == null) {
 			homeDir = ""; // Without this, homeDir + "/.esapi" would produce

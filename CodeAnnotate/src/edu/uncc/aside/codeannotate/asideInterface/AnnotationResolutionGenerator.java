@@ -21,10 +21,16 @@ import org.eclipse.ui.IMarkerResolutionGenerator2;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.PartInitException;
 
+import edu.uncc.aside.codeannotate.Plugin;
+import edu.uncc.aside.codeannotate.PluginConstants;
+import edu.uncc.aside.utils.MarkerAndAnnotationUtil;
+import edu.uncc.sis.aside.markers.IgnoreMarkerResolution;
+import edu.uncc.sis.aside.markers.ReadMoreResolution;
+//MM For green.diamond marker
 	public class AnnotationResolutionGenerator  implements
 			IMarkerResolutionGenerator, IMarkerResolutionGenerator2
 	{
-		public IMarkerResolution[] getResolutions(IMarker mk) 
+		public IMarkerResolution[] getResolutions(IMarker marker) 
 		{
 			Random rand = new Random();
 			int  n = rand.nextInt(9999) + 1000;
@@ -34,25 +40,35 @@ import org.eclipse.ui.PartInitException;
 			
 			
 			//handle highlighting
-			InterfaceUtil.clearAndSetHighlighting(0, mk,randomId);
+			InterfaceUtil.clearAndSetHighlighting(0, marker,randomId);
 			
 			
 		       try {
-		          Object problem = mk.getAttribute("WhatsUp");
+		          Object problem = marker.getAttribute("WhatsUp");
 		          //making "problem" an empty string. normally it would be from the marker
 		          problem = "";
 		          
 		          //get the matching request marker
 		          
-		          int markerIndex = mk.getAttribute("markerIndex", -1);
+		          int markerIndex = marker.getAttribute("markerIndex", -1);
 		          IMarker matchingRequestMarker = VariablesAndConstants.annotationRequestMarkers[markerIndex];
+		          
+		          ICompilationUnit fCompilationUnit = MarkerAndAnnotationUtil.getCompilationUnit(marker);
 		          
 		          return new IMarkerResolution[] 
 		        {
-		             new AnnotationCodeResolution("**********ASIDE Annotation**********"+problem, matchingRequestMarker),
-		             new AnnotationDeleteResolution("301-Delete Annotation"+problem),
-		             new AnnotationResolution("302-Modify Annotation"+problem),
-		             new AnnotationReadMore("303-Read More"+problem),
+		           //  new AnnotationCodeResolution("**********" + Plugin.PLUGIN_NAME + " Annotation**********"+problem, matchingRequestMarker),
+		           //  new AnnotationDeleteResolution("301-Delete Annotation"+problem),
+		          //   new AnnotationResolution("302-Modify Annotation"+problem),
+		          //   new AnnotationReadMore("303-Read More"+problem),
+		             
+		             new ReadMoreResolution(marker, "annotation", ""+ problem),
+		             
+		             new AnnotationDeleteResolution("41-Delete Annotation"),	
+		             
+			         new IgnoreMarkerResolution(
+			    				fCompilationUnit, PluginConstants.INPUT_IGNORE_RANK_NUM, "annotation")
+			 
 		          };
 		       }
 		       catch (CoreException e) 

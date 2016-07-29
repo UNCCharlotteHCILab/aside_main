@@ -27,14 +27,12 @@ import org.eclipse.jdt.core.dom.MethodDeclaration;
 
 import edu.uncc.aside.ast.ASTBuilder;
 import edu.uncc.aside.codeannotate.Plugin;
+import edu.uncc.aside.codeannotate.PluginConstants;
 import edu.uncc.sis.aside.AsidePlugin;
-import edu.uncc.sis.aside.constants.PluginConstants;
 import edu.uncc.sis.aside.visitors.MethodDeclarationVisitor;
 
 public class AsideBuilder extends IncrementalProjectBuilder {
 
-//	private static final String ASIDE_BUILDER_ID = "edu.uncc.sis.aside.AsideBuilder";
-//	private static final String ASIDE_NATURE_ID = "edu.uncc.sis.aside.AsideNature";
 
 	// vulnerability information for an Aside nature enabled IProject
 	private static Map<ICompilationUnit, Map<MethodDeclaration, ArrayList<IMarker>>> checkpoints;
@@ -119,7 +117,7 @@ public class AsideBuilder extends IncrementalProjectBuilder {
 	class ResourceVisitor implements IResourceVisitor {
 		public boolean visit(IResource resource) {
 			try {
-				resource.getProject().deleteMarkers(PluginConstants.ASIDE_MARKER_TYPE, true,
+				resource.getProject().deleteMarkers(PluginConstants.MARKER_INPUT_VALIDATION, true,
 						IFile.DEPTH_INFINITE);
 				if (checkpoints == null) {
 					checkpoints = new HashMap<ICompilationUnit, Map<MethodDeclaration, ArrayList<IMarker>>>();

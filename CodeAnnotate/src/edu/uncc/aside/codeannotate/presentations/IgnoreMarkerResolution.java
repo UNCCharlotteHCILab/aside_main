@@ -16,13 +16,13 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IMarkerResolution2;
 import org.eclipse.ui.ISharedImages;
 
-import edu.uncc.aside.codeannotate.Constants;
 import edu.uncc.aside.codeannotate.Plugin;
+import edu.uncc.aside.codeannotate.PluginConstants;
 import edu.uncc.aside.codeannotate.Utils;
 import edu.uncc.aside.codeannotate.models.ModelRegistry;
 import edu.uncc.aside.codeannotate.models.Path;
-import edu.uncc.aside.codeannotate.models.PathCollector;
-import edu.uncc.aside.codeannotate.models.Point;
+import edu.uncc.aside.codeannotate.models.ModelCollector;
+import edu.uncc.aside.codeannotate.models.AccessControlPoint;
 /**
  * 
  * @author Jing Xie (jxie2 at uncc dot edu)
@@ -50,15 +50,15 @@ public class IgnoreMarkerResolution implements IMarkerResolution2 {
 		Path path = retrivePathFromMarker(marker);
 		Utils.removeMarkersOnPath(path);
 		
-		PathCollector pathCollector = ModelRegistry
+		ModelCollector modelCollector = ModelRegistry
 				.getPathCollectorForProject(project);
-		pathCollector.removePath(path);
+		modelCollector.removePath(path);
 	}
 
 	@Override
 	public String getDescription() {
 
-		return Constants.IGNORE_MARKER_RESOLUTION_DESC;
+		return PluginConstants.IGNORE_MARKER_RESOLUTION_DESC;
 	}
 
 	@Override
@@ -98,23 +98,23 @@ public class IgnoreMarkerResolution implements IMarkerResolution2 {
 		NodeFinder finder = new NodeFinder(astRoot, charStart, length);
 
 		ASTNode node = finder.getCoveringNode();
-		Point nodePoint = new Point(node, astRoot, resource);
+		AccessControlPoint nodePoint = new AccessControlPoint(node, astRoot, resource);
 
 		return getPathByAccessor(nodePoint);
 
 	}
 
-	private Path getPathByAccessor(Point nodePoint) {
+	private Path getPathByAccessor(AccessControlPoint nodePoint) {
 
 		if (nodePoint == null)
 			return null;
 
-		PathCollector pathCollector = ModelRegistry
+		ModelCollector modelCollector = ModelRegistry
 				.getPathCollectorForProject(project);
-		List<Path> paths = pathCollector.getAllPaths();
-		Point accessor = null;
+		List<Path> paths = modelCollector.getAllPaths();
+		AccessControlPoint accessor = null;
 		for (Path path : paths) {
-			accessor = path.getAccessor();
+			accessor = path.getSensitiveOperation();
 			if (accessor.equalsTo(nodePoint)) {
 				return path;
 			}

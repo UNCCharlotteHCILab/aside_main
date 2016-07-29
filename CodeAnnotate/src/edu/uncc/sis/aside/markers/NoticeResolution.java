@@ -19,7 +19,7 @@ import org.eclipse.ui.browser.IWebBrowser;
 import org.eclipse.ui.browser.IWorkbenchBrowserSupport;
 
 import edu.uncc.aside.codeannotate.Plugin;
-import edu.uncc.aside.utils.ASIDEMarkerAndAnnotationUtil;
+import edu.uncc.aside.utils.MarkerAndAnnotationUtil;
 import edu.uncc.sis.aside.AsidePlugin;
 
 public class NoticeResolution implements IMarkerResolution,
@@ -39,7 +39,7 @@ public class NoticeResolution implements IMarkerResolution,
 	
 	@Override
 	public String getDescription() {
-		String description = "By default, Eclipse sometimes provides a list of general recommendations that appear along with ASIDE warnings. These can almost always be ignored and should go away when the ASIDE warning is addressed.";
+		String description = "By default, Eclipse sometimes provides a list of general recommendations that appear along with " + Plugin.PLUGIN_NAME + " warnings. These can almost always be ignored and should go away when the " + Plugin.PLUGIN_NAME + " warning is addressed.";
 		return description;
 	}
 
@@ -53,8 +53,8 @@ public class NoticeResolution implements IMarkerResolution,
 	@Override
 	public String getLabel() {
 		String start = "10";
-		String end = " - Options below are not ASIDE generated";
-		return ""; //start + this.rankNum + end;
+		String end = " - Options below are not " + Plugin.PLUGIN_NAME + " generated";
+		return start + this.rankNum + end;
 	}
 
 	@Override

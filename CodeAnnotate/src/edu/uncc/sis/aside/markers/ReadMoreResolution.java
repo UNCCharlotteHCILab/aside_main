@@ -11,11 +11,12 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import org.eclipse.core.runtime.FileLocator;
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.jdt.core.ICompilationUnit;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IMarkerResolution;
 import org.eclipse.ui.IMarkerResolution2;
@@ -23,11 +24,11 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.browser.IWebBrowser;
 
 import edu.uncc.aside.codeannotate.Plugin;
+import edu.uncc.aside.codeannotate.PluginConstants;
 import edu.uncc.aside.codeannotate.asideInterface.VariablesAndConstants;
-import edu.uncc.aside.utils.ASIDEMarkerAndAnnotationUtil;
+import edu.uncc.aside.utils.MarkerAndAnnotationUtil;
 import edu.uncc.aside.utils.Converter;
 import edu.uncc.sis.aside.AsidePlugin;
-import edu.uncc.sis.aside.constants.PluginConstants;
 
 public class ReadMoreResolution implements IMarkerResolution,
 IMarkerResolution2{
@@ -35,23 +36,22 @@ IMarkerResolution2{
 	private static final Logger logger = Plugin.getLogManager().getLogger(
 			SyntacticValidationResolution.class.getName());
 
-	private ICompilationUnit fCompilationUnit;
+//	private ICompilationUnit fCompilationUnit;
 	private String fInputType;
 	private IMarker fMarker;
-	private IProject fProject;
+//	private IProject fProject;
 	private String readMoreType;
 	/**
 	 * Constructor for ReadMoreResolution
-	 * 
-	 * @param cu
+	 * @param problem TODO
 	 * @param validationRule
 	 */
-	public ReadMoreResolution(ICompilationUnit cu, IMarker marker, IProject project, String readMoreType) {
+	public ReadMoreResolution(IMarker marker, String readMoreType, String problem) {
 		super();
-		fCompilationUnit = cu;
+	//	fCompilationUnit = cu;
 		fInputType = PluginConstants.ReadMore;
 		fMarker = marker;
-		fProject = project;
+		//fProject = project;
 		this.readMoreType = readMoreType;
 	}
 
@@ -61,24 +61,25 @@ IMarkerResolution2{
 		String content = "";
 		// First Option : Read more examples
 		if(this.readMoreType.equals("input")){
+			
 			description ="This line of code reads untrusted data. If the input is not validated before it is used, attackers can potentially insert malicious code into the program. This can lead to Cross Site Scripting or other security problems.";
 			instruction ="";
-			moreInfo =" Use the options below to insert code that validates this input, or Read More for more information about this vulnerability and how to fix it.";
-			/*
-			instruction = "-- Double click the \"Input Validation: Explanations and Examples\" link for an in-depth review of these issues";
-		description = "Security issues occur when malicious characters make their way into applications, programs, systems and databases (to name a few). Therefore, it is imperative to validate anything that is externally obtained prior to doing anything with the external input.";
-		moreInfo = "Follow the \"Input Validation: Explanations and Examples\" link for more info about why this method invocation needs validation.";
-		*/
+			moreInfo =" Use the options below to insert code that validates this input, or Read more information about this vulnerability and how to fix it.";
+			
 		content = instruction + "<p><p>" + description + "<p><p>" + moreInfo;
+		
 		}else if(this.readMoreType.equals("output")){
 			instruction = "-- Double click the \"Output Encoding: Explanations and Examples\" link for an in-depth review of these issues.";
 			description = " MM Security issues occur when malicious characters make their way into the output. Therefore, it is imperative to encode anything that is externally obtained prior to sending it to a browser.";
 			moreInfo = "Follow the \"Output Encoding: Explanations and Examples\" link for more info about why this method invocation needs encoding.";
-			content = instruction + "<p><p>" + description + "<p><p>" + moreInfo;
-		}else{
-			content = "";
+			
+		}else if(this.readMoreType.equals("annotation")){
+			description ="This line of code reads untrusted data. If the input is not validated before it is used, attackers can potentially insert malicious code into the program. This can lead to Cross Site Scripting or other security problems.";
+			instruction ="";
+			moreInfo =" Use the options below to insert code that validates this input, or Read More for more information about this vulnerability and how to fix it.";
+					
 		}
-		return content;
+		return instruction + "<p><p>" + description + "<p><p>" + moreInfo;
 	}
 
 	@Override
@@ -92,12 +93,18 @@ IMarkerResolution2{
 	@Override
 	public String getLabel() {
 		if(this.readMoreType.equals("input")){
-			return  "- ESIDE Unvalidated Input Vulnerability"; //"101 - Input Validation: Explanations and Examples";
-			}
+			return  "10-" + Plugin.PLUGIN_NAME + " Unvalidated Input Vulnerability"; //"101 - Input Validation: Explanations and Examples";
+		}
 		else if(this.readMoreType.equals("output")){
-			return "101 - Output Encoding: Explanations and Examples";
+			return "20-Output Encoding: Explanations and Examples";
+		}
+		else if(this.readMoreType.equals("sql")){
+			return "30-SQL Injection: Explanations and Examples";
+		}
+		else if(this.readMoreType.equals("annotation")){
+			return "40-Annotation Request: Explanations and Examples";
 		}else
-			return "1011 - ESIDE Unvalidated Input Vulnerability"; //"101 - Input Validation: Explanations and Examples";
+			return "50-" + Plugin.PLUGIN_NAME + " Unvalidated Input Vulnerability"; //"101 - Input Validation: Explanations and Examples";
 	}
 
 	@Override
@@ -108,13 +115,13 @@ IMarkerResolution2{
 //   		 URL url;
 //   		 String lineText = VariablesAndConstants.methodNames[marker.getAttribute("markerIndex", -1)];
 //   		 System.out.println(lineText);
-//   		 IWebBrowser webBrowser = PlatformUI.getWorkbench().getBrowserSupport().createBrowser(1, "myId", "ASIDE More Information", "ASIDE More Information");
+//   		 IWebBrowser webBrowser = PlatformUI.getWorkbench().getBrowserSupport().createBrowser(1, "myId", "" + Plugin.pluginName + " More Information", "" + Plugin.pluginName + " More Information");
 //   		 if(this.readMoreType.equals("input")){
-//   			 url = new URL("https://cd881bde7e4e09b16cb85cc7a0d5e747929b7864.googledrive.com/host/0BzEfllwR2DGafnVyZEV2ODhEQ1p0ekoyZ1I5anZ6aURHbkJoZFFTeXQ2NldBbFotV0hNMlE/ASIDE%20Validation.html");
+//   			 url = new URL("https://cd881bde7e4e09b16cb85cc7a0d5e747929b7864.googledrive.com/host/0BzEfllwR2DGafnVyZEV2ODhEQ1p0ekoyZ1I5anZ6aURHbkJoZFFTeXQ2NldBbFotV0hNMlE/Validation.html");
 //   		 }else if(this.readMoreType.equals("output")){
-//			 url = new URL("https://e93c6c1b3c43bf644cdfce81f94611601da37359.googledrive.com/host/0BzEfllwR2DGafm5MbjlfaWZGSDFZUE1qeWZZVHRjWl9SdDdQX3ZwU2NfZ0hFN01ISGt0Qjg/ASIDE%20Encoding.html");
+//			 url = new URL("https://e93c6c1b3c43bf644cdfce81f94611601da37359.googledrive.com/host/0BzEfllwR2DGafm5MbjlfaWZGSDFZUE1qeWZZVHRjWl9SdDdQX3ZwU2NfZ0hFN01ISGt0Qjg/Encoding.html");
 //   		 }else{
-//   			 url = new URL("https://cd881bde7e4e09b16cb85cc7a0d5e747929b7864.googledrive.com/host/0BzEfllwR2DGafnVyZEV2ODhEQ1p0ekoyZ1I5anZ6aURHbkJoZFFTeXQ2NldBbFotV0hNMlE/ASIDE%20Validation3.html");
+//   			 url = new URL("https://cd881bde7e4e09b16cb85cc7a0d5e747929b7864.googledrive.com/host/0BzEfllwR2DGafnVyZEV2ODhEQ1p0ekoyZ1I5anZ6aURHbkJoZFFTeXQ2NldBbFotV0hNMlE/Validation3.html");
 //   		 }
 //   		 webBrowser.openURL(url);
 //   		 URLConnection urlConnection = url.openConnection();
@@ -127,19 +134,21 @@ IMarkerResolution2{
 		// TODO Auto-generated method stub
 		
 		String ruleNameBelongTo="";
-		IProject project = ASIDEMarkerAndAnnotationUtil.getProjectFromICompilationUnit(fCompilationUnit);
+	//	IProject project = MarkerAndAnnotationUtil.getProjectFromICompilationUnit(fCompilationUnit);
 		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 		  
 	    //get current date time with Date()
 		Date date = new Date();
 	   
 	    try {
-	    	 URL url;
+	    	 URL url ;
 	    String queryUrlStr = PluginConstants.HostUrl;
 	   // IWebBrowser webBrowser = PlatformUI.getWorkbench().getBrowserSupport().createBrowser("myId");
+	    
 	    int constantValue = 1<<1;
 	    //System.out.println("constantValue= "+constantValue);
-	    IWebBrowser webBrowser = PlatformUI.getWorkbench().getBrowserSupport().createBrowser(constantValue, "myId", "ASIDE More Information", "ASIDE More Information");	    
+	    
+	    IWebBrowser webBrowser = PlatformUI.getWorkbench().getBrowserSupport().createBrowser(constantValue, "myId", "" + Plugin.PLUGIN_NAME + " More Information", "" + Plugin.PLUGIN_NAME + " More Information");	    
 	    //ruleNameBelongTo = (String)marker.getAttribute("edu.uncc.sis.aside.marker.ruleNameBelongTo");
 	    //System.out.println(ruleNameBelongTo);
 	    //for the demo of Feb. 17, since there are two explanation pages available
@@ -148,35 +157,47 @@ IMarkerResolution2{
 	    String urlStr = "";//queryUrlStr+ruleNameBelongTo; //URLEncoder.encode(ruleNameBelongTo, "UTF-8");
 	    //added Feb. 16, for server 
 	    //urlStr = "http://hci.sis.uncc.edu/aside/index";
-	    ruleNameBelongTo = (String)marker.getAttribute("edu.uncc.sis.aside.marker.typeNameBelongTo");
 	    
 	    
-	    logger.info(dateFormat.format(date) + " " + Plugin.getUserId() + " chose ReadMore option to read the webpage of <webpageType>" + ruleNameBelongTo + "<webpageType> for the warning " + "at line "
-				+ marker.getAttribute(IMarker.LINE_NUMBER, -1) + " in java file <<"
-				+ fCompilationUnit.getElementName()
-				+ ">> in Project ["
-				+ project.getName() + "]");
-	    
-	    String ruleTypeUrlParam = Converter.ruleTypeToUrlParam(ruleNameBelongTo);
-	    //System.out.println("ruleTypeUrlParam-=-"+ruleTypeUrlParam);
 	    String userID = Plugin.getUserId();
-	    if(userID.equals("anonymizedUser")){
-	    	urlStr = queryUrlStr + ruleTypeUrlParam + ".jsp";
-	    }else
-	    urlStr = queryUrlStr + ruleTypeUrlParam + ".jsp?userName=" + userID;
-	    //System.out.println("urlStr = " + urlStr);
+	    url = Platform.getBundle(PluginConstants.PLUGIN_ID).getEntry("files/ASIDE_Input_Validation.html");
 	    
 	    /// Make Them Offline. Changing the URLl to load from local
 	    if(this.readMoreType.equals("output")){
-			 url = new URL("https://bf01edb9cef99332ecbb51e2b7d6bd6e0ea6e715.googledrive.com/host/0B_sYP_Y3om2XaVVManJKcU1xVHc/ASIDE_Output_Encoding.html");
+	    	
+	    	
+	    	 url = Platform.getBundle(PluginConstants.PLUGIN_ID).getEntry("files/ASIDE_Output_Encoding.html");
+	    	//url = new URL("https://bf01edb9cef99332ecbb51e2b7d6bd6e0ea6e715.googledrive.com/host/0B_sYP_Y3om2XaVVManJKcU1xVHc/ASIDE_Output_Encoding.html");
 		 }else if(this.readMoreType.equals("input")){
-			 url = new URL("https://5b1d4b79290586caa52348cf1f0035de64b53bf3.googledrive.com/host/0B_sYP_Y3om2XSDB0aUMwSTRTQUE/ASIDE_Input_Validation.html");
+			 
+			 ruleNameBelongTo = (String)marker.getAttribute("edu.uncc.sis.aside.marker.typeNameBelongTo");
+			    
+			 String ruleTypeUrlParam = Converter.ruleTypeToUrlParam(ruleNameBelongTo);
+			    //System.out.println("ruleTypeUrlParam-=-"+ruleTypeUrlParam);
+			 
+			 url = Platform.getBundle(PluginConstants.PLUGIN_ID).getEntry("files/ASIDE_Input_Validation.html");
+			 //url = new URL("https://5b1d4b79290586caa52348cf1f0035de64b53bf3.googledrive.com/host/0B_sYP_Y3om2XSDB0aUMwSTRTQUE/ASIDE_Input_Validation.html");
+			 
+			 if(userID.equals("anonymizedUser")){
+			    	urlStr = queryUrlStr + ruleTypeUrlParam + ".jsp";
+			    }else
+			    urlStr = queryUrlStr + ruleTypeUrlParam + ".jsp?userName=" + userID;
 		 }
-		 else
+		 else if(this.readMoreType.equals("sql"))
 		 {
-			 url = new URL("https://1b11f44f746ed3e929e864ba53f92c994760f743.googledrive.com/host/0B_sYP_Y3om2XTEpXRVhuVENuUkk/ASIDE_SQL_Statement.html");
+			 //url = Platform.getBundle(PluginConstants.PLUGIN_ID).getEntry("files\\ASIDE SQL Statement.html");
+			 url =  Platform.getBundle(PluginConstants.PLUGIN_ID).getEntry("files/ASIDE_SQL_Statement.html");
 		 }
-		 webBrowser.openURL(url);
+		 else if(this.readMoreType.equals("annotation"))
+			 {
+				 //url = Platform.getBundle(PluginConstants.PLUGIN_ID).getEntry("files\\ASIDE SQL Statement.html");
+				 url =  Platform.getBundle(PluginConstants.PLUGIN_ID).getEntry("files/ASIDE_Access_Control.html");
+			 }
+	    
+	    
+	    //System.out.println("urlStr = " + urlStr);
+	    
+		 webBrowser.openURL(FileLocator.resolve(url));
 		 URLConnection urlConnection = url.openConnection();
 		 urlConnection.setDoOutput(true);
 	    //URL url = new URL(urlStr);

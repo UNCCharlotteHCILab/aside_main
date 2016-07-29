@@ -34,13 +34,13 @@ import org.eclipse.jdt.launching.JavaRuntime;
 import org.eclipse.swt.widgets.Display;
 import org.osgi.framework.Bundle;
 
-import edu.uncc.aside.codeannotate.Plugin;
+import edu.uncc.aside.codeannotate.PluginConstants;
 import edu.uncc.aside.utils.ConsentForm;
 import edu.uncc.sis.aside.AsidePlugin;
 
 public class ESAPIConfigurationJob extends Job {
 
-	private final static String ESAPI_CONFIG_DIR_NAME = "ASIDE-ESAPI";
+	private final static String ESAPI_CONFIG_DIR_NAME = "ESAPI-Lib";
 	private final static String ASIDE_ESAPI_CONTAINER = "ESAPI Libraries";
 	private final static String PROJECT_LIB_PATH = "WebContent"
 			+ IPath.SEPARATOR + "WEB-INF" + IPath.SEPARATOR + "lib";
@@ -75,18 +75,19 @@ public class ESAPIConfigurationJob extends Job {
 		 * dynamic web project structure defined by Eclipse
 		 */
 	
-		final IFolder lib = fProject.getFolder(PROJECT_LIB_PATH);
-		
-		if (!lib.exists()) {
+		final IFolder destLib = fProject.getFolder(PROJECT_LIB_PATH);
+		//MM Check whether the target project has the WEB-INF/lib path 
+		if (!destLib.exists()) {
 			
-			System.out.println("Cannot find: " + lib);
+			System.out.println("Cannot find: " + destLib);
 			return Status.OK_STATUS;
 		}
 
-		Bundle bundle = Platform.getBundle(Plugin.PLUGIN_ID);
+		Bundle bundle = Platform.getBundle(PluginConstants.PLUGIN_ID);
 		
 		Path path = new Path(IPath.SEPARATOR + ESAPI_CONFIG_DIR_NAME);
 		
+		//MM Finding ESAPI folder in the Plug in 
 		URL fileURL = FileLocator.find(bundle, path, null);
 		if (fileURL == null) {
 			System.out.println("cannot locate ESAPI directory");
@@ -99,29 +100,30 @@ public class ESAPIConfigurationJob extends Job {
 			URL localFileURL = FileLocator.toFileURL(fileURL);
 
 			String sourcePath = localFileURL.getFile();
-			File file = new File(sourcePath);
+			File lib = new File(sourcePath);
 			
-			if (file.exists() && file.isDirectory()) {
+			if (lib.exists() && lib.isDirectory()) {
 				
-				File[] sourceFiles = file.listFiles();
+				File[] sourceFiles = lib.listFiles();
 				
 				monitor.beginTask("Configuring OWASP ESAPI for Java Project: "
 						+ fProject.getName(), IProgressMonitor.UNKNOWN);
 				
-				for (int i = 0; i < sourceFiles.length; i++) {
-
-					File target = sourceFiles[i];
-					String fileName = target.getName();
+			//MM	for (int i = 0; i < sourceFiles.length; i++) {
+				//MM Copying ESAPI files to the destination project lib 
+				for (File file : sourceFiles) {
+					
+					String fileName = file.getName();
 					
 					monitor.subTask("Checking and Copying ESAPI library: "
 							+ fileName);
 
-					if (target.isFile()) {
+					if (file.isFile()) {
 						
 						if (fileName.endsWith(".jar")) {
 							
 							is = new BufferedInputStream(new FileInputStream(
-									target.getAbsolutePath()));
+									file.getAbsolutePath()));
 							
 							IFile destination = fProject
 									.getFile(IPath.SEPARATOR + PROJECT_LIB_PATH
@@ -137,7 +139,7 @@ public class ESAPIConfigurationJob extends Job {
 						}else if(fileName.equals("log4j.properties")){ //copy the log4j.properties file
 							
 							is = new BufferedInputStream(new FileInputStream(
-									target.getAbsolutePath()));
+									file.getAbsolutePath()));
 							
 							IFile destination = fProject
 									.getFile(IPath.SEPARATOR + PROJECT_WEBINF_PATH
@@ -151,7 +153,7 @@ public class ESAPIConfigurationJob extends Job {
 								}
 							}
 						}
-					} else if (target.isDirectory()) {
+					} else if (file.isDirectory()) {
 						
 						if (fileName.equalsIgnoreCase("esapi")
 								|| fileName.equalsIgnoreCase(".esapi")) {
@@ -174,7 +176,7 @@ public class ESAPIConfigurationJob extends Job {
 									continue;
 								}
 							}
-							copyDirectory(target, tmp, is, monitor);
+							copyDirectory(file, tmp, is, monitor);
 						}
 					}
 					monitor.worked(1);
@@ -204,6 +206,7 @@ public class ESAPIConfigurationJob extends Job {
 
 		// setESAPIClasspathContainer(lib);
 		setESAPIResourceLocation();
+		
 		return Status.OK_STATUS;
 	}
 
@@ -290,7 +293,7 @@ public class ESAPIConfigurationJob extends Job {
 
 			@Override
 			public String getDescription() {
-				return "ASIDE ESAPI Libraries";
+				return "ESAPI-Lib Libraries";
 			}
 
 			@Override
@@ -352,9 +355,9 @@ public class ESAPIConfigurationJob extends Job {
 			locationUri = folder.getRawLocationURI();
 			//System.out.println("setESAPIResourceLocation class--older.getRawLocationURI="+locationUri);
 		} else {
-			folder = fProject.getFolder(".esapi");
 			System.out.println("folder not exist!");
 			
+			folder = fProject.getFolder(".esapi");	
 			if (folder.exists()) {
 				locationUri = folder.getRawLocationURI();
 				//System.out.println("setESAPIResourceLocation class-- fProject.getFolder .esapi exist, locationUri="+locationUri);
@@ -363,17 +366,20 @@ public class ESAPIConfigurationJob extends Job {
 		}
 
 		if (locationUri == null){
-			System.out.println("setESAPIResourceLocation class--locationUri= null");
+			System.out.println("ERROR setESAPIResourceLocation class--locationUri= null");
 			return;
 		}
 		//String path = ESAPI_VM_ARG + "=\"" + locationUri.getPath().substring(1) + "\""; just added for test Feb. 28
 		
 		String path = ESAPI_VM_ARG + "=\"" + "/" + locationUri.getPath().substring(1) + "\"";
+		//MM "-Dorg.owasp.esapi.resources=\path\to\esapi\lib"
 		
         //System.out.println("Line 307 Path = " + path);
 		try {
+			//MM Returns the VM assigned to build the given Java project
 			AbstractVMInstall vminstall = (AbstractVMInstall) JavaRuntime
 					.getVMInstall(javaProject);
+			
 			if (vminstall != null) {
 				String[] vmargs = vminstall.getVMArguments();
 				if (vmargs == null) {

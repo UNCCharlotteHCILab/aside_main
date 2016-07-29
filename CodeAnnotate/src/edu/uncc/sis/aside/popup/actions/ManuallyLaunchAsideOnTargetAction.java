@@ -35,11 +35,11 @@ import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
 
 import edu.uncc.aside.codeannotate.Plugin;
+import edu.uncc.aside.codeannotate.PluginConstants;
 import edu.uncc.aside.utils.AuthenCenter;
 import edu.uncc.aside.utils.ConsentForm;
 import edu.uncc.aside.utils.Converter;
 import edu.uncc.sis.aside.AsidePlugin;
-import edu.uncc.sis.aside.constants.PluginConstants;
 import edu.uncc.sis.aside.jobs.ESAPIConfigurationJob;
 import edu.uncc.sis.aside.visitors.MethodDeclarationVisitor;
 
@@ -57,6 +57,7 @@ public class ManuallyLaunchAsideOnTargetAction implements IObjectActionDelegate 
 	private IAction targetAction;
 	private IWorkbenchPart targetWorkbench;
 
+	//MM List of all Markers per Method per Java File
 	private static Map<ICompilationUnit, Map<MethodDeclaration, ArrayList<IMarker>>> projectMarkerMap = null;
 
 	public ManuallyLaunchAsideOnTargetAction() {
@@ -74,12 +75,12 @@ public class ManuallyLaunchAsideOnTargetAction implements IObjectActionDelegate 
 		}
 
 		if(Plugin.getDefault().isAllowed()){
-			System.out.println("manually run ASIDE");
+			System.out.println("manually run " + Plugin.PLUGIN_NAME + "");
 			DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 			//System.out.println("in Manuallylsdfjalsj");
 			//get current date time with Date()
 			Date date = new Date();
-			logger.info(dateFormat.format(date)+ " " + "User clicked Run ASIDE from the context menu to launch ASIDE");
+			logger.info(dateFormat.format(date)+ " " + "User clicked Run " + Plugin.PLUGIN_NAME + " from the context menu to launch " + Plugin.PLUGIN_NAME + "");
 
 			// scan the selected target's project presentation
 			if (targetWorkbench == null) {
@@ -157,33 +158,38 @@ public class ManuallyLaunchAsideOnTargetAction implements IObjectActionDelegate 
 
 		System.out.println("project.getElementName()==" +project.getElementName());
 		
-		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-
-		//get current date time with Date()
+		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");		
 		Date date = new Date();
-		logger.info(dateFormat.format(date) + " : " + Plugin.getUserId() + " ASIDE is inspecting project: " + project.getElementName());
+		logger.info(dateFormat.format(date) + " : " + Plugin.getUserId() + " " + Plugin.PLUGIN_NAME + " is inspecting project: " + project.getElementName());
+		/*/MM
 		if(project != null){ // && project.getElementName()!="RemoteSystemsTempFiles"
 			try{
 				project.getCorrespondingResource().deleteMarkers(
-						Plugin.ROOT_MARKER, true,
+						PluginConstants.ROOT_MARKER, true,
 						IResource.DEPTH_INFINITE);
+				
 			}catch(Exception e){
 				e.printStackTrace();
 			}
 		}
+		*/
 		projectMarkerMap = Plugin.getDefault().getMarkerIndex(project);
 
+		//MM projectMarkerMap =list of the markers for each function in this Java file.
 		if (projectMarkerMap == null) {
 			projectMarkerMap = new HashMap<ICompilationUnit, Map<MethodDeclaration, ArrayList<IMarker>>>();
 		}
 
+		//MM fragments = Java Packages in a project
 		IPackageFragment[] packageFragmentsInProject = project
-				.getPackageFragments();
+				.getPackageFragments();		
 		
 		for (IPackageFragment fragment : packageFragmentsInProject) {
+			
 			ICompilationUnit[] units = fragment.getCompilationUnits();
 			for (ICompilationUnit unit : units) {
 
+				//MM Run analysis for each Java file
 				Map<MethodDeclaration, ArrayList<IMarker>> fileMap = inspectOnJavaFile(unit);
 				
 				projectMarkerMap.put(unit, fileMap);
@@ -192,17 +198,15 @@ public class ManuallyLaunchAsideOnTargetAction implements IObjectActionDelegate 
 
 		// At last, put it back to Aside Plugin
 		Plugin.getDefault().setMarkerIndex(project, projectMarkerMap);
+		
 		date = new Date();
-		logger.info(dateFormat.format(date) + " " + Plugin.getUserId() + " ASIDE finished inspecting project: " + project.getElementName());
+		logger.info(dateFormat.format(date) + " " + Plugin.getUserId() + " " + Plugin.PLUGIN_NAME + " finished inspecting project: " + project.getElementName());
 	}
 
 	public static Map<MethodDeclaration, ArrayList<IMarker>> inspectOnJavaFile(
 			ICompilationUnit unit) {
-		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-		  
-	    //get current date time with Date()
-		Date date = new Date();
-	    logger.info(dateFormat.format(date) + " : " + Plugin.getUserId() + " ASIDE starts inspecting java file: " + unit.getElementName());
+		
+		addInspectOnFileLog(unit);
 
 		CompilationUnit astRoot = Converter.parse(unit);
 		// PreferencesSet set = new PreferencesSet(true, true, false, new
@@ -212,6 +216,12 @@ public class ManuallyLaunchAsideOnTargetAction implements IObjectActionDelegate 
 		
 		return declarationVisitor.process();
 
+	}
+
+	private static void addInspectOnFileLog(ICompilationUnit unit) {
+		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");		
+		Date date = new Date();
+	    logger.info(dateFormat.format(date) + " : " + Plugin.getUserId() + " " + Plugin.PLUGIN_NAME + " starts inspecting java file: " + unit.getElementName());
 	}
 
 	@Override

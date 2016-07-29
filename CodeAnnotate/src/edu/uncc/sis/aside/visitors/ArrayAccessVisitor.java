@@ -18,7 +18,8 @@ import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
 
 import edu.uncc.aside.ast.ASTResolving;
 import edu.uncc.aside.codeannotate.Plugin;
-import edu.uncc.aside.utils.ASIDEMarkerAndAnnotationUtil;
+import edu.uncc.aside.codeannotate.PluginConstants;
+import edu.uncc.aside.utils.MarkerAndAnnotationUtil;
 import edu.uncc.sis.aside.AsidePlugin;
 
 public class ArrayAccessVisitor extends ASTVisitor {
@@ -43,7 +44,7 @@ public class ArrayAccessVisitor extends ASTVisitor {
 		this.taintedListSources = taintedListSources;
 
 		if (existingArrayAccessMarkers != null && !existingArrayAccessMarkers.isEmpty()) {
-			ASIDEMarkerAndAnnotationUtil
+			MarkerAndAnnotationUtil
 					.clearStaleMarkers(existingArrayAccessMarkers);
 		}
 
@@ -92,7 +93,7 @@ public class ArrayAccessVisitor extends ASTVisitor {
 			int charEnd = charStart + length;
 
 			if (name.equals(paramSearch)
-					&& !ASIDEMarkerAndAnnotationUtil.hasAnnotationAtPosition(
+					&& !MarkerAndAnnotationUtil.hasAnnotationAtPosition(
 							cu, node)) {
 
 				markerAttributes.put(IMarker.CHAR_START, charStart);
@@ -104,9 +105,12 @@ public class ArrayAccessVisitor extends ASTVisitor {
 						"edu.uncc.sis.aside.marker.validationType", "String");
 				// This is the attribute that differentiates ArrayAccess markers with other node markers
 				markerAttributes.put(IMarker.TEXT, "ArrayAccess");
+				markerAttributes.put(IMarker.SEVERITY, IMarker.SEVERITY_ERROR);
+				markerAttributes.put(IMarker.PRIORITY, IMarker.PRIORITY_HIGH);
 
-				marker = ASIDEMarkerAndAnnotationUtil.addMarker(astRoot,
-						markerAttributes);
+				// Adding Input Validation Marker
+				marker = MarkerAndAnnotationUtil.addMarker(astRoot,
+						markerAttributes, PluginConstants.MARKER_INPUT_VALIDATION);
 
 				arrayAccessMarkers.add(marker);
 			}

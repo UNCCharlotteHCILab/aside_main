@@ -35,7 +35,7 @@ import org.eclipse.ui.PartInitException;
 
 import edu.uncc.aside.ast.ASTResolving;
 import edu.uncc.aside.codeannotate.Plugin;
-import edu.uncc.aside.utils.ASIDEMarkerAndAnnotationUtil;
+import edu.uncc.aside.utils.MarkerAndAnnotationUtil;
 import edu.uncc.sis.aside.AsidePlugin;
 import edu.uncc.sis.aside.auxiliary.core.AsideScanOneICompilationUnit;
 import edu.uncc.sis.aside.auxiliary.core.CodeGenerator;
@@ -74,9 +74,11 @@ public class SpecialOutputValidationResolution implements IMarkerResolution,
 			description = "Description about this rule is not available";
 		
 		StringBuffer buf = new StringBuffer();
+		
 		if(fInputType.equals("SafeString")){
 		    description = "getParameter(value) is typically used to obtain outside (user) data which can be exploited with malicious injections of bad characters. Use this to limit input from an outside source (users) to alphabetical characters and numbers only as well as controlling for a buffer overflow vulnerability. ";
 		    info = "Note, special characters are not allowed (&gt;.@&, etc) and if they are entered, an exception will be thrown that must be handled by the developer (e.g., place in the validation catch response.sendRedirect(\"Login.jsp\"); and an accompanying message to the user that their attempt was unsuccessful)"; 
+		
 		}else if(fInputType.equals("HTTPParameterValue")){
 			description = "getParameter(value) is typically used to obtain outside (user) data which can be exploited with malicious injections of bad characters. Use this to limit HTTP input from an outside source (users) to alphabetical characters, numbers and the special characters .-/+=_ !$*?@";
 			info = "Note, if malicious characters are entered, an exception will be thrown that must be handled by the developer (e.g., place in the validation catch response.sendRedirect(\"Login.jsp\"); and an accompanying message to the user that their attempt was unsuccessful)";
@@ -84,7 +86,8 @@ public class SpecialOutputValidationResolution implements IMarkerResolution,
 		else if(fInputType.equals("HTTPServletPath")){
 			description = "Servlet path information (e.g., request.getServletPath()) uses a limited amount of characters and is susceptible to malicious characters. Use this filter when obtaining HttpServletPath information.";
 			info = "Note, if malicious characters are entered, an exception will be thrown that must be handled by the developer (e.g., place in the validation catch response.sendRedirect(\"Login.jsp\"); and an accompanying message to the user that their attempt was unsuccessful)";
-	}else if(fInputType.equals("URL")){
+	
+		}else if(fInputType.equals("URL")){
 			description = "Ensure that all provided URL input follow appropriate protocol-host-port format. If malicious input is found, an exception will be thrown that must be handled by the developer (e.g., place in the validation catch response.sendRedirect(\"Login.jsp\"); and an accompanying message to the user that their attempt was unsuccessful)";
 			info = "";
 	}
@@ -199,7 +202,7 @@ public class SpecialOutputValidationResolution implements IMarkerResolution,
 //					astRoot, fImportRewrite, ast, node, fInputType);
 			///////////
 //			ITrackedNodePosition replacementPositionTracking = null;
-			ASIDEMarkerAndAnnotationUtil.deleteMarkerAtPosition(marker);
+			MarkerAndAnnotationUtil.deleteMarkerAtPosition(marker);
 			boolean result = CodeGenerator.getInstance().generateSpecialOutputValidationCode(document,
 					astRoot, fImportRewrite, ast, node, fInputType, returnTypeOfMethodDeclarationStr);
 			if(result==false){

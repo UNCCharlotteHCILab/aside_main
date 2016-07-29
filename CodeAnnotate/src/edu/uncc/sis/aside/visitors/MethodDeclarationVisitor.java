@@ -13,7 +13,7 @@ import org.eclipse.jdt.core.dom.ASTVisitor;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 
-import edu.uncc.aside.utils.ASIDEMarkerAndAnnotationUtil;
+import edu.uncc.aside.utils.MarkerAndAnnotationUtil;
 import edu.uncc.sis.aside.preferences.PreferencesSet;
 
 /**
@@ -28,7 +28,8 @@ public class MethodDeclarationVisitor extends ASTVisitor {
 	private ICompilationUnit cu;
 
 	private Map<MethodDeclaration, ArrayList<IMarker>> markersMap;
-	private ArrayList<IMarker> asideMarkers;
+	private ArrayList<IMarker> markersList; 
+	//MM to keep the list of markers for this method declaration and then will be used to make the project markers map
 
 	private Map<MethodDeclaration, ArrayList<IMarker>> existingMarkersMapForICompilationUnit;
 
@@ -54,14 +55,14 @@ public class MethodDeclarationVisitor extends ASTVisitor {
 		if (markersMap == null) {
 			markersMap = new HashMap<MethodDeclaration, ArrayList<IMarker>>();
 		}
-		asideMarkers = new ArrayList<IMarker>();
+		markersList = new ArrayList<IMarker>();
 		this.prefSet = prefSet;
 	}
 
 	@Override
 	public void endVisit(MethodDeclaration node) {
 
-		markersMap.put(node, asideMarkers);
+		markersMap.put(node, markersList);
 		super.endVisit(node);
 	}
 
@@ -73,7 +74,7 @@ public class MethodDeclarationVisitor extends ASTVisitor {
 		 * method for Java applications
 		 */
 
-		boolean main = ASIDEMarkerAndAnnotationUtil.isMainEntrance(cu, node);
+		boolean main = MarkerAndAnnotationUtil.isMainEntrance(cu, node);
 
 		MethodInvocationVisitor methodInvocationVisitor = null;
 		ArrayAccessVisitor arrayAccessVisitor = null;
@@ -89,9 +90,9 @@ public class MethodDeclarationVisitor extends ASTVisitor {
 			methodInvocationVisitor = new MethodInvocationVisitor(node, null,
 					cu, prefSet);
 
-			System.out.println("MM methodInvocationVisitor.process before asideMarkers");
+		//	System.out.println("MM methodInvocationVisitor.process before asideMarkers");
 			
-			asideMarkers = methodInvocationVisitor.process();
+			markersList = methodInvocationVisitor.process();
 
 			/*
 			 * if (main) { arrayAccessVisitor = new ArrayAccessVisitor(node,
@@ -102,7 +103,7 @@ public class MethodDeclarationVisitor extends ASTVisitor {
 			/*
 			 * Comparing the current MethodDeclaration node with the ones have markers from previous scanning
 			 */
-			MethodDeclaration matchee = ASIDEMarkerAndAnnotationUtil
+			MethodDeclaration matchee = MarkerAndAnnotationUtil
 					.getMatchee(node,
 							existingMarkersMapForICompilationUnit.keySet());
 
@@ -114,8 +115,9 @@ public class MethodDeclarationVisitor extends ASTVisitor {
 				methodInvocationVisitor = new MethodInvocationVisitor(node,
 						existingMarkers, cu, prefSet);
 				
-				System.out.println("MM else_methodInvocationVisitor.process");
-				asideMarkers = methodInvocationVisitor.process();
+			//	System.out.println("MM else_methodInvocationVisitor.process");
+			
+				markersList = methodInvocationVisitor.process();
 
 				/*
 				 * if (main) { ArrayList<IMarker> existingArrayAccessMarkers =
@@ -132,7 +134,7 @@ public class MethodDeclarationVisitor extends ASTVisitor {
 				methodInvocationVisitor = new MethodInvocationVisitor(node,
 						null, cu, prefSet);
 
-				asideMarkers = methodInvocationVisitor.process();
+				markersList = methodInvocationVisitor.process();
 
 				/*
 				 * if (main) { arrayAccessVisitor = new ArrayAccessVisitor(node,
@@ -149,9 +151,12 @@ public class MethodDeclarationVisitor extends ASTVisitor {
 
 					Iterator<ArrayList<IMarker>> it = values.iterator();
 					Iterator<IMarker> itm = null;
+					
 					while(it.hasNext()){
+						
 						ArrayList<IMarker> element = it.next();
 						itm = element.iterator();
+						
 						while(itm.hasNext()){
 							IMarker marker = itm.next();
 							if (marker != null && marker.exists()) {
@@ -171,7 +176,9 @@ public class MethodDeclarationVisitor extends ASTVisitor {
 
 	private ArrayList<IMarker> extractArrayAccessMarkers(
 			ArrayList<IMarker> existingMarkers) {
+		
 		ArrayList<IMarker> temp = new ArrayList<IMarker>();
+		
 		try {
 			for (IMarker marker : existingMarkers) {
 

@@ -27,6 +27,7 @@ public class Messenger {
 		event = _event;
 	}
 	
+	// It is used by the CodeAnnotateElementChangeListener.elementChanged
 	public BufferChangedEvent getDocumentEvent(){
 		return event;
 	}

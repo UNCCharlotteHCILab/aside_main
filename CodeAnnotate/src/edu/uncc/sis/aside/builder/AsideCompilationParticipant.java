@@ -56,10 +56,11 @@ public class AsideCompilationParticipant extends CompilationParticipant {
 	private static final Logger logger = Plugin.getLogManager().getLogger(
 			AsideCompilationParticipant.class.getName());
 
-	private static CompilationUnit cuAST_BeforeReconcile = null;
+	private static CompilationUnit cuBeforeReconcile = null;
 
 	private static ASTMatcher astMatcher = null;
 
+	// List of markers per method per compilation units.
 	private static Map<ICompilationUnit, Map<MethodDeclaration, ArrayList<IMarker>>> projectMarkerMap = null;
 
 	private int counter = 0;
@@ -141,13 +142,14 @@ public class AsideCompilationParticipant extends CompilationParticipant {
 		if(Plugin.isAllowed()){
 
 		counter++;
-		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-		// get current date time with Date()
+		
+		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");		
 		Date date = new Date();
-		logger.info(dateFormat.format(date) + " " + Plugin.getUserId() + " ASIDE starts RECONCILING... " + counter);
+		logger.info(dateFormat.format(date) + " " + Plugin.getUserId() + " " + Plugin.PLUGIN_NAME + " starts RECONCILING... " + counter);
 
 		try {
 			// javaElementDelta = List of Changes in AST 
+			
 			IJavaElementDelta javaElementDelta = context.getDelta();
 
 			if (javaElementDelta == null) {
@@ -210,29 +212,33 @@ public class AsideCompilationParticipant extends CompilationParticipant {
 			}
 
 			int flags = javaElementDelta.getFlags();
+			// Description of Flags:
 			if ((flags & IJavaElementDelta.F_CONTENT) != 0
 					|| (flags & IJavaElementDelta.F_AST_AFFECTED) != 0) {
 				
 				System.out.println("MM After F_AST_AFFECTED");
 				
-				CompilationUnit cuAST_AfterReconcile = context.getAST3();
+				CompilationUnit cuAfterReconcile = context.getAST3();
 
-				if (cuAST_AfterReconcile == null) {
+				if (cuAfterReconcile == null) {
 					return;
 				}
 
-				ICompilationUnit cu = (ICompilationUnit) cuAST_AfterReconcile
+				ICompilationUnit cu = (ICompilationUnit) cuAfterReconcile
 						.getJavaElement().getPrimaryElement();
 
-				Map<MethodDeclaration, ArrayList<IMarker>> markersMap = projectMarkerMap
-						.get(cu);
+				//markersMap = List of the markers of the compilation unit.				
+				Map<MethodDeclaration, ArrayList<IMarker>> markersMap = projectMarkerMap.get(cu);
 
-				if (cuAST_BeforeReconcile == null) {
+				// First Time Reconciling. Usually when the file opens
+				if (cuBeforeReconcile == null) { 
+				
 					// inspect on this compilation unit AST
-					System.out.println("MM cuAST_BeforeReconcile");
+				//	System.out.println("MM cuAST_BeforeReconcile");
 					
+					// Finding Vulnerabilities in changed AST in method declarations and then add corresponding markers
 					MethodDeclarationVisitor methodDeclarationVisitor = new MethodDeclarationVisitor(
-							cuAST_AfterReconcile, markersMap, cu,
+							cuAfterReconcile, markersMap, cu,
 							null);
 					markersMap = methodDeclarationVisitor.process();
 
@@ -243,6 +249,7 @@ public class AsideCompilationParticipant extends CompilationParticipant {
 						markersMap = new HashMap<MethodDeclaration, ArrayList<IMarker>>();
 					}
 
+					// Adding found vulnerabilities as markers
 					projectMarkerMap.put(cu, markersMap);
 
 					/*
@@ -250,16 +257,18 @@ public class AsideCompilationParticipant extends CompilationParticipant {
 					 * reconcile
 					 */
 
-					cuAST_BeforeReconcile = cuAST_AfterReconcile;
+					cuBeforeReconcile = cuAfterReconcile;
 
 					Plugin.getDefault().setMarkerIndex(project,
 							projectMarkerMap);
 
 					return;
 
-				} else {
+				} 
+				// Reconciling request after the first time a file gets opened
+				else {
 
-					if (astMatcher.match(cuAST_BeforeReconcile,	cuAST_AfterReconcile)) {
+					if (astMatcher.match(cuBeforeReconcile,	cuAfterReconcile)) {
 						// no change on the structure of the ICompilationUnit
 						// When a file is opened for the second time there is no change in its AST structure
 						// Two ASTs : cuAST_BeforeReconcile and cuAST_AfterReconcile are equal
@@ -272,7 +281,8 @@ public class AsideCompilationParticipant extends CompilationParticipant {
 					 * method declaration within which the change happened
 					 */
 
-					List<TypeDeclaration> types = cuAST_AfterReconcile.types();
+					@SuppressWarnings("unchecked")
+					List<TypeDeclaration> types = cuAfterReconcile.types();
 
 					if (types.isEmpty()) {
 						// return; ?
@@ -284,35 +294,44 @@ public class AsideCompilationParticipant extends CompilationParticipant {
 
 					Set<MethodDeclaration> methodsBefore = markersMap.keySet();
 
-					Map<MethodDeclaration, ArrayList<IMarker>> newMap = new HashMap<MethodDeclaration, ArrayList<IMarker>>();
+					Map<MethodDeclaration, ArrayList<IMarker>> newMarkersMap = new HashMap<MethodDeclaration, ArrayList<IMarker>>();
 
+					// type is a class in a compilation unit
 					for (TypeDeclaration type : types) {
+						
+						//The methods in the AST 
 						MethodDeclaration[] methodsAfter = type.getMethods();
 
-						for (MethodDeclaration matchee : methodsAfter) {
-							MethodDeclaration member = getMatchInSet(matchee,
+						for (MethodDeclaration methodAfter : methodsAfter) {
+							
+							MethodDeclaration matched = getMatchInSet(methodAfter,
 									methodsBefore);
 
-							if (member != null) {
-								newMap.put(member, markersMap.get(member));
-								markersMap.remove(member);
+							//Not a new Mthod. If there is a method found in both ASTs of Class( before and after a change happened)						
+							if (matched != null) {
+								//Update its markers
+								newMarkersMap.put(matched, markersMap.get(matched));
+								
+								markersMap.remove(matched);
 
-							} else if (member == null) {
+							} else 
+								//A new method has been added to the class
+								if (matched == null) {
 								
 								MethodInvocationVisitor methodInvocationVisitor = new MethodInvocationVisitor(
-										matchee, null, cu, null);
+										methodAfter, null, cu, null);
 								
-								System.out.println("MM Before process ");
+							//	System.out.println("MM Before process ");
 								
-								ArrayList<IMarker> markers = methodInvocationVisitor
-										.process();
+								// Get the lis of the markers for this new method
+								ArrayList<IMarker> markers = methodInvocationVisitor.process();
 
-								newMap.put(matchee, markers);
+								newMarkersMap.put(methodAfter, markers);
 							}
 
 						}
 
-					}
+					}// For all classes in a compilation  unit
 
 					// clear out all markers of last scanning before the change
 					if (!markersMap.isEmpty()) {
@@ -331,19 +350,19 @@ public class AsideCompilationParticipant extends CompilationParticipant {
 						}
 					}
 
-					projectMarkerMap.put(cu, newMap);
+					projectMarkerMap.put(cu, newMarkersMap);
 					/*
 					 * store the AST after this reconcile process for next round
 					 * reconcile
 					 */
-					cuAST_BeforeReconcile = cuAST_AfterReconcile;
+					cuBeforeReconcile = cuAfterReconcile;
 				}
 
 			}
 
 			Plugin.getDefault().setMarkerIndex(project, projectMarkerMap);
 			date = new Date();
-	//		logger.info(dateFormat.format(date) + " " + Plugin.getUserId() + " ASIDE finished RECONCILING... " + counter);
+	//		logger.info(dateFormat.format(date) + " " + Plugin.getUserId() + " " + Plugin.pluginName + " finished RECONCILING... " + counter);
 
 		} catch (JavaModelException e) {
 			e.printStackTrace();

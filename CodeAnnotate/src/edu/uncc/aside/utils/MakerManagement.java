@@ -31,14 +31,16 @@ import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.launching.sourcelookup.containers.JavaProjectSourceContainer;
 
 import edu.uncc.aside.codeannotate.Plugin;
+import edu.uncc.aside.codeannotate.PluginConstants;
 import edu.uncc.aside.codeannotate.asideInterface.InterfaceUtil;
+import edu.uncc.aside.codeannotate.models.ModelCollector;
+import edu.uncc.aside.codeannotate.models.ModelRegistry;
 import edu.uncc.sis.aside.AsidePlugin;
-import edu.uncc.sis.aside.auxiliary.core.TestRunOnAllProjects;
-import edu.uncc.sis.aside.constants.PluginConstants;
+import edu.uncc.sis.aside.auxiliary.core.RunAnalysisOnAllProjects;
 
 public class MakerManagement {
 	private static final Logger logger = Plugin.getLogManager().getLogger(
-			TestRunOnAllProjects.class.getName());
+			RunAnalysisOnAllProjects.class.getName());
 	
 	public static void deleteWorkspaceMarkers(String markerType){
 		IJavaProject javaProject ;
@@ -65,10 +67,14 @@ public class MakerManagement {
 	    if(project != null){
 	    	try{
 	    		IMarker[] markers = project.getCorrespondingResource().findMarkers(markerType, true, IResource.DEPTH_INFINITE);
+	    		
 	    		project.getCorrespondingResource().deleteMarkers( //PluginConstants.ASIDE_MARKER_TYPE
 	    				markerType, true,
 	    				IResource.DEPTH_INFINITE);
 
+	    		ModelCollector model=  ModelRegistry.getPathCollectorForProject(project.getProject());
+	    		model.removeAllInputValidation();
+	    		
 	    	}catch(Exception e){
 	    		System.err.println("project.get1");
 	    		e.printStackTrace();
@@ -104,6 +110,7 @@ public class MakerManagement {
 			markers = resource.findMarkers(markerType, true, IResource.DEPTH_INFINITE);
 			
 			System.out.println("Markers in " + unit.getElementName() + " is " + markers.length);
+		
 		} catch (JavaModelException e) {
 			System.err.println("project.get3");
 			// TODO Auto-generated catch block
@@ -211,6 +218,21 @@ public class MakerManagement {
 								
 								if(fields[1].equalsIgnoreCase(name))
 								{
+									Map<String, Object> markerAttributes = new HashMap<String, Object>();	
+									
+									markerAttributes.put(IMarker.CHAR_START,Integer.parseInt(fields[2]) );
+									markerAttributes.put(IMarker.CHAR_END,Integer.parseInt(fields[3]) );
+									markerAttributes.put(IMarker.LINE_NUMBER,	Integer.parseInt(fields[4]));
+									markerAttributes.put(IMarker.MESSAGE,fields[7]);
+									markerAttributes.put(IMarker.SEVERITY, Integer.parseInt(fields[5]));
+									markerAttributes.put(IMarker.PRIORITY, Integer.parseInt(fields[6]));
+									markerAttributes.put("CurrentTime", fields[8]);
+									markerAttributes.put("UserId",fields[9]);
+									
+									MarkerAndAnnotationUtil
+											.addMarker(unit.getResource(),
+													markerAttributes, fields[0]);
+									/*
 									InterfaceUtil.createMarker(unit.getResource(),fields[0] ,
 											Integer.parseInt(fields[2]) //Start
 											, Integer.parseInt(fields[3]) //End
@@ -221,6 +243,8 @@ public class MakerManagement {
 											,fields[8]  //Creation Time
 											,fields[9]  //UserId
 													); //message
+													
+													*/
 									/*
 									resource = unit.getResource();
 									marker=resource.createMarker(fields[0]);

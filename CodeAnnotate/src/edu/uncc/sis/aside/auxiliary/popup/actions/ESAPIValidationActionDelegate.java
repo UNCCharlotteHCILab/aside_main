@@ -22,7 +22,7 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchSite;
 
 import edu.uncc.aside.ast.ASTResolving;
-import edu.uncc.aside.utils.ASIDEMarkerAndAnnotationUtil;
+import edu.uncc.aside.utils.MarkerAndAnnotationUtil;
 import edu.uncc.sis.aside.auxiliary.core.CodeGenerator;
 
 public class ESAPIValidationActionDelegate implements IEditorActionDelegate {
@@ -107,7 +107,7 @@ public class ESAPIValidationActionDelegate implements IEditorActionDelegate {
 		IDocument document = JavaUI.getDocumentProvider().getDocument(
 				editorPart.getEditorInput());
 		MethodDeclaration methodDeclaration = ASTResolving.findParentMethodDeclaration(node);
-		String returnTypeOfMethodDeclarationStr = ASIDEMarkerAndAnnotationUtil.getReturnTypeStr(methodDeclaration);
+		String returnTypeOfMethodDeclarationStr = MarkerAndAnnotationUtil.getReturnTypeStr(methodDeclaration);
 		
 		CodeGenerator.getInstance().generateValidationCodeAndAddASIDE_Flag(document, root, fImportRewrite, ast, node, key, returnTypeOfMethodDeclarationStr);
 	}

@@ -21,31 +21,49 @@ import org.eclipse.ui.IMarkerResolutionGenerator2;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.PartInitException;
 
+import edu.uncc.aside.codeannotate.Plugin;
+import edu.uncc.aside.codeannotate.PluginConstants;
+import edu.uncc.aside.utils.MarkerAndAnnotationUtil;
+import edu.uncc.sis.aside.markers.IgnoreMarkerResolution;
+import edu.uncc.sis.aside.markers.ReadMoreResolution;
+
 //The resolution generator for the green checks
 	public class CheckedResolutionGenerator  implements
 			IMarkerResolutionGenerator, IMarkerResolutionGenerator2
 	{
-		public IMarkerResolution[] getResolutions(IMarker mk) 
+		public IMarkerResolution[] getResolutions(IMarker marker) 
 		{
 			
 			Random rand = new Random();
 			int  n = rand.nextInt(9999) + 1000;
 			String randomId=Integer.toString(n);
 			
+			ICompilationUnit fCompilationUnit = MarkerAndAnnotationUtil.getCompilationUnit(marker);
+			
+			
 			//handle highlighting
-			InterfaceUtil.clearAndSetHighlighting(1, mk,randomId);
+			InterfaceUtil.clearAndSetHighlighting(1, marker,randomId);
+			
 		       try {
-		          Object problem = mk.getAttribute("WhatsUp");
+		          Object problem = marker.getAttribute("WhatsUp");
 		          //making "problem" an empty string. normally it would be from the marker
 		          problem = "";
 		          
 		          return new IMarkerResolution[] 
 		          {
-		             new CheckedTitleResolution("**********ASIDE Bound Annotation Request**********"+problem),
-		             new AnnotateNowResolution("Add Annotation" + problem, "green.check",randomId),
-		             new CheckedDeleteResolution("Delete All Associated Annotations"+problem),
-		             new CheckedResolution("Modify Annotation Binding"+problem),
-		             new CheckedReadMore("Read More"+problem),
+		         //     new CheckedTitleResolution("**********" + Plugin.PLUGIN_NAME + " Bound Annotation Request**********"+problem),
+		         //     new AnnotateNowResolution("Add Annotation" + problem, PluginConstants.MARKER_ANNOTATION_CHECKED,randomId),
+		         //     new CheckedDeleteResolution("Delete All Associated Annotations"+problem),
+		         //    new CheckedResolution("Modify Annotation Binding"+problem),
+		         //    new CheckedReadMore("Read More"+problem),
+		             
+		             new ReadMoreResolution(marker, "annotation", ""+ problem),		
+		             new AnnotateNowResolution("41-Add Annotation", PluginConstants.MARKER_ANNOTATION_CHECKED,randomId),
+		             new CheckedDeleteResolution("42-Delete All Associated Annotations"),			        	
+			         new IgnoreMarkerResolution(
+			    				fCompilationUnit, PluginConstants.INPUT_IGNORE_RANK_NUM, "annotation")
+			
+		             
 		          };
 		       }
 		       catch (CoreException e) 

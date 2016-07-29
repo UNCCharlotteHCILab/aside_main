@@ -6,12 +6,9 @@ import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IProjectNature;
 import org.eclipse.core.runtime.CoreException;
 
-public class AsideNature implements IProjectNature {
+import edu.uncc.aside.codeannotate.PluginConstants;
 
-	/**
-	 * ID of this corresponding project builder
-	 */
-	private static final String ASIDE_BUILDER_ID = "edu.uncc.sis.aside.AsideBuilder";
+public class AsideNature implements IProjectNature {
 
 	private IProject project;
 	
@@ -32,7 +29,7 @@ public class AsideNature implements IProjectNature {
 			ICommand[] commands = description.getBuildSpec();
 
 			for (int i = 0; i < commands.length; ++i) {
-				if (commands[i].getBuilderName().equals(ASIDE_BUILDER_ID)) {
+				if (commands[i].getBuilderName().equals(PluginConstants.ASIDE_BUILDER_ID)) {
 					return;
 				}
 			}
@@ -40,7 +37,7 @@ public class AsideNature implements IProjectNature {
 			ICommand[] newCommands = new ICommand[commands.length + 1];
 			System.arraycopy(commands, 0, newCommands, 0, commands.length);
 			ICommand command = description.newCommand();
-			command.setBuilderName(ASIDE_BUILDER_ID);
+			command.setBuilderName(PluginConstants.ASIDE_BUILDER_ID);
 			newCommands[newCommands.length - 1] = command;
 			description.setBuildSpec(newCommands);
 
@@ -60,7 +57,7 @@ public class AsideNature implements IProjectNature {
 		ICommand[] commands = description.getBuildSpec();
 		
 		for (int i = 0; i < commands.length; ++i) {
-			if (commands[i].getBuilderName().equals(ASIDE_BUILDER_ID)) {
+			if (commands[i].getBuilderName().equals(PluginConstants.ASIDE_BUILDER_ID)) {
 				ICommand[] newCommands = new ICommand[commands.length - 1];
 				System.arraycopy(commands, 0, newCommands, 0, i);
 				System.arraycopy(commands, i + 1, newCommands, i,

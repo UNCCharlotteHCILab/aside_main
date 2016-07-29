@@ -14,6 +14,8 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
+import edu.uncc.aside.codeannotate.Plugin;
+
 public class SemanticInputWizardPage extends WizardPage {
 	
 	private String ruleKey;
@@ -171,7 +173,7 @@ public class SemanticInputWizardPage extends WizardPage {
 		// User's home directory
 		String base = System.getProperty("user.home");
 		dirDialog.setFilterPath(base);
-		dirDialog.setText("ASIDE Directory Dialog");
+		dirDialog.setText("" + Plugin.PLUGIN_NAME + " Directory Dialog");
 		dirDialog.setMessage("Select a base directory");
 		String dirPath = dirDialog.open();
 		if (dirPath == null)

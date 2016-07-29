@@ -5,9 +5,9 @@ import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTParser;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 
-public class Converter {
+import edu.uncc.aside.codeannotate.PluginConstants;
 
-	private static final String DELIMITER = "\\p{Punct}";
+public class Converter {
 
 	public static String arrayToString(String[] stringArray) {
 		String output = "";
@@ -44,7 +44,7 @@ public class Converter {
 
 	public static int[] stringToIntArray(String input) {
 
-		String[] result = input.split(DELIMITER);
+		String[] result = input.split(PluginConstants.DELIMITER);
 		int[] output = new int[result.length];
 		for (int i = 0; i < result.length; i++) {
 			output[i] = Integer.parseInt(result[i]);
@@ -56,7 +56,7 @@ public class Converter {
 		if(input == null)
 			return null;
 		
-		String[] output = input.split(DELIMITER);
+		String[] output = input.split(PluginConstants.DELIMITER);
 		String[] output_copy = new String[output.length];
 		for(int i = 0; i < output.length; i++){
 			String trimed_copy = output[i].trim();

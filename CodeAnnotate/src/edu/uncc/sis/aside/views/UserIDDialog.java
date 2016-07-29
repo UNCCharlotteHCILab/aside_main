@@ -17,6 +17,8 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.*;
 import org.eclipse.swt.widgets.*;
 
+import edu.uncc.aside.codeannotate.Plugin;
+
 /**
  * This class demonstrates how to create your own dialog classes. It allows users
  * to input a String
@@ -46,7 +48,7 @@ public class UserIDDialog extends Dialog {
 	
     super(parent, style);
     this.shell = parent;
-    setText("ASIDE Usage Logs Submission");
+    setText("" + Plugin.PLUGIN_NAME + " Usage Logs Submission");
   }
 
   /**
@@ -83,8 +85,8 @@ public class UserIDDialog extends Dialog {
    	
    // shell.setSize(6, 6);
     // Show the message
-    final String asideLink = "http://hci.uncc.edu/tomcat/ASIDE/ASIDEoverview.jsp";
-    String msg = "Welcome to ASIDE! \n\nASIDE is a research tool for detecting security vulnerabilities in Java Code, while you program. For more information on ASIDE or this research, please see [http://hci.uncc.edu/tomcat/ASIDE/ASIDEoverview.jsp] or contact Michael Whitney at ASIDEplugin@gmail.com. \n\nThis tool is currently being used as part of a research study. If you are a part of that study, the tool will automatically submit logs of your interaction back to the research team. These logs will only contain information about how you used ASIDE, if you choose to use it but not about your code. \n\nIf you do not want your data to be part of this research, please contact Michael Whitney at ASIDEplugin@gmail.com and let him know to remove your id from data collection.\n";
+    final String asideLink = "http://hci.uncc.edu/tomcat/" + Plugin.PLUGIN_NAME + "/overview.jsp";
+    String msg = "Welcome to " + Plugin.PLUGIN_NAME + "! \n\n" + Plugin.PLUGIN_NAME + " is a research tool for detecting security vulnerabilities in Java Code, while you program. For more information on " + Plugin.PLUGIN_NAME + " or this research, please see [http://hci.uncc.edu/tomcat/" + Plugin.PLUGIN_NAME + "/overview.jsp] or contact Michael Whitney at ASIDEplugin@gmail.com. \n\nThis tool is currently being used as part of a research study. If you are a part of that study, the tool will automatically submit logs of your interaction back to the research team. These logs will only contain information about how you used " + Plugin.PLUGIN_NAME + ", if you choose to use it but not about your code. \n\nIf you do not want your data to be part of this research, please contact Michael Whitney at ASIDEplugin@gmail.com and let him know to remove your id from data collection.\n";
     final StyledText styledText = new StyledText(shell, SWT.WRAP | SWT.BORDER);
 	styledText.setText(msg);
 	//styledText.setLineIndent(0, 1, 50);

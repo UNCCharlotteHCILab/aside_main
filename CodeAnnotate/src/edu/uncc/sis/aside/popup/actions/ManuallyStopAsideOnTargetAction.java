@@ -35,16 +35,16 @@ import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
 
 import edu.uncc.aside.codeannotate.Plugin;
+import edu.uncc.aside.codeannotate.PluginConstants;
 import edu.uncc.aside.utils.ConsentForm;
 import edu.uncc.aside.utils.Converter;
 import edu.uncc.aside.utils.MakerManagement;
 import edu.uncc.sis.aside.AsidePlugin;
-import edu.uncc.sis.aside.constants.PluginConstants;
 import edu.uncc.sis.aside.jobs.ESAPIConfigurationJob;
 import edu.uncc.sis.aside.visitors.MethodDeclarationVisitor;
 
 /**
- * Application Security IDE Plugin (ASIDE)
+ * Application Security IDE Plugin (" + Plugin.pluginName + ")
  * 
  * @author Jun Zhu (jzhu16 at uncc dot edu) <a href="http://www.uncc.edu/">UNC
  *         Charlotte</a>

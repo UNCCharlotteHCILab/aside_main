@@ -14,12 +14,12 @@ import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.core.dom.ASTNode;
 
-import edu.uncc.aside.codeannotate.Plugin;
+import edu.uncc.aside.codeannotate.PluginConstants;
 import edu.uncc.aside.codeannotate.Utils;
 import edu.uncc.aside.codeannotate.models.ModelRegistry;
 import edu.uncc.aside.codeannotate.models.Path;
-import edu.uncc.aside.codeannotate.models.PathCollector;
-import edu.uncc.aside.codeannotate.models.Point;
+import edu.uncc.aside.codeannotate.models.ModelCollector;
+import edu.uncc.aside.codeannotate.models.AccessControlPoint;
 /**
  * 
  * @author Jing Xie (jxie2 at uncc dot edu)
@@ -61,13 +61,13 @@ public class GarbagePathCollector extends Job {
 	@Override
 	protected IStatus run(IProgressMonitor monitor) {
 
-		final PathCollector pathCollector = ModelRegistry
+		final ModelCollector modelCollector = ModelRegistry
 				.getPathCollectorForProject(projectOfInterest);
 
-		if (pathCollector == null)
+		if (modelCollector == null)
 			return Status.CANCEL_STATUS;
 
-		List<Path> paths = pathCollector.getAllPaths();
+		List<Path> paths = modelCollector.getAllPaths();
 
 		try {
 			monitor.beginTask(
@@ -83,7 +83,7 @@ public class GarbagePathCollector extends Job {
 					 * accessor from b4 editing. the challenge here is to find a
 					 * way to see which node has been modified and which hasn't
 					 */
-					Point accessor = path.getAccessor();
+					AccessControlPoint accessor = path.getSensitiveOperation();
 					IResource resource = accessor.getResource();
 					ASTNode originalNode = accessor.getNode();
 					if (sourceOfInterest == null || resource == null) {
@@ -91,20 +91,20 @@ public class GarbagePathCollector extends Job {
 					} else if (sourceOfInterest.equals(resource)) {
 						int start = -1, end = -1;
 						Object obj_start = originalNode
-								.getProperty(Plugin.ASIDE_NODE_PROP_START);
+								.getProperty(PluginConstants.ASIDE_NODE_PROP_START);
 						if (obj_start == null) {
 							start = originalNode.getStartPosition();
 							originalNode.setProperty(
-									Plugin.ASIDE_NODE_PROP_START, start);
+									PluginConstants.ASIDE_NODE_PROP_START, start);
 						} else {
 							start = Integer.parseInt(obj_start.toString());
 						}
 						Object obj_end = originalNode
-								.getProperty(Plugin.ASIDE_NODE_PROP_END);
+								.getProperty(PluginConstants.ASIDE_NODE_PROP_END);
 						if (obj_end == null) {
 							end = start + originalNode.getLength();
 							originalNode.setProperty(
-									Plugin.ASIDE_NODE_PROP_END, end);
+									PluginConstants.ASIDE_NODE_PROP_END, end);
 						} else {
 							end = Integer.parseInt(obj_end.toString());
 						}
@@ -114,24 +114,24 @@ public class GarbagePathCollector extends Job {
 						} else if (start >= nextStartOffset) {
 							if (modificationType.equals("INSERTION")) {
 								originalNode.setProperty(
-										Plugin.ASIDE_NODE_PROP_START, start
+										PluginConstants.ASIDE_NODE_PROP_START, start
 												+ text.length());
 								originalNode.setProperty(
-										Plugin.ASIDE_NODE_PROP_END,
+										PluginConstants.ASIDE_NODE_PROP_END,
 										end + text.length());
 							} else if (modificationType.equals("REMOVAL")) {
 								originalNode.setProperty(
-										Plugin.ASIDE_NODE_PROP_START, start
+										PluginConstants.ASIDE_NODE_PROP_START, start
 												- length);
 								originalNode.setProperty(
-										Plugin.ASIDE_NODE_PROP_END, end
+										PluginConstants.ASIDE_NODE_PROP_END, end
 												- length);
 							} else if (modificationType.equals("REPLACEMENT")) {
 								originalNode.setProperty(
-										Plugin.ASIDE_NODE_PROP_START, start
+										PluginConstants.ASIDE_NODE_PROP_START, start
 												+ text.length() - length);
 								originalNode.setProperty(
-										Plugin.ASIDE_NODE_PROP_END,
+										PluginConstants.ASIDE_NODE_PROP_END,
 										end + text.length() - length);
 							} else {
 								// I don't know what to do for this case

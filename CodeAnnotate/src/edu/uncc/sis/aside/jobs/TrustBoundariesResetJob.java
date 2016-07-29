@@ -28,8 +28,8 @@ import org.eclipse.jdt.core.dom.MethodDeclaration;
 
 import edu.uncc.aside.ast.ASTBuilder;
 import edu.uncc.aside.codeannotate.Plugin;
+import edu.uncc.aside.codeannotate.PluginConstants;
 import edu.uncc.sis.aside.AsidePlugin;
-import edu.uncc.sis.aside.constants.PluginConstants;
 import edu.uncc.sis.aside.preferences.PreferencesSet;
 import edu.uncc.sis.aside.visitors.MethodDeclarationVisitor;
 
@@ -53,7 +53,7 @@ public class TrustBoundariesResetJob extends Job {
 		// get current date time with Date()
 		Date date = new Date();
 		logger.info(dateFormat.format(date) + Plugin.getUserId() + 
-				" User resets trust boundary rules through ASIDE preference page");
+				" User resets trust boundary rules through " + Plugin.PLUGIN_NAME + " preference page");
 
 		if (monitor == null) {
 			monitor = new NullProgressMonitor();
@@ -73,8 +73,11 @@ public class TrustBoundariesResetJob extends Job {
 			monitor.beginTask("Working on current workspace at "
 					+ stateLocation.toOSString() + ";", indexedProjects.size());
 			if(Plugin.getDefault().isAllowed()){
+				
 			while (!indexedProjects.isEmpty()) {
+				
 				for (IJavaProject indexedProject : indexedProjects) {
+					
 					monitor.subTask("Checking on Project "
 							+ indexedProject.getElementName() + "...");
 
@@ -111,8 +114,10 @@ public class TrustBoundariesResetJob extends Job {
 						} else if (projectMarkerMap != null) {
 							Map<MethodDeclaration, ArrayList<IMarker>> fileMap = projectMarkerMap
 									.get(unit);
+							
 							MethodDeclarationVisitor declarationVisitor = new MethodDeclarationVisitor(
 									astRoot, fileMap, unit, prefSet);
+							
 							projectMarkerMap.put(unit,
 									declarationVisitor.process());
 						}
@@ -156,7 +161,7 @@ public class TrustBoundariesResetJob extends Job {
 		}
 
 		project.getCorrespondingResource().deleteMarkers(
-				PluginConstants.ASIDE_MARKER_TYPE, false,
+				PluginConstants.MARKER_INPUT_VALIDATION, false,
 				IResource.DEPTH_INFINITE);
 
 		projectMarkerMap = Plugin.getDefault().getMarkerIndex(project);

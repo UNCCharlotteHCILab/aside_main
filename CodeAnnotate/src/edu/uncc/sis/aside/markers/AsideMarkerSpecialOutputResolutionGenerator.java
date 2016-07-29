@@ -24,12 +24,12 @@ import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.PartInitException;
 
 import edu.uncc.aside.codeannotate.Plugin;
-import edu.uncc.aside.utils.ASIDEMarkerAndAnnotationUtil;
+import edu.uncc.aside.codeannotate.PluginConstants;
+import edu.uncc.aside.utils.MarkerAndAnnotationUtil;
 import edu.uncc.aside.utils.Converter;
 import edu.uncc.aside.utils.SecureProgrammingKnowledgeBase;
 import edu.uncc.sis.aside.AsidePlugin;
 import edu.uncc.sis.aside.auxiliary.properties.ESAPIPropertiesReader;
-import edu.uncc.sis.aside.constants.PluginConstants;
 import edu.uncc.sis.aside.domainmodels.VulnerabilityKnowledge;
 import edu.uncc.sis.aside.views.ExplanationView;
 
@@ -38,10 +38,6 @@ public class AsideMarkerSpecialOutputResolutionGenerator implements
 
 	private static final Logger logger = Plugin.getLogManager().getLogger(
 			AsideMarkerInputResolutionGenerator.class.getName());
-
-	private static final String EXPLANATION_VIEW_ID = "edu.uncc.sis.aside.views.complimentaryExplanationView";
-
-	private static final String ASIDE_MARKER_TYPE = "edu.uncc.sis.aside.AsideMarker";
 
 	private static String ABSTRACT = "ABSTRACT\n\n";
 	private static String EXPLANATION = "\n\n\n\nEXPLANATION\n\n";
@@ -83,7 +79,7 @@ public class AsideMarkerSpecialOutputResolutionGenerator implements
 	}
 
 	private IMarkerResolution[] internalGetResolutions(IMarker marker) {
-		fCompilationUnit = ASIDEMarkerAndAnnotationUtil
+		fCompilationUnit = MarkerAndAnnotationUtil
 				.getCompilationUnit(marker);
 		if (fCompilationUnit == null) {
 			return NO_RESOLUTION;
@@ -93,7 +89,7 @@ public class AsideMarkerSpecialOutputResolutionGenerator implements
 			return NO_RESOLUTION;
 		}
 
-		IProject project = ASIDEMarkerAndAnnotationUtil
+		IProject project = MarkerAndAnnotationUtil
 				.getProjectFromICompilationUnit(fCompilationUnit);
 		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 
@@ -111,9 +107,10 @@ public class AsideMarkerSpecialOutputResolutionGenerator implements
 		// definedInputTypeList after filtered
 		ArrayList<String> tmpList = ESAPIPropertiesReader.getInstance(project)
 				.retrieveESAPIDefinedInputTypes();
+		
 		// filter for input types, some input types are filtered here for
 		// educational version use
-		ArrayList<String> definedInputTypeList = ASIDEMarkerAndAnnotationUtil
+		ArrayList<String> definedInputTypeList = MarkerAndAnnotationUtil
 				.filterValidationTypes(tmpList);
 		// /////
 
@@ -122,13 +119,17 @@ public class AsideMarkerSpecialOutputResolutionGenerator implements
 		}
 		// for test use
 		IMarkerResolution readMoreResolution = new ReadMoreResolution(
-				fCompilationUnit, marker, project, "output");
+				 marker,  "output", "");
+		
 		resolutionSet.add(readMoreResolution);
 
 		SpecialOutputValidationResolution resolution = null;
+		
 		for (String inputType : definedInputTypeList) {
+			
 			resolution = new SpecialOutputValidationResolution(
 					fCompilationUnit, marker, inputType, project);
+			
 			resolutionSet.add(resolution);
 		}
 
@@ -150,7 +151,7 @@ public class AsideMarkerSpecialOutputResolutionGenerator implements
 		try {
 			String markerType = marker.getType();
 
-			if (markerType == null || !markerType.equals(ASIDE_MARKER_TYPE)) {
+			if (markerType == null || !markerType.equals(PluginConstants.MARKER_INPUT_VALIDATION)) {
 				return false;
 			}
 

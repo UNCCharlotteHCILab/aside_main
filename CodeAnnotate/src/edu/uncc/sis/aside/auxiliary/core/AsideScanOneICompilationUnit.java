@@ -28,9 +28,9 @@ import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
 
 import edu.uncc.aside.codeannotate.Plugin;
+import edu.uncc.aside.codeannotate.PluginConstants;
 import edu.uncc.aside.utils.Converter;
 import edu.uncc.sis.aside.AsidePlugin;
-import edu.uncc.sis.aside.constants.PluginConstants;
 import edu.uncc.sis.aside.jobs.ESAPIConfigurationJob;
 import edu.uncc.sis.aside.visitors.MethodDeclarationVisitor;
 
@@ -97,7 +97,7 @@ public class AsideScanOneICompilationUnit {
 		  
 	    //get current date time with Date()
 		Date date = new Date();
-	    logger.info(dateFormat.format(date) + " " + Plugin.getUserId() + " . After user applied some rule options, ASIDE is re-inspecting java file: <<" + unit.getElementName() + ">>");
+	    logger.info(dateFormat.format(date) + " " + Plugin.getUserId() + " . After user applied some rule options, " + Plugin.PLUGIN_NAME + " is re-inspecting java file: <<" + unit.getElementName() + ">>");
 
 		Map<MethodDeclaration, ArrayList<IMarker>> MarkerIndexForICompilationUnit;
 		CompilationUnit astRoot = Converter.parse(unit);
@@ -134,7 +134,7 @@ public class AsideScanOneICompilationUnit {
 		projectMarkerMap.put(unit, MarkerIndexForICompilationUnit);
 		
 		date = new Date();
-		logger.info(dateFormat.format(date) + " " + Plugin.getUserId() + " . ASIDE finished re-inspecting java file: <<" + unit.getElementName() + ">>");
+		logger.info(dateFormat.format(date) + " " + Plugin.getUserId() + " . " + Plugin.PLUGIN_NAME + " finished re-inspecting java file: <<" + unit.getElementName() + ">>");
 
         return true;
 	}

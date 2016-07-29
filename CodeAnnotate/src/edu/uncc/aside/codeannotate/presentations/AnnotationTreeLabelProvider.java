@@ -8,8 +8,11 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.internal.dialogs.ViewLabelProvider;
 
 import edu.uncc.aside.codeannotate.Plugin;
+import edu.uncc.aside.codeannotate.models.InputValidationPoint;
+import edu.uncc.aside.codeannotate.models.OutputEncodingPoint;
 import edu.uncc.aside.codeannotate.models.Path;
-import edu.uncc.aside.codeannotate.models.Point;
+import edu.uncc.aside.codeannotate.models.AccessControlPoint;
+import edu.uncc.aside.codeannotate.models.SQLInjectionPoint;
 /**
  * 
  * @author Jing Xie (jxie2 at uncc dot edu)
@@ -38,11 +41,19 @@ public class AnnotationTreeLabelProvider extends ColorDecoratingLabelProvider {
 		if (element == null) {
 			descriptor = Plugin.getImageDescriptor("owasp.gif");
 		} else if (element instanceof Path) {
-			descriptor = Plugin.getImageDescriptor("red.jpeg");
-		} else if (element instanceof Point) {
-			descriptor = Plugin.getImageDescriptor("green.jpeg");
+			descriptor = Plugin.getImageDescriptor("yellowQuestion.png");
+			
+		} else if (element instanceof InputValidationPoint) {
+			descriptor = Plugin.getImageDescriptor("devil.png");
+			
+		} else if (element instanceof OutputEncodingPoint) {
+			descriptor = Plugin.getImageDescriptor("devil.png");
+			
+		} else if (element instanceof SQLInjectionPoint) {
+			descriptor = Plugin.getImageDescriptor("devil.png");
+			
 		} else {
-			descriptor = Plugin.getImageDescriptor("devil.jpeg");
+			descriptor = Plugin.getImageDescriptor("redFlag.png");
 		}
 		// obtain the cached image corresponding to the descriptor
 		Image image = Plugin.imageCache.get(descriptor);
@@ -62,9 +73,12 @@ public class AnnotationTreeLabelProvider extends ColorDecoratingLabelProvider {
 			return text;
 
 		if (element instanceof Path) {
-			text = ((Path) element).getPathID();
-		} else if (element instanceof Point) {
-			text = ((Point) element).getPointID();
+			text = ((Path) element).getSensitiveOperation().getLineNumberText();
+		} else if (element instanceof AccessControlPoint) {
+			text = ((AccessControlPoint) element).getLineNumberText();
+		}
+		else if (element instanceof InputValidationPoint) {
+			text = ((InputValidationPoint) element).getLineNumberText();
 		}
 		return text;
 	}

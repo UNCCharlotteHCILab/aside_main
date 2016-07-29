@@ -37,6 +37,7 @@ import org.eclipse.ui.texteditor.AnnotationTypeLookup;
 
 import edu.uncc.aside.codeannotate.Constants;
 import edu.uncc.aside.codeannotate.Plugin;
+import edu.uncc.aside.codeannotate.PluginConstants;
 
 /*
 import edu.uncc.sis.aside.AsidePlugin;
@@ -110,7 +111,7 @@ IMarkerResolution2{
 					.getImageDescriptor("redFlag.png");
 			
 		}
-		else if(markerType.equals("green.check"))
+		else if(markerType.equals(PluginConstants.MARKER_ANNOTATION_CHECKED))
 		{
 			descriptor = Plugin
 					.getImageDescriptor("greenCheck.png");

@@ -36,13 +36,18 @@ import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
 
 import edu.uncc.aside.ast.ASTResolving;
 import edu.uncc.aside.codeannotate.Plugin;
-import edu.uncc.aside.utils.ASIDEMarkerAndAnnotationUtil;
+import edu.uncc.aside.codeannotate.PluginConstants;
+import edu.uncc.aside.codeannotate.models.InputValidationPoint;
+//import edu.uncc.aside.codeannotate.models.InputValidationsCollector;
+import edu.uncc.aside.codeannotate.models.ModelRegistry;
+import edu.uncc.aside.codeannotate.models.ModelCollector;
+import edu.uncc.aside.utils.MarkerAndAnnotationUtil;
 import edu.uncc.aside.utils.Converter;
 import edu.uncc.sis.aside.AsidePlugin;
-import edu.uncc.sis.aside.constants.PluginConstants;
 import edu.uncc.sis.aside.domainmodels.TrustBoundaryRepository;
 import edu.uncc.sis.aside.preferences.PreferencesSet;
 
+import org.apache.commons.lang3.*;
 /**
  * 
  * @author Jun Zhu (jzhu16 at uncc dot edu) Jing Xie (jxie2 at uncc dot edu) <a href="http://www.uncc.edu/">UNC
@@ -58,7 +63,7 @@ public class MethodInvocationVisitor extends ASTVisitor {
 
 	private MethodDeclaration acceptor;
 
-	private ArrayList<IMarker> asideMarkers;
+	private ArrayList<IMarker> markersList;
 
 	private IProject project;
 
@@ -67,6 +72,9 @@ public class MethodInvocationVisitor extends ASTVisitor {
 	private CompilationUnit astRoot;
 
 	private PreferencesSet prefSet;
+	
+	//MM
+	private ModelCollector modelCollector;
 
 	// Expression: ArrayAccess && MethodInvocation
 	private ArrayList<Expression> taintedListSources = new ArrayList<Expression>();
@@ -89,12 +97,12 @@ public class MethodInvocationVisitor extends ASTVisitor {
 		this.prefSet = prefSet;
 
 		if (existingAsideMarkers != null && !existingAsideMarkers.isEmpty()) {
-			ASIDEMarkerAndAnnotationUtil
+			MarkerAndAnnotationUtil
 					.clearStaleMarkers(existingAsideMarkers);
 		}
 
-		if (asideMarkers == null) {
-			asideMarkers = new ArrayList<IMarker>();
+		if (markersList == null) {
+			markersList = new ArrayList<IMarker>();
 		}
 
 		astRoot = ASTResolving.findParentCompilationUnit(node);
@@ -105,22 +113,28 @@ public class MethodInvocationVisitor extends ASTVisitor {
 		}
 
 		astMatcher = Plugin.getDefault().getASTMatcher();
+		
+		this.modelCollector = ModelRegistry
+				.getPathCollectorForProject(project);
+
+		if (modelCollector == null) {
+			modelCollector = new ModelCollector(project);
+		}
 	}
 
 	public ArrayList<IMarker> process() {
 		if (acceptor != null)
 			acceptor.accept(this);
 		
-		return asideMarkers;
+		return markersList;
 	}
 
 	@Override
 	public boolean visit(MethodInvocation node) {
-
-      
-		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 		
 		IMethodBinding methodBinding = node.resolveMethodBinding();
+		
+		
 
 	//	System.out.println("MM visit(MethodInvocation");
 		if (methodBinding == null) {
@@ -141,6 +155,7 @@ public class MethodInvocationVisitor extends ASTVisitor {
 		
 		//System.out.println("MM TrustBoundaryRepository 1");
 		
+		// To check whether the method is defined in the trust boundary list
 		boolean tainted_as_defined_by_trust_boundary = TrustBoundaryRepository
 				.getHandler(project, prefSet).isExist(methodBinding,
 						isMethodInvocation, qualifiedName);
@@ -171,25 +186,27 @@ public class MethodInvocationVisitor extends ASTVisitor {
 		 * aside marker attributes which will be used for the corresponding
 		 * marker resolutions
 		 */
-		
-		
-		markerAttributes.put(IMarker.SEVERITY, IMarker.SEVERITY_WARNING);
-		
-		markerAttributes.put(IMarker.LINE_NUMBER, lineNumber);
-		
-		markerAttributes.put("edu.uncc.sis.aside.marker.flow",
-				Converter.arrayToString(attrTypes));
-		
+			
+		markerAttributes.put(IMarker.LINE_NUMBER, lineNumber);		
+		markerAttributes.put("edu.uncc.sis.aside.marker.flow",	Converter.arrayToString(attrTypes));
 	    //the trustboundary rule that the methodInvocation belongs to, 
-		markerAttributes.put("edu.uncc.sis.aside.marker.ruleNameBelongTo", ruleNameBelongTo);
+		
 		markerAttributes.put("edu.uncc.sis.aside.marker.typeNameBelongTo", typeNameBelongTo);
+		markerAttributes.put("edu.uncc.sis.aside.marker.ruleNameBelongTo", ruleNameBelongTo);
+
+		
+		
 		//newly added Feb. 24
 		MethodDeclaration parentMethodDeclaration = ASTResolving.findParentMethodDeclaration(node);
-		String returnTypeStr = ASIDEMarkerAndAnnotationUtil.getReturnTypeStr(parentMethodDeclaration);
-				
-		markerAttributes.put("edu.uncc.sis.aside.marker.returnTypeOfMethodDeclarationBelongTo", returnTypeStr);
 		
+		String returnTypeStr = MarkerAndAnnotationUtil.getReturnTypeStr(parentMethodDeclaration);
+				
+		markerAttributes.put("edu.uncc.sis.aside.marker.returnTypeOfMethodDeclarationBelongTo"
+				, returnTypeStr);
+		
+
 		//System.out.println("MM Before tainted_as_defined_by_trust_boundary" );
+		
 		if (tainted_as_defined_by_trust_boundary) {
 			
 		//	System.out.println("MM After tainted_as_defined_by_trust_boundary" );
@@ -208,14 +225,17 @@ public class MethodInvocationVisitor extends ASTVisitor {
 //				return false;
 			//special case deals with the case that the untrusted input is an 
 			//argument of the esapi validation method invocation
-			if (ASIDEMarkerAndAnnotationUtil.specialCase(node))
+			
+			//MM It is needed to make a Point Object here.
+			
+			if (MarkerAndAnnotationUtil.specialCase(node))
 				return false;
 			//should delete this if 
 //			if (ASIDEMarkerAndAnnotationUtil.isConvertedToNumericType(node))
 //				return false;
 			//only use annotation to judge
 			
-			if (ASIDEMarkerAndAnnotationUtil.hasAnnotationAtPosition(cu, node))
+			if (MarkerAndAnnotationUtil.hasAnnotationAtPosition(cu, node))
 				{
 				//System.out.println("ASIDEMarkerAndAnnotationUtil.hasAnnotationAtPosition in methodinvocation");
 				return false;
@@ -237,7 +257,7 @@ public class MethodInvocationVisitor extends ASTVisitor {
 
 			if (qualifiedName.equals("java.lang.String")) {
 				
-				if(!ASIDEMarkerAndAnnotationUtil.isDirectlyEmbracedByValidationMethodInvocation(node))
+				if(!MarkerAndAnnotationUtil.isDirectlyEmbracedByValidationMethodInvocation(node))
 				{
 				int start = node.getStartPosition();
 				int length = node.getLength();
@@ -252,29 +272,37 @@ public class MethodInvocationVisitor extends ASTVisitor {
 
 				markerAttributes.put(IMarker.CHAR_START, start);
 				markerAttributes.put(IMarker.CHAR_END, end);
-				markerAttributes
-						.put(IMarker.MESSAGE,
-								PluginConstants.TOOL_TIP);
+				markerAttributes.put(IMarker.MESSAGE, PluginConstants.TOOL_TIP);
+				markerAttributes.put(IMarker.SEVERITY, IMarker.SEVERITY_ERROR);
+				markerAttributes.put(IMarker.PRIORITY, IMarker.PRIORITY_HIGH);
+				
+				markerAttributes.put("edu.uncc.sis.aside.marker.validationType", "String");
+				
+				//Adding Input Validation Marker
+				marker = MarkerAndAnnotationUtil.addMarker(astRoot,
+						markerAttributes, PluginConstants.MARKER_INPUT_VALIDATION);
 
-				markerAttributes.put(
-						"edu.uncc.sis.aside.marker.validationType", "String");
-				marker = ASIDEMarkerAndAnnotationUtil.addMarker(astRoot,
-						markerAttributes);
-
-				System.out.println("MM Before Add Marker");
-				asideMarkers.add(marker);
+				
+				// here we have to update the ASIDE view as well. 
+				
+				InputValidationPoint point= new InputValidationPoint
+						((ASTNode)node,this.astRoot,this.cu.getResource());
+				
+				modelCollector.addInputValidation(point);
+				
+			//	marker.getResource()
+				
+			//	System.out.println("MM Before Add Marker");
+				
+				markersList.add(marker);
 				  
 			    //get current date time with Date()
-				Date date = new Date();
-			    logger.info(dateFormat.format(date) + " " + Plugin.getUserId() + " ASIDE found an input validation vulnerability at line " + lineNumber
-						+ ".<code>" + node.toString() + "<code> in Java File <<"
-						+ astRoot.getJavaElement().getElementName()
-						+ ">> in Project [" + project.getName() + "]");
+				addInputValidationLog(node, lineNumber);
 			}
 			}
 
 			if (qualifiedName.equals("int")) {
-				if(!ASIDEMarkerAndAnnotationUtil.isDirectlyEmbracedByValidationMethodInvocation(node))
+				if(!MarkerAndAnnotationUtil.isDirectlyEmbracedByValidationMethodInvocation(node))
 				{
 				/**
 				 * integers are treated differently as strings since most
@@ -304,19 +332,31 @@ public class MethodInvocationVisitor extends ASTVisitor {
 				markerAttributes
 						.put(IMarker.MESSAGE,
 								PluginConstants.TOOL_TIP);
-
+				markerAttributes.put(IMarker.SEVERITY, IMarker.SEVERITY_ERROR);
+				markerAttributes.put(IMarker.PRIORITY, IMarker.PRIORITY_HIGH);
 				markerAttributes.put(
 						"edu.uncc.sis.aside.marker.validationType", "int");
-				marker = ASIDEMarkerAndAnnotationUtil.addMarker(astRoot,
-						markerAttributes);
-				asideMarkers.add(marker);
+				
+				
+				
+				
+				InputValidationPoint point= new InputValidationPoint
+						((ASTNode)node,this.astRoot,this.cu.getResource());
+				
+				modelCollector.addInputValidation(point);
+				
+				byte[] data =SerializationUtils.serialize(point);
+				
+				markerAttributes.put("model.point", data);
+				
+				marker = MarkerAndAnnotationUtil.addMarker(astRoot,
+						markerAttributes, PluginConstants.MARKER_INPUT_VALIDATION);
+				
+				
+				
+				markersList.add(marker);
 				  
-			    //get current date time with Date()
-				Date date = new Date();
-			    logger.info(dateFormat.format(date) + " " + Plugin.getUserId() + " ASIDE found an input validation vulnerability at line " + lineNumber
-						+ ".<code>" + node.toString() + "<code> in Java File <<"
-						+ astRoot.getJavaElement().getElementName()
-						+ ">> in Project [" + project.getName() + "]");
+			    addInputValidationLog(node, lineNumber);
 
 			}
 			}
@@ -347,140 +387,147 @@ public class MethodInvocationVisitor extends ASTVisitor {
 					 * need to consider these three types of node
 					 */
 
-//					int nodeType = argumentNode.getNodeType();
-//
-//					switch (nodeType) {
-//
-//					case ASTNode.SIMPLE_NAME:
-						int argCharStart = argumentNode.getStartPosition();
+					//					int nodeType = argumentNode.getNodeType();
+					//
+					//					switch (nodeType) {
+					//
+					//					case ASTNode.SIMPLE_NAME:
+					int argCharStart = argumentNode.getStartPosition();
 
-						int argLength = argumentNode.getLength();
+					int argLength = argumentNode.getLength();
 
+					/*
+					 * Check the validity of each argument node to eliminate
+					 * false positives, such as String constant, integer
+					 * constant, boolean constant, etc
+					 */
+					//
+					//						if (!ASIDEMarkerAndAnnotationUtil.hasAnnotationAtPosition(
+					//								cu, argumentNode) && !ASIDEMarkerAndAnnotationUtil.isFalsePositive(
+					//										argumentNode, argCharStart, argLength, cu))
+
+					if (!MarkerAndAnnotationUtil.hasAnnotationAtPosition(
+							cu, argumentNode) )
+						//						if (!ASIDEMarkerAndAnnotationUtil.hasASIDE_FlagAtNode(
+						//								argumentNode) )
+
+					{
 						/*
-						 * Check the validity of each argument node to eliminate
-						 * false positives, such as String constant, integer
-						 * constant, boolean constant, etc
+						 * before create a Marker for a particular node, remember to
+						 * delete any residue marker associated with this node
 						 */
-//
-//						if (!ASIDEMarkerAndAnnotationUtil.hasAnnotationAtPosition(
-//								cu, argumentNode) && !ASIDEMarkerAndAnnotationUtil.isFalsePositive(
-//										argumentNode, argCharStart, argLength, cu))
-
-							if (!ASIDEMarkerAndAnnotationUtil.hasAnnotationAtPosition(
-									cu, argumentNode) )
-//						if (!ASIDEMarkerAndAnnotationUtil.hasASIDE_FlagAtNode(
-//								argumentNode) )
-						
+						//newly added, determine whether the argument node output is encoding method invocation
+						//if yes, it means the argument has been encoded
+						if(!MarkerAndAnnotationUtil.isEncodingOrValidationMethodInvocation(argumentNodeList.get(index)))
 						{
-							/*
-							 * before create a Marker for a particular node, remember to
-							 * delete any residue marker associated with this node
-							 */
-							//newly added, determine whether the argument node output is encoding method invocation
-								//if yes, it means the argument has been encoded
-								if(!ASIDEMarkerAndAnnotationUtil.isEncodingOrValidationMethodInvocation(argumentNodeList.get(index)))
-								{
-                                  if(!ASIDEMarkerAndAnnotationUtil.isConstant(argumentNode)){
-							deleteResidueMarkerForNode(argumentNode);
-							markerAttributes.put(IMarker.CHAR_START, argCharStart);
-							markerAttributes.put(IMarker.CHAR_END, argCharStart
-									+ argLength);
-							markerAttributes
-									.put(IMarker.MESSAGE,
-											PluginConstants.TOOL_TIP);
+							if(!MarkerAndAnnotationUtil.isConstant(argumentNode)){
 
-							markerAttributes.put(
-									"edu.uncc.sis.aside.marker.targetPosition", index);
-							
-							marker = ASIDEMarkerAndAnnotationUtil.addMarker(astRoot,
-									markerAttributes);
-							argumentMarkerList.add(marker);
-								}
-							    }
+								deleteResidueMarkerForNode(argumentNode);
+
+								markerAttributes.put(IMarker.CHAR_START, argCharStart);
+								markerAttributes.put(IMarker.CHAR_END, argCharStart
+										+ argLength);
+								markerAttributes.put(IMarker.MESSAGE,	PluginConstants.TOOL_TIP);
+
+								markerAttributes.put(
+										"edu.uncc.sis.aside.marker.targetPosition", index);
+								markerAttributes.put(IMarker.SEVERITY, IMarker.SEVERITY_ERROR);
+								markerAttributes.put(IMarker.PRIORITY, IMarker.PRIORITY_HIGH);
 								
-						}	
-				
+								marker = MarkerAndAnnotationUtil.addMarker(astRoot,
+										markerAttributes, PluginConstants.MARKER_INPUT_VALIDATION);
 
-					}
-			
+								argumentMarkerList.add(marker);
+							}
+						}
+
+					}	
+
+
+				}
+
 
 				if (!argumentMarkerList.isEmpty()) {
-					asideMarkers.addAll(argumentMarkerList);
-                    Date date = new Date();
-            	    logger.info(dateFormat.format(date) + " " + Plugin.getUserId() + " ASIDE found an output encoding vulnerability at line " + lineNumber
-    						+ ".<code>" + node.toString() + "<code> in Java File <<"
-    						+ astRoot.getJavaElement().getElementName()
-    						+ ">> in Project [" + project.getName() + "]");
+					
+					markersList.addAll(argumentMarkerList);
+					
+					addInputValidationLog(node, lineNumber);
+					
 				}
 			}
             //newly added for only warning case
 			if (qualifiedName.equals("java.sql.ResultSet")) {
-				if(!ASIDEMarkerAndAnnotationUtil.isDirectlyEmbracedByValidationMethodInvocation(node))
+				if(!MarkerAndAnnotationUtil.isDirectlyEmbracedByValidationMethodInvocation(node))
 				{
-				int start = node.getStartPosition();
-				int length = node.getLength();
-				int end = start + length;
+					int start = node.getStartPosition();
+					int length = node.getLength();
+					int end = start + length;
 
-				/*
-				 * before creating a marker for the node, check and see whether
-				 * there is a residue marker at the position. If yes, delete it.
-				 */
+					/*
+					 * before creating a marker for the node, check and see whether
+					 * there is a residue marker at the position. If yes, delete it.
+					 */
 
-				deleteResidueMarkerForNode(node);
+					deleteResidueMarkerForNode(node);
 
-				markerAttributes.put(IMarker.CHAR_START, start);
-				markerAttributes.put(IMarker.CHAR_END, end);
-				markerAttributes
-						.put(IMarker.MESSAGE,
-								PluginConstants.TOOL_TIP);
+					markerAttributes.put(IMarker.CHAR_START, start);
+					markerAttributes.put(IMarker.CHAR_END, end);
+					markerAttributes.put(IMarker.MESSAGE,
+							PluginConstants.TOOL_TIP);
 
-				markerAttributes.put(
-						"edu.uncc.sis.aside.marker.validationType", "ResultSet");
-				marker = ASIDEMarkerAndAnnotationUtil.addMarker(astRoot,
-						markerAttributes);
+					markerAttributes.put(IMarker.SEVERITY, IMarker.SEVERITY_ERROR);
+					markerAttributes.put(IMarker.PRIORITY, IMarker.PRIORITY_HIGH);
+					
+					
+					markerAttributes.put(
+							"edu.uncc.sis.aside.marker.validationType", "ResultSet");
 
-				asideMarkers.add(marker);
-				Date date = new Date();
-			    logger.info(dateFormat.format(date) + " " + Plugin.getUserId() + " ASIDE found a prepared statement vulnerability at line " + lineNumber
-						+ ".<code>" + node.toString() + "<code> in Java File <<"
-						+ astRoot.getJavaElement().getElementName()
-						+ ">> in Project [" + project.getName() + "]");
-			}
+					marker = MarkerAndAnnotationUtil.addMarker(astRoot,
+							markerAttributes, PluginConstants.MARKER_INPUT_VALIDATION);
+
+				
+					markersList.add(marker);
+
+					addInputValidationLog(node, lineNumber);
+				}
 			}
 			if (qualifiedName.equals("boolean")) {
-				if(!ASIDEMarkerAndAnnotationUtil.isDirectlyEmbracedByValidationMethodInvocation(node))
+				if(!MarkerAndAnnotationUtil.isDirectlyEmbracedByValidationMethodInvocation(node))
 				{
-				int start = node.getStartPosition();
-				int length = node.getLength();
-				int end = start + length;
+					int start = node.getStartPosition();
+					int length = node.getLength();
+					int end = start + length;
 
-				/*
-				 * before creating a marker for the node, check and see whether
-				 * there is a residue marker at the position. If yes, delete it.
-				 */
+					/*
+					 * before creating a marker for the node, check and see whether
+					 * there is a residue marker at the position. If yes, delete it.
+					 */
 
-				deleteResidueMarkerForNode(node);
+					deleteResidueMarkerForNode(node);
 
-				markerAttributes.put(IMarker.CHAR_START, start);
-				markerAttributes.put(IMarker.CHAR_END, end);
-				markerAttributes
-						.put(IMarker.MESSAGE,
-								PluginConstants.TOOL_TIP);
+					markerAttributes.put(IMarker.CHAR_START, start);
+					markerAttributes.put(IMarker.CHAR_END, end);
+					markerAttributes
+					.put(IMarker.MESSAGE,
+							PluginConstants.TOOL_TIP);
 
-				markerAttributes.put(
-						"edu.uncc.sis.aside.marker.validationType", "boolean");
-				marker = ASIDEMarkerAndAnnotationUtil.addMarker(astRoot,
-						markerAttributes);
+					markerAttributes.put(IMarker.SEVERITY, IMarker.SEVERITY_ERROR);
+					markerAttributes.put(IMarker.PRIORITY, IMarker.PRIORITY_HIGH);
+					
+					
+					markerAttributes.put(
+							"edu.uncc.sis.aside.marker.validationType", "boolean");
+					marker = MarkerAndAnnotationUtil.addMarker(astRoot,
+							markerAttributes, PluginConstants.MARKER_INPUT_VALIDATION);
 
-				asideMarkers.add(marker);
-				Date date = new Date();
-			    logger.info(dateFormat.format(date) + " " + Plugin.getUserId() + " ASIDE found an input validation vulnerability at line " + lineNumber
-						+ ".<code>" + node.toString() + "<code> in Java File <<"
-						+ astRoot.getJavaElement().getElementName()
-						+ ">> in Project [" + project.getName() + "]");
+					
+					markersList.add(marker);
+
+
+					addInputValidationLog(node, lineNumber);
+				}
 			}
-			}
-			
+
 			
 			
 			/*
@@ -491,22 +538,30 @@ public class MethodInvocationVisitor extends ASTVisitor {
 				taintedMapSources.add(node);
 				StructuralPropertyDescriptor location = node
 						.getLocationInParent();
+				
 				if (location.isChildProperty()) {
 					ASTNode parent = node.getParent();
+					
 					if (parent.getNodeType() == ASTNode.ASSIGNMENT) {
+						
 						if (node.getLocationInParent() == Assignment.RIGHT_HAND_SIDE_PROPERTY) {
+							
 							Assignment assignmentParent = (Assignment) parent;
 							Expression assignmentExpression = assignmentParent
 									.getLeftHandSide();
+							
 							taintedMapSources.add(assignmentExpression);
 						}
 					}
 
 					if (parent.getNodeType() == ASTNode.VARIABLE_DECLARATION_FRAGMENT) {
+						
 						if (node.getLocationInParent() == VariableDeclarationFragment.INITIALIZER_PROPERTY) {
+							
 							VariableDeclarationFragment variableDeclarationParent = (VariableDeclarationFragment) parent;
 							SimpleName variable = variableDeclarationParent
 									.getName();
+							
 							taintedMapSources.add(variable);
 						}
 					}
@@ -522,19 +577,26 @@ public class MethodInvocationVisitor extends ASTVisitor {
 				taintedListSources.add(node);
 				StructuralPropertyDescriptor location = node
 						.getLocationInParent();
+				
 				if (location.isChildProperty()) {
+					
 					ASTNode parent = node.getParent();
+					
 					if (parent.getNodeType() == ASTNode.ASSIGNMENT) {
+						
 						if (node.getLocationInParent() == Assignment.RIGHT_HAND_SIDE_PROPERTY) {
 							Assignment assignmentParent = (Assignment) parent;
 							Expression assignmentExpression = assignmentParent
 									.getLeftHandSide();
+							
 							taintedListSources.add(assignmentExpression);
 						}
 					}
 
 					if (parent.getNodeType() == ASTNode.VARIABLE_DECLARATION_FRAGMENT) {
+					
 						if (node.getLocationInParent() == VariableDeclarationFragment.INITIALIZER_PROPERTY) {
+							
 							VariableDeclarationFragment variableDeclarationParent = (VariableDeclarationFragment) parent;
 							SimpleName variable = variableDeclarationParent
 									.getName();
@@ -566,33 +628,36 @@ public class MethodInvocationVisitor extends ASTVisitor {
 //							.getParent()))
 //				return false;
 
-			if (ASIDEMarkerAndAnnotationUtil.specialCase(node))
+			if (MarkerAndAnnotationUtil.specialCase(node))
 				return false;
 
 			int start = node.getStartPosition();
 			int length = node.getLength();
 			int end = start + length;
 
-			if (!ASIDEMarkerAndAnnotationUtil.hasAnnotationAtPosition(cu, node)) {
+			if (!MarkerAndAnnotationUtil.hasAnnotationAtPosition(cu, node)) {
 			//if (!ASIDEMarkerAndAnnotationUtil.hasASIDE_FlagAtNode(node)) {
 				if (!qualifiedName.equals("int")) {
 					Expression methodExpression = node.getExpression();
 					SimpleName methodName = node.getName();
 					// Object value = Map.get("key");
+					
 					if (methodExpression != null
 							&& methodName.getIdentifier() != null
 							&& methodName.getIdentifier().equals("get")) {
+						
 						int invokeExpressionType = methodExpression
 								.getNodeType();
+						
 						switch (invokeExpressionType) {
 						case ASTNode.METHOD_INVOCATION:
 
 							MethodInvocation target = (MethodInvocation) methodExpression;
 
-							if (ASIDEMarkerAndAnnotationUtil.isTainted(target,
+							if (MarkerAndAnnotationUtil.isTainted(target,
 									taintedMapSources, astMatcher)) {
 
-								if (!ASIDEMarkerAndAnnotationUtil
+								if (!MarkerAndAnnotationUtil
 										.specialCase(target)) {
 
 									markerAttributes.put(IMarker.CHAR_START,
@@ -601,55 +666,52 @@ public class MethodInvocationVisitor extends ASTVisitor {
 									// TODO: make message more concrete and
 									// meaningful
 									markerAttributes
-											.put(IMarker.MESSAGE,
-													PluginConstants.TOOL_TIP);
+									.put(IMarker.MESSAGE,
+											PluginConstants.TOOL_TIP);
 
 									markerAttributes
-											.put("edu.uncc.sis.aside.marker.validationType",
-													"String");
-									marker = ASIDEMarkerAndAnnotationUtil
+									.put("edu.uncc.sis.aside.marker.validationType",
+											"String");
+									markerAttributes.put(IMarker.SEVERITY, IMarker.SEVERITY_ERROR);
+									markerAttributes.put(IMarker.PRIORITY, IMarker.PRIORITY_HIGH);
+									
+									
+									marker = MarkerAndAnnotationUtil
 											.addMarker(astRoot,
-													markerAttributes);
+													markerAttributes, PluginConstants.MARKER_INPUT_VALIDATION);
 
-									asideMarkers.add(marker);
-									Date date = new Date();
-									logger.info(Plugin.getUserId() + dateFormat.format(date)+" Found vulnerability at line "
-											+ lineNumber
-											+ " in Java File <<"
-											+ astRoot.getJavaElement()
-													.getElementName()
-											+ ">> in Project =="
-											+ project.getName() + "==");
+									
+									markersList.add(marker);
+
+									addInputValidationLog(node, lineNumber);
+
 								}
-
 							}
 							break;
 						case ASTNode.SIMPLE_NAME:
-							if (ASIDEMarkerAndAnnotationUtil.isTainted(
+							if (MarkerAndAnnotationUtil.isTainted(
 									(SimpleName) methodExpression,
 									taintedMapSources)) {
 
 								markerAttributes.put(IMarker.CHAR_START, start);
 								markerAttributes.put(IMarker.CHAR_END, end);
 								markerAttributes
-										.put(IMarker.MESSAGE,
-												PluginConstants.TOOL_TIP);
+								.put(IMarker.MESSAGE,
+										PluginConstants.TOOL_TIP);
 
 								markerAttributes
-										.put("edu.uncc.sis.aside.marker.validationType",
-												"String");
-								marker = ASIDEMarkerAndAnnotationUtil
-										.addMarker(astRoot, markerAttributes);
+								.put("edu.uncc.sis.aside.marker.validationType",
+										"String");
+								markerAttributes.put(IMarker.SEVERITY, IMarker.SEVERITY_ERROR);
+								markerAttributes.put(IMarker.PRIORITY, IMarker.PRIORITY_HIGH);
+								
+								
+								marker = MarkerAndAnnotationUtil
+										.addMarker(astRoot, markerAttributes, PluginConstants.MARKER_INPUT_VALIDATION);
 
-								asideMarkers.add(marker);
-								Date date = new Date();
-								logger.info(Plugin.getUserId() + dateFormat.format(date)+" Found vulnerability at line "
-										+ lineNumber
-										+ " in Java File <<"
-										+ astRoot.getJavaElement()
-												.getElementName()
-										+ ">> in Project =="
-										+ project.getName() + "==");
+								markersList.add(marker);
+
+								addInputValidationLog(node, lineNumber);
 
 							}
 							break;
@@ -672,11 +734,25 @@ public class MethodInvocationVisitor extends ASTVisitor {
 		return false;
 	}
 
+	private void addInputValidationLog(MethodInvocation node,
+			int lineNumber) 
+	{
+		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+		Date date = new Date();
+		logger.info(dateFormat.format(date) + " " + Plugin.getUserId() + " " + Plugin.PLUGIN_NAME + " found an input validation vulnerability at line " + lineNumber
+				+ ".<code>" + node.toString() + "<code> in Java File <<"
+				+ astRoot.getJavaElement().getElementName()
+				+ ">> in Project [" + project.getName() + "]");
+		
+	
+	}
+
 	/*
 	 * check and see whether there is a residue marker at the position. If yes,
 	 * delete it.
 	 */
 	private void deleteResidueMarkerForNode(ASTNode node) {
+		
 		int start = node.getStartPosition();
 		int length = node.getLength();
 		int end = start + length;
@@ -684,8 +760,9 @@ public class MethodInvocationVisitor extends ASTVisitor {
 
 		try {
 			IFile file = (IFile) cu.getUnderlyingResource();
+			
 			IMarker[] markers = file.findMarkers(
-					PluginConstants.ASIDE_MARKER_TYPE, false,
+					PluginConstants.MARKER_INPUT_VALIDATION, false,
 					IResource.DEPTH_ONE);
 
 			for (IMarker marker : markers) {

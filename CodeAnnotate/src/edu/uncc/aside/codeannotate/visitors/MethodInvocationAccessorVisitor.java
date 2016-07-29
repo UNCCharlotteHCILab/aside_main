@@ -1,6 +1,5 @@
 package edu.uncc.aside.codeannotate.visitors;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -17,14 +16,14 @@ import org.eclipse.jdt.core.dom.ASTVisitor;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.MethodInvocation;
 
-import edu.uncc.aside.codeannotate.Plugin;
+import edu.uncc.aside.codeannotate.PluginConstants;
 import edu.uncc.aside.codeannotate.Utils;
 import edu.uncc.aside.codeannotate.XMLConfig;
 import edu.uncc.aside.codeannotate.XMLConfig.SinkDescription;
 import edu.uncc.aside.codeannotate.models.ModelRegistry;
 import edu.uncc.aside.codeannotate.models.Path;
-import edu.uncc.aside.codeannotate.models.PathCollector;
-import edu.uncc.aside.codeannotate.models.Point;
+import edu.uncc.aside.codeannotate.models.ModelCollector;
+import edu.uncc.aside.codeannotate.models.AccessControlPoint;
 /**
  * 
  * @author Jing Xie (jxie2 at uncc dot edu)
@@ -37,20 +36,25 @@ public class MethodInvocationAccessorVisitor extends ASTVisitor {
 	private IProject projectOfInterest;
 	private ICompilationUnit unitOfInterest;
 	private IResource resource;
-	private PathCollector collector;
+	private ModelCollector modelCollector;
 	private int lineChangedStartOffset;
-	private int nextStartOffset;
+	private int nextLineStartingOffset;
 
 	public MethodInvocationAccessorVisitor(ASTNode node,
-			ArrayList<Path> pathsOfInterest, ICompilationUnit unit,
-			IProject project, int lineChangedStartOffset, int nextStartOffset) {
+			ICompilationUnit unit, IProject project,
+			int lineChangedStartOffset, int nextLineStartingOffset) {
+		
 		target = node;
 		this.lineChangedStartOffset = lineChangedStartOffset;
-		this.nextStartOffset = nextStartOffset;
-		accessors = XMLConfig.readSinks(Plugin.SENSITIVE_ACCESSORS_CONFIG);
+		this.nextLineStartingOffset = nextLineStartingOffset;
+		// List of Security sensitive operations . Should be loaded only once for all vistirs and nodes
+		accessors = XMLConfig.readSinks(PluginConstants.SENSITIVE_OPERATIONS_CONFIG_FILE);
+		
 		projectOfInterest = project;
 		unitOfInterest = unit;
-		collector = ModelRegistry.getPathCollectorForProject(projectOfInterest);
+		
+		modelCollector = ModelRegistry.getPathCollectorForProject(projectOfInterest);
+		
 		try {
 			resource = unitOfInterest.getUnderlyingResource();
 		} catch (JavaModelException e) {
@@ -64,22 +68,27 @@ public class MethodInvocationAccessorVisitor extends ASTVisitor {
 		int start = _node.getStartPosition();
 		int end = start + _node.getLength();
 
-		if (end < lineChangedStartOffset || start > nextStartOffset)
+		if (end < lineChangedStartOffset || start > nextLineStartingOffset)
 			return false;
 
 		if (_node.getNodeType() == ASTNode.METHOD_INVOCATION) {
 			MethodInvocation node = (MethodInvocation) _node;
 
 			/* I visit Mahmoud*/ 
+			// Is node one of the sensitive operations?
 			if (Utils.isMethodInvocationOfInterest(node, accessors)) {
 
+				//Getting parent node of this method declaration 
 				MethodDeclaration parent = Utils
 						.getParentMethodDeclaration(node);
-				IMethod method = Utils.convertMethodDecl2IMethod(parent,
+				
+				IMethod parentMethod = Utils.convertMethodDecl2IMethod(parent,
 						resource);
+				
 				IResource mResource;
 				try {
-					mResource = method.getUnderlyingResource();
+					mResource = parentMethod.getUnderlyingResource();
+					
 					if (mResource == null) {
 						System.err.println("Check here...");
 						return false;
@@ -88,22 +97,29 @@ public class MethodInvocationAccessorVisitor extends ASTVisitor {
 					e.printStackTrace();
 					return false;
 				}
-				if(parent != null)
-					System.err.println("MM.. NOT Entrance Method " + parent.toString());
 				
+			//	if(parent != null)
+				//	System.err.println("MM.. The parent is NOT an Entrance Method " + parent.toString());
+				//MM Is the parent of the a sensitive operation is one of the entrance points( Post, Get ,...)
 				if (Utils.isEntranceMethodDeclaration(parent)) {
 
-					Utils.markAccessor(node, resource,
+					Utils.markSensitiveOperation(node, resource,
 							Utils.getCompilationUnit(unitOfInterest));
-					Point accessor = new Point(node,
+					
+					//MM Point for sensitive operation( database.execquery(),...)
+					AccessControlPoint accessor = new AccessControlPoint(node,
 							Utils.getCompilationUnit(unitOfInterest), resource);
-					Point entrance = new Point(parent,
-							Utils.getCompilationUnit(method
+					
+					//MM Point for entrance method ( doGet, doPost ,...
+					AccessControlPoint entrance = new AccessControlPoint(parent,
+							Utils.getCompilationUnit(parentMethod
 									.getCompilationUnit()), mResource);
 
+					//MM Third parameter which is list of checks is empty
 					final Path path = new Path(entrance, accessor, null);
 					
-					collector.addPath(path);
+					
+					modelCollector.addPath(path);
 					
 					System.out.println("Just created and added a new path "
 							+ path.getPathID());

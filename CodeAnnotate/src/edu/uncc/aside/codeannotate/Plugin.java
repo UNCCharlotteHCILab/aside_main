@@ -1,12 +1,6 @@
 package edu.uncc.aside.codeannotate;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -24,17 +18,16 @@ import java.util.StringTokenizer;
 
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaProject;
-import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.JavaModelException;
-import org.eclipse.core.internal.resources.MarkerManager;
+import org.eclipse.core.commands.Command;
+import org.eclipse.core.commands.State;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceDescription;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
@@ -50,13 +43,15 @@ import org.eclipse.ui.IViewReference;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
 import edu.uncc.sis.aside.logging.AsideLoggingManager;
-import edu.uncc.sis.aside.preferences.IPreferenceConstants;
-import edu.uncc.sis.aside.auxiliary.core.TestRunOnAllProjects;
-import edu.uncc.sis.aside.constants.PluginConstants;
+import edu.uncc.sis.aside.auxiliary.core.RunAnalysisOnAllProjects;
+import edu.uncc.sis.aside.auxiliary.core.sample1;
+import edu.uncc.aside.codeannotate.asideInterface.InterfaceUtil;
 import edu.uncc.aside.codeannotate.listeners.CodeAnnotateElementChangeListener;
 import edu.uncc.aside.codeannotate.models.Path;
 import edu.uncc.aside.codeannotate.presentations.AnnotationView;
@@ -78,25 +73,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * @author Jing Xie (jxie2 at uncc dot edu)
  */
 public class Plugin extends AbstractUIPlugin {
-
-	// The plug-in ID
-	public static final String PLUGIN_ID = "ESIDE"; //$NON-NLS-1$
-
-	public static final String JAVA_WEB_APP_NATURE = "org.eclipse.jdt.core.javanature";
-
-	public static final String ANNOTATION_RELATIONSHIP_VIEW_ID = "relationships";
-	public static final String ROOT_MARKER = "ASIDE.RootMarker";
-	public static final String ANNOTATION_ANSWER = "green.diamond"; //"CodeAnnotate.annotationAnswer";
-	public static final String ANNOTATION_QUESTION ="yellow.question.box"; // "CodeAnnotate.annotationQuestion"; //"yellow.question.box"; 
-	public static final String ANNOTATION_QUESTION_CHECKED = "green.check"; //"CodeAnnotate.annotationQuestionChecked";
-	public static final String SENSITIVE_ACCESSORS_CONFIG = "SensitiveInfoAccessors.xml";
 	
-	public static final String ASIDE_NODE_PROP_START = "aside_start";
-	public static final String ASIDE_NODE_PROP_END = "aside_end";
-	
-	//public static  String ASIDE_ANALYSIS_STATUS = "On"; // To turn on and off the aside analysis
-//	public static final String ASIDE_MARKERS_STATUS = "Show"; // To show or hide the aside markers
-	
+	public static String PLUGIN_NAME="ESIDE";	
 	
 	// The shared instance
 	private static Plugin plugin;
@@ -115,10 +93,6 @@ public class Plugin extends AbstractUIPlugin {
 	
 	public static String userId;
 
-	private static final String LOG_PROPERTIES_FILE = "logger.properties";
-	
-	private static final String ASIDE_USERID_FILE = "userID.txt";
-	
 	// The shared AST matcher instance
 	private static ASTMatcher astMatcher;
 		
@@ -210,7 +184,6 @@ public class Plugin extends AbstractUIPlugin {
 	
 	public void start(BundleContext context) throws Exception {
 		
-		super.start(context);
 		plugin = this;
 		
 		JavaCore.addElementChangedListener(CodeAnnotateElementChangeListener
@@ -223,140 +196,155 @@ public class Plugin extends AbstractUIPlugin {
 		setUserId(userIDFromSystem);
 		
 		if(AuthenCenter.hasPermission(userIDFromSystem)){
-			setAllowed(true);
+			
+			ICommandService service =
+					(ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
+			
+			Command command = service.getCommand("ToggleAside");
+			State state = command.getState("org.eclipse.ui.commands.toggleState");
+			
+			if (state.getValue() ==null) 
+			{
+				state = new State();
+				state.setValue(false);
+				
+			}
+							
+			setAllowed((Boolean)state.getValue());
 			
 		}
 		
-		//System.out.println("XXXXXXXXXXXXXXXX");
+		super.start(context);
 		
-		 if (astMatcher == null) {
-				astMatcher = new ASTMatcher();
-			}
+		
+		if (astMatcher == null) {
+			astMatcher = new ASTMatcher();
+		}
 
-			IWorkspace workspace = ResourcesPlugin.getWorkspace();
-	       
-			IWorkspaceDescription description = workspace.getDescription();
-			if (!description.isAutoBuilding()) {
-				description.setAutoBuilding(true);
-				try {
-					workspace.setDescription(description);
-				} catch (CoreException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
+		IWorkspace workspace = ResourcesPlugin.getWorkspace();
 
-			configureLog();
-			
-			System.out.println("Aside Plugin start print test");
-			
-			DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-			// get current date time with Date()
-			Date date = new Date();
-		 /*
+		IWorkspaceDescription description = workspace.getDescription();
+		if (!description.isAutoBuilding()) {
+			description.setAutoBuilding(true);
+			try {
+				workspace.setDescription(description);
+			} catch (CoreException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+
+		configureLog();
+
+		System.out.println("Aside Plugin start print test");
+
+		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+		// get current date time with Date()
+		Date date = new Date();
+		/*
 			IPath stateLocation = Plugin.getDefault().getStateLocation();
 			String fileName = stateLocation + "/"
 					+ Plugin.getAsideUseridFile(); // might have to be updated
 														// about "/"
-			
+
 			File userIdFile = new File(fileName);
-			*/
-			System.out.println("Plugin.getDefault().isAllowed() = "
-					+ Plugin.getDefault().isAllowed());
+		 */
+		System.out.println("Plugin.getDefault().isAllowed() = "
+				+ Plugin.getDefault().isAllowed());
+
+		if (Plugin.isAllowed()) {
+			Plugin.getDefault().setUserId(userIDFromSystem);
+
+			System.out.println("Removing Markers");
+
+			// MakerManagement.deleteWorkspaceMarkers(PluginConstants.MARKER_ROOT_TYPE);
+
 			
-			if (Plugin.isAllowed()) {
-				Plugin.getDefault().setUserId(userIDFromSystem);
-				
-//				if (userIdFile.exists()) {
-//					try {
-//						FileReader fr = new FileReader(userIdFile);
-//						BufferedReader br = new BufferedReader(fr);
-//						String userIdRead = br.readLine();
-//						System.out.println("userId read from the file = "
-//								+ userIdRead);
-//						Plugin.getDefault().setUserId(userIdRead);
-//						br.close();
-//						fr.close();
-//					} catch (IOException e) {
-//						// TODO Auto-generated catch block
-//						e.printStackTrace();
-//					}
-//
-//					
-//				} else {
-//					// /////////////
-//					// pop up consent form asking for id and consent
-//					Display.getDefault().syncExec(new Runnable() {
-//						public void run() {
-//							ConsentForm.process();
-//						}
-//					});
-//					
-//					// System.out.println("userIdRead in Maunual =" + userIdRead);
-//
-//					boolean created = false;
-//					try {
-//						created = userIdFile.createNewFile();
-//					} catch (IOException e) {
-//						// TODO Auto-generated catch block
-//						e.printStackTrace();
-//					}
-//					if (created) {
-//						FileWriter fw = null;
-//						try {
-//							fw = new FileWriter(userIdFile);
-//							BufferedWriter bw = new BufferedWriter(fw);
-//							bw.write(userIDFromSystem);
-//							bw.close();
-//							fw.close();
-//						} catch (IOException e) {
-//							// TODO Auto-generated catch block
-//							e.printStackTrace();s
-//						}
-//						Plugin.getDefault().setUserId(userIDFromSystem);
-//					} else {
-//						System.err.println("UserId file is not created properly!");
-//					}
-//				}
-				System.out.println("Removing Markers");
-				
-		//		MakerManagement.deleteWorkspaceMarkers(Plugin.ROOT_MARKER);
-				
-		//		MakerManagement.deleteWorkspaceMarkers(PluginConstants.ASIDE_MARKER_TYPE);
-				
-				TestRunOnAllProjects testRunOnAllProjects = new TestRunOnAllProjects();
-			//	testRunOnAllProjects.runOnAllProjects();
-				
-			
-				
+
+			//RunAnalysisOnAllProjects runAnalysisOnAllProjects = new RunAnalysisOnAllProjects();
+			//	runAnalysisOnAllProjects.runOnAllProjects();
+
+
+
 			//	MakerManagement.restoreMarkersFromFile("markers.csv");
-				
+
 			//	Utils.RetrievalImplementation.readFromCSVFile();
+			
+		//	IMarker[] markers = project.getCorrespondingResource().findMarkers(, true, IResource.DEPTH_INFINITE);
+    		
+			restoreMarkers();
 
-			}else{
-				System.out.println("this user is not allowed");
+		}else{
+			System.out.println("this user is not allowed");
+		}
+
+		//		RetrievalImplementation q = new RetrievalImplementation();
+		//		 new AnnotationIO(q);
+		//		 new ReadingFromCSV(q);
+
+
+
+		//io code ends here
+
+		//		 ISaveParticipant saveParticipant = new CodeAnnotateSaveParticipant();
+		//		   ISavedState lastState =
+		//		      ResourcesPlugin.getWorkspace().addSaveParticipant(PLUGIN_ID, saveParticipant);
+		//
+		//		   if (lastState != null) {
+		//		      String saveFileName = lastState.lookup(new org.eclipse.core.runtime.Path("CodeAnnotate")).toString();
+		//		      File f = plugin.getStateLocation().append(saveFileName).toFile();
+		//		
+		//		   }
+
+		//		ResourcesPlugin.getWorkspace().addResourceChangeListener(
+		//				CodeAnnotateMarkerChangeListener.getListener());
+	}
+
+	/**
+	 * 
+	 */
+	private void restoreMarkers() 
+	{
+		IJavaProject javaProject ;
+		IProject[] allProjects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
+
+
+		for(IProject project : allProjects){
+			if(project.isOpen() && !project.getName().equalsIgnoreCase("RemoteSystemsTempFiles"))
+			{
+				javaProject= null;
+				javaProject = JavaCore.create(project);  
+
+				if(javaProject == null )				
+					continue;
+
+				try {
+					IMarker[] markers = javaProject.getCorrespondingResource().findMarkers(PluginConstants.MARKER_ROOT_TYPE, true, IResource.DEPTH_INFINITE);
+					for (int i = 0; i < markers.length; i++) {
+						if( 
+								markers[i].getType().equalsIgnoreCase(PluginConstants.MARKER_ANNOTATION_REQUEST)
+								|| 
+								markers[i].getType().equalsIgnoreCase(PluginConstants.MARKER_ANNOTATION_ANSWER)
+								|| 
+								markers[i].getType().equalsIgnoreCase(PluginConstants.MARKER_ANNOTATION_CHECKED)	
+							)
+							
+							InterfaceUtil.prepareAnnotationRequest(markers[i],null);
+						
+					}
+					
+				} catch (JavaModelException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (CoreException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
 			}
+		}
 
-//		RetrievalImplementation q = new RetrievalImplementation();
-//		 new AnnotationIO(q);
-//		 new ReadingFromCSV(q);
-		
-		
-	        			
-			//io code ends here
-		 
-//		 ISaveParticipant saveParticipant = new CodeAnnotateSaveParticipant();
-//		   ISavedState lastState =
-//		      ResourcesPlugin.getWorkspace().addSaveParticipant(PLUGIN_ID, saveParticipant);
-//
-//		   if (lastState != null) {
-//		      String saveFileName = lastState.lookup(new org.eclipse.core.runtime.Path("CodeAnnotate")).toString();
-//		      File f = plugin.getStateLocation().append(saveFileName).toFile();
-//		
-//		   }
 
-//		ResourcesPlugin.getWorkspace().addResourceChangeListener(
-//				CodeAnnotateMarkerChangeListener.getListener());
 	}
 
 	/*
@@ -379,6 +367,7 @@ public class Plugin extends AbstractUIPlugin {
 		plugin = null;
 		JavaCore.removeElementChangedListener(CodeAnnotateElementChangeListener
 				.getListener());
+		
 //		ResourcesPlugin.getWorkspace().removeResourceChangeListener(
 //				CodeAnnotateMarkerChangeListener.getListener());
 		if (this.loggingManager != null) {
@@ -395,11 +384,11 @@ public class Plugin extends AbstractUIPlugin {
 		try {
 			this.END_DAY_SEND_LOGS = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").parse(PluginConstants.LOG_SEND_END_DATE);   //the date needs to be verified
 			
-			URL url = getBundle().getEntry("/" + LOG_PROPERTIES_FILE);
+			URL url = getBundle().getEntry("/" + PluginConstants.LOG_PROPERTIES_FILE);
 			InputStream propertiesInputStream = url.openStream();
 			
 			if (propertiesInputStream != null) {
-				//System.out.println("configure log run.......................");
+				System.out.println("configure log run.......................");
 				Properties props = new Properties();
 				
 				props.load(propertiesInputStream);
@@ -475,6 +464,7 @@ public class Plugin extends AbstractUIPlugin {
 	public void setMarkerIndex(
 			IJavaProject project,
 			Map<ICompilationUnit, Map<MethodDeclaration, ArrayList<IMarker>>> markerIndex) {
+		
 		Plugin.markerIndex.put(project, markerIndex);
 	}
 	/**
@@ -490,10 +480,10 @@ public class Plugin extends AbstractUIPlugin {
 		String iconPath = "icons/";
 		try {
 			URL installURL = getDefault().getBundle().getEntry("/");
-			System.out.println("MM 1" +name + " : " + installURL.toString());
+		//	System.out.println("MM 1" +name + " : " + installURL.toString());
 			URL url = new URL(installURL, iconPath + name);
 			
-			System.out.println("MM 2" +name + " : " + url.toString());
+		//	System.out.println("MM 2" +name + " : " + url.toString());
 			
 			return ImageDescriptor.createFromURL(url);
 			
@@ -523,7 +513,7 @@ public class Plugin extends AbstractUIPlugin {
 		}
 
 		IViewReference reference = page
-				.findViewReference(Plugin.ANNOTATION_RELATIONSHIP_VIEW_ID);
+				.findViewReference(PluginConstants.ANNOTATION_RELATIONSHIP_VIEW_ID);
 
 		if (reference != null)
 			return (AnnotationView) reference.getView(true);
@@ -546,14 +536,16 @@ public class Plugin extends AbstractUIPlugin {
 	/*
 	 * ASIDE PREFERENCES
 	 */
+	// TB = Trust Boundary
+	
 	public String[] getDefaultTBPathsPreference() {
 		return convert(getPreferenceStore().getDefaultString(
-				IPreferenceConstants.EXTERNAL_TB_PATH_PREFERENCE));
+				PluginConstants.EXTERNAL_TB_PATH_PREFERENCE));
 	}
 
 	public String[] getTBPathsPreference() {
 		return convert(getPreferenceStore().getString(
-				IPreferenceConstants.EXTERNAL_TB_PATH_PREFERENCE));
+				PluginConstants.EXTERNAL_TB_PATH_PREFERENCE));
 	}
 
 	public void setTBPathPreference(String[] elements) {
@@ -565,60 +557,60 @@ public class Plugin extends AbstractUIPlugin {
 		StringBuffer buffer = new StringBuffer();
 		for (int i = 0; i < elements.length; i++) {
 			buffer.append(elements[i]);
-			buffer.append(IPreferenceConstants.PATH_DELIMITER);
+			buffer.append(PluginConstants.PATH_DELIMITER);
 		}
 		getPreferenceStore().setValue(
-				IPreferenceConstants.EXTERNAL_TB_PATH_PREFERENCE,
+				PluginConstants.EXTERNAL_TB_PATH_PREFERENCE,
 				buffer.toString());
 	}
 
 	public boolean getAsideTBCheckPreference() {
 		return getPreferenceStore().getBoolean(
-				IPreferenceConstants.ASIDE_TB_PREFERENCE);
+				PluginConstants.ASIDE_TB_PREFERENCE);
 	}
 
 	public void setAsideTBCheckPreference(boolean check) {
-		getPreferenceStore().setValue(IPreferenceConstants.ASIDE_TB_PREFERENCE,
+		getPreferenceStore().setValue(PluginConstants.ASIDE_TB_PREFERENCE,
 				check);
 	}
 
 	public boolean getProjectTBCheckPreference() {
 		return getPreferenceStore().getBoolean(
-				IPreferenceConstants.PROJECT_TB_PREFERENCE);
+				PluginConstants.PROJECT_TB_PREFERENCE);
 	}
 
 	public void setProjectTBCheckPreference(boolean check) {
 		getPreferenceStore().setValue(
-				IPreferenceConstants.PROJECT_TB_PREFERENCE, check);
+				PluginConstants.PROJECT_TB_PREFERENCE, check);
 	}
 
 	public boolean getExternalTBCheckPreference() {
 		return getPreferenceStore().getBoolean(
-				IPreferenceConstants.EXTERNAL_TB_PREFERENCE);
+				PluginConstants.EXTERNAL_TB_PREFERENCE);
 	}
 
 	public void setExternalTBCheckPreference(boolean check) {
 		getPreferenceStore().setValue(
-				IPreferenceConstants.EXTERNAL_TB_PREFERENCE, check);
+				PluginConstants.EXTERNAL_TB_PREFERENCE, check);
 	}
 	
 	public void setAsideVRCheckPreference(boolean check) {
-		getPreferenceStore().setValue(IPreferenceConstants.ASIDE_VR_PREFERENCE,
+		getPreferenceStore().setValue(PluginConstants.ASIDE_VR_PREFERENCE,
 				check);
 	}
 	
 	public boolean getExternalVRCheckPreference() {
 		return getPreferenceStore().getBoolean(
-				IPreferenceConstants.EXTERNAL_VR_PREFERENCE);
+				PluginConstants.EXTERNAL_VR_PREFERENCE);
 	}
 
 	public void setExternalVRCheckPreference(boolean check) {
 		getPreferenceStore().setValue(
-				IPreferenceConstants.EXTERNAL_VR_PREFERENCE, check);
+				PluginConstants.EXTERNAL_VR_PREFERENCE, check);
 	}
 	public void setProjectVRCheckPreference(boolean check) {
 		getPreferenceStore().setValue(
-				IPreferenceConstants.PROJECT_VR_PREFERENCE, check);
+				PluginConstants.PROJECT_VR_PREFERENCE, check);
 	}
 	public void setVRPathPreference(String[] elements) {
 
@@ -629,16 +621,16 @@ public class Plugin extends AbstractUIPlugin {
 		StringBuffer buffer = new StringBuffer();
 		for (int i = 0; i < elements.length; i++) {
 			buffer.append(elements[i]);
-			buffer.append(IPreferenceConstants.PATH_DELIMITER);
+			buffer.append(PluginConstants.PATH_DELIMITER);
 		}
 		getPreferenceStore().setValue(
-				IPreferenceConstants.EXTERNAL_VR_PATH_PREFERENCE,
+				PluginConstants.EXTERNAL_VR_PATH_PREFERENCE,
 				buffer.toString());
 	}
 
 	private String[] convert(String preferenceValue) {
 		StringTokenizer tokenizer = new StringTokenizer(preferenceValue,
-				IPreferenceConstants.PATH_DELIMITER);
+				PluginConstants.PATH_DELIMITER);
 		int tokenCount = tokenizer.countTokens();
 		String[] elements = new String[tokenCount];
 
@@ -651,12 +643,12 @@ public class Plugin extends AbstractUIPlugin {
 	
 	public String[] getDefaultVRPathsPreference() {
 		return convert(getPreferenceStore().getDefaultString(
-				IPreferenceConstants.EXTERNAL_VR_PATH_PREFERENCE));
+				PluginConstants.EXTERNAL_VR_PATH_PREFERENCE));
 	}
 
 	public String[] getVRPathsPreference() {
 		return convert(getPreferenceStore().getString(
-				IPreferenceConstants.EXTERNAL_VR_PATH_PREFERENCE));
+				PluginConstants.EXTERNAL_VR_PATH_PREFERENCE));
 	}
 	
 	public void setSignal(boolean signal) {
@@ -676,7 +668,7 @@ public class Plugin extends AbstractUIPlugin {
 	}
 
 	public static String getAsideUseridFile() {
-		return ASIDE_USERID_FILE;
+		return PluginConstants.ASIDE_USERID_FILE;
 	}
 
 	/*

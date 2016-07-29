@@ -22,9 +22,14 @@ public class ModelRegistry implements PropertyChangeListener {
 	private ModelRegistry() {
 	}
 
-	private static Map<IProject, PathCollector> pathCollectors = Collections
-			.synchronizedMap(new HashMap<IProject, PathCollector>());
-
+	private static Map<IProject, ModelCollector> modelCollectors = Collections
+			.synchronizedMap(new HashMap<IProject, ModelCollector>());
+	
+	//MM
+	/*
+	private static Map<IProject, InputValidationsCollector> inputValidationsCollectors = Collections
+			.synchronizedMap(new HashMap<IProject, InputValidationsCollector>());
+*/
 	public static ModelRegistry getInstance() {
 		if (instance == null)
 			instance = new ModelRegistry();
@@ -32,73 +37,143 @@ public class ModelRegistry implements PropertyChangeListener {
 		return instance;
 	}
 
-	public static PathCollector getPathCollectorForProject(IProject project) {
-		if (pathCollectors == null)
+	//MM
+	/*
+	public static InputValidationsCollector getInputValidationsCollectorForProject(IProject project) {
+		if (inputValidationsCollectors == null)
 			return null;
 
-		return pathCollectors.get(project);
+		return inputValidationsCollectors.get(project);
+	}
+	*/
+	
+	public static ModelCollector getPathCollectorForProject(IProject project) {
+		if (modelCollectors == null)
+			return null;
+
+		return modelCollectors.get(project);
 	}
 
-	public static void registerPathCollector(PathCollector collector) {
+	public static void registerPathCollector(ModelCollector collector) {
+
 		collector.accept(AddModelVisitor.getInstance());
-		synchronized (pathCollectors) {
-			pathCollectors.put(collector.getProject(), collector);
+
+		synchronized (modelCollectors) {
+			modelCollectors.put(collector.getProject(), collector);
 		}
 	}
+	/*
+	public static void registerInputValidationsCollector(InputValidationsCollector collector) {
 
-	public static Collection<PathCollector> getAllRegisteredChildren() {
-		return pathCollectors.values();
+		collector.accept(AddModelVisitor.getInstance());
+
+		synchronized (inputValidationsCollectors) {
+			inputValidationsCollectors.put(collector.getProject(), collector);
+		}
+	}
+	*/
+
+	public static Collection<ModelCollector> getAllRegisteredChildren() {
+		return modelCollectors.values();
 	}
 
+	//MM gets called after firing the events in e.g., addPath method
 	@Override
 	public void propertyChange(PropertyChangeEvent event) {
 
-		PathCollector pathCollector;
+		ModelCollector modelCollector;
 		Path path;
+		InputValidationPoint point;
+	//	InputValidationsCollector pointCollector;
 
 		String propertyName = event.getPropertyName();
 
 		Object source = event.getSource();
 
-		if (source instanceof PathCollector) {
-			pathCollector = (PathCollector) source;
+		if (source instanceof ModelCollector) {
+			modelCollector = (ModelCollector) source;
 
 			if (propertyName.equals("addPath")) {
-				synchronized (pathCollectors) {
-					pathCollectors.put(pathCollector.getProject(),
-							pathCollector);
+				synchronized (modelCollectors) {
+					modelCollectors.put(modelCollector.getProject(),
+							modelCollector);
 				}
 			} else if (propertyName.equals("removePath")) {
-				synchronized (pathCollectors) {
-					pathCollectors.put(pathCollector.getProject(),
-							pathCollector);
+				
+				synchronized (modelCollectors) {
+					//MM replaces the new modelCollector
+					modelCollectors.put(modelCollector.getProject(),
+							modelCollector);
 				}
 			}
 
 		} else if (source instanceof Path) {
 			path = (Path) source;
-			pathCollector = (PathCollector) path.getParent();
+
+			modelCollector = (ModelCollector) path.getParent();
 
 			if (propertyName.equals("addCheck")) {
-				synchronized (pathCollectors) {
-					pathCollectors.put(pathCollector.getProject(),
-							pathCollector);
+				synchronized (modelCollectors) {
+					modelCollectors.put(modelCollector.getProject(),
+							modelCollector);
+				}
+			} else if (propertyName.equals("addAnnotation")) {
+
+				synchronized (modelCollectors) {
+					modelCollectors.put(modelCollector.getProject(),
+							modelCollector);
 				}
 			} else if (propertyName.equals("removeCheck")) {
-
-				pathCollector.replacePath(path);
-				synchronized (pathCollectors) {
-					pathCollectors.put(pathCollector.getProject(),
-							pathCollector);
+//MM replace the old Path having check with new one without the removed check
+				modelCollector.replacePath(path);
+				
+				synchronized (modelCollectors) {
+					modelCollectors.put(modelCollector.getProject(),
+							modelCollector);
 				}
 			}
+			else if (propertyName.equals("removeAnnotation")) {
 
-		} else {
-			/*
-			 * unexpected problem, best practice to log it, but oh well, I am
-			 * lazy, so I save it for later.
-			 */
-		}
+				//MM replace the old Path having the Annotation with new one without the removed Annotation
+				modelCollector.replacePath(path);
+				
+				synchronized (modelCollectors) {
+					modelCollectors.put(modelCollector.getProject(),
+							modelCollector);
+				}		
+			}
+		}else 
+			//MM Input validation points firing
+		if (source instanceof InputValidationPoint) {
+			point = (InputValidationPoint) source;
+
+			modelCollector = (ModelCollector) point.getParent();
+
+			if (propertyName.equals("addInputValidation")) {
+					synchronized (modelCollectors) {
+						modelCollectors.put(modelCollector.getProject(),
+								modelCollector);
+					}
+						
+
+				} else if (propertyName.equals("removeInputValidation")) {
+					
+					modelCollector.replacePoint(point);
+					
+					synchronized (modelCollectors) {
+						modelCollectors.put(modelCollector.getProject(),
+								modelCollector);
+					}	
+
+				}
+
+
+			} else {
+				/*
+				 * unexpected problem, best practice to log it, but oh well, I am
+				 * lazy, so I save it for later.
+				 */
+			}
 
 	}
 

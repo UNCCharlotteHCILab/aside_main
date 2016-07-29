@@ -14,8 +14,8 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.browser.IWebBrowser;
 import org.eclipse.ui.browser.IWorkbenchBrowserSupport;
 
-import edu.uncc.aside.codeannotate.Constants;
 import edu.uncc.aside.codeannotate.Plugin;
+import edu.uncc.aside.codeannotate.PluginConstants;
 /**
  * 
  * @author Jing Xie (jxie2 at uncc dot edu)
@@ -79,7 +79,7 @@ public class ReadMoreMarkerResolution implements IMarkerResolution2 {
 	@Override
 	public String getDescription() {
 
-		return Constants.READ_MORE_RESOLUTION_DESC;
+		return PluginConstants.READ_MORE_RESOLUTION_DESC;
 	}
 
 	@Override

@@ -36,16 +36,20 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.ViewPart;
 
 import edu.uncc.aside.codeannotate.Plugin;
+import edu.uncc.aside.codeannotate.PluginConstants;
+import edu.uncc.aside.codeannotate.models.InputValidationPoint;
+//import edu.uncc.aside.codeannotate.models.InputValidationsCollector;
 import edu.uncc.aside.codeannotate.models.Model;
 import edu.uncc.aside.codeannotate.models.ModelRegistry;
 import edu.uncc.aside.codeannotate.models.Path;
-import edu.uncc.aside.codeannotate.models.PathCollector;
+import edu.uncc.aside.codeannotate.models.ModelCollector;
+import edu.uncc.aside.codeannotate.models.AccessControlPoint;
 import edu.uncc.aside.codeannotate.models.Point;
 
 /**
  * 
  * @author Jing Xie (jxie2 at uncc dot edu)
- * 
+ * @authod Mahmoud Mohammadi ( mmoham12 at uncc dot edu)
  * 
  */
 
@@ -84,14 +88,25 @@ public class AnnotationView extends ViewPart implements PropertyChangeListener {
 		GridData layoutData = new GridData(GridData.FILL_BOTH);
 
 		viewer = new TreeViewer(leftTree);
+
+		//
 		contentProvider = new AnnotationContentProvider();
+		
 		viewer.setUseHashlookup(true);
+		
+		//MM very important
 		viewer.setContentProvider(contentProvider);
+		
+		//
 		labelProvider = new AnnotationTreeLabelProvider();
+		
 		viewer.setLabelProvider(labelProvider);
 		
+		//
 		getSite().setSelectionProvider(viewer);
+		
 		listener = new ProjectSelectionListener(viewer);
+		
 		getSite().getPage().addSelectionListener(listener);
 
 		// the invocation of setInput() method will trigger the execution of the
@@ -106,6 +121,7 @@ public class AnnotationView extends ViewPart implements PropertyChangeListener {
 		
 		viewer.getControl().setLayoutData(layoutData);
 
+		//MM When the user selects an item in the Tree view selection changes event gets called  to show the proper text
 		viewer.addSelectionChangedListener(new ISelectionChangedListener() {
 
 			@Override
@@ -116,13 +132,15 @@ public class AnnotationView extends ViewPart implements PropertyChangeListener {
 					styledText.setText("");
 				} else {
 					IStructuredSelection sSelection = (IStructuredSelection) selection;
+					
 					Model model = (Model) sSelection.getFirstElement();
+					
 					styledText.setText(model.toString());
 				}
 			}
 
 		});
-
+//MM Text Shown in the right panel
 		Composite rightText = new Composite(form, SWT.BORDER_DOT);
 		rightText.setLayout(new FillLayout());
 
@@ -133,6 +151,7 @@ public class AnnotationView extends ViewPart implements PropertyChangeListener {
 		layoutData.verticalAlignment = GridData.FILL;
 		layoutData.horizontalAlignment = GridData.FILL;
 		styledText.setLayoutData(layoutData);
+		
 		styledText.addListener(SWT.Modify, new Listener() {
 			public void handleEvent(Event e) {
 				styledText.setTopIndex(styledText.getLineCount() - 1);
@@ -143,7 +162,7 @@ public class AnnotationView extends ViewPart implements PropertyChangeListener {
 			protected void activate(ISelection selection) {
 
 			}
-// MM Needs to be modified. Not Synced with code changes
+
 			protected void linkToEditor(ISelection selection) {
 				try {
 					if (selection instanceof ITreeSelection) {
@@ -153,56 +172,22 @@ public class AnnotationView extends ViewPart implements PropertyChangeListener {
 						
 						if (elementOfInterest instanceof Path) {
 							Path pathOfInterest = (Path) elementOfInterest;
-							Point accessor = pathOfInterest.getAccessor();
-							ASTNode node = accessor
-									.getNode();
-							IFile file = (IFile) accessor.getResource();
-							IEditorPart part = EditorUtility.openInEditor(file);
+							AccessControlPoint sink = pathOfInterest.getSensitiveOperation();
 							
-							if (part == null)
-								return;
+							linkNodeToEditor(sink);
 							
-							int startOffset = -1;
-							Object startProperty = node
-									.getProperty(Plugin.ASIDE_NODE_PROP_START);
-							
-							if (startProperty == null) {
-								startOffset = node.getStartPosition();
-							} else {
-								startOffset = Integer.parseInt(startProperty
-										.toString());
-							}
-							EditorUtility.revealInEditor(part, startOffset,
-									node.getLength());
 
 						} else if (elementOfInterest instanceof Point) {
-							// TODO this does not work as expected
-							Point check = (Point) elementOfInterest;
-							ASTNode node = check.getNode();
-							IFile file = (IFile) check.getResource();
-							IEditorPart part = EditorUtility.openInEditor(file);
 							
-							if (part == null)
-								return;
-							int startOffset = -1;
-							Object startProperty = node
-									.getProperty(Plugin.ASIDE_NODE_PROP_START);
-							
-							if (startProperty == null) {
-								startOffset = node.getStartPosition();
-							} else {
-								startOffset = Integer.parseInt(startProperty
-										.toString());
-								
-							}
-							EditorUtility.revealInEditor(part, startOffset,
-									node.getLength());
+							linkNodeToEditor(elementOfInterest);
+
 							
 						} else {
 							// do nothing
 							System.err.println(elementOfInterest.getClass()
 									.toString());
 						}
+						
 					}
 
 				} catch (PartInitException ex) {
@@ -210,6 +195,27 @@ public class AnnotationView extends ViewPart implements PropertyChangeListener {
 				}
 
 			}
+/**
+ * @param elementOfInterest
+ * @throws PartInitException
+ * @throws NumberFormatException
+ */
+private void linkNodeToEditor(Object elementOfInterest)
+		throws PartInitException, NumberFormatException {
+	// TODO this does not work as expected
+	Point point = (Point) elementOfInterest;
+	
+	IFile file = (IFile) point.getResource();
+	IEditorPart part = EditorUtility.openInEditor(file);
+	
+	
+	if (part == null)
+		return;
+	int startOffset = point.getStartOffset();
+	
+	EditorUtility.revealInEditor(part, startOffset,
+			point.getNode().getLength());
+}
 
 			protected void open(ISelection selection, boolean activate) {
 				if (selection instanceof IStructuredSelection) {
@@ -248,6 +254,7 @@ public class AnnotationView extends ViewPart implements PropertyChangeListener {
 		@Override
 		public void selectionChanged(IWorkbenchPart sourcePart,
 				ISelection selection) {
+			//MM When something other than View selected and View looses focus
 			if (sourcePart != AnnotationView.this) {
 				showSelection(sourcePart, selection);
 			}
@@ -269,18 +276,29 @@ public class AnnotationView extends ViewPart implements PropertyChangeListener {
 				Object fElement = sSelection.getFirstElement();
 				
 				if (fElement != null && fElement instanceof IResource) {
+					
 					IResource element = (IResource) fElement;
+					
 					IProject selectProject = element.getProject();
+					
 					setContentDescription(sourcePart.getTitle() + " ("
 							+ selection.getClass().getName() + "): "
 							+ selectProject.getName());
-					PathCollector root = ModelRegistry
+					
+					ModelCollector root = ModelRegistry
 							.getPathCollectorForProject(selectProject);
 					
 					if (root == null) {
-						root = new PathCollector(selectProject);
+						root = new ModelCollector(selectProject);
 					}
+					//MM triggers getElement of ContenetProvider					
 					viewer.setInput(root);
+					
+				//	InputValidationsCollector root2 = ModelRegistry
+					//		.getInputValidationsCollectorForProject(selectProject);
+					
+				//	viewer.setInput(root2);
+					
 				}
 			} else if (selection instanceof ITextSelection) {
 				ITextSelection ts = (ITextSelection) selection;
@@ -289,20 +307,26 @@ public class AnnotationView extends ViewPart implements PropertyChangeListener {
 
 	}
 
+	//MM It is Called when the one of the subclasses of the Model classes implementing the PropertyListern
+	// are called such as adding markers or annotations. It is needed to be modified to handle different vulnerabilities not only path and pathcollector classes of the annotations.
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
 		Object source = evt.getSource();
 
-		if (source instanceof PathCollector) {
+		
+		if (source instanceof ModelCollector) {
 
-			PathCollector collector = (PathCollector) source;
-			final PathCollector _collector = ModelRegistry
+			ModelCollector collector = (ModelCollector) source;
+			
+			final ModelCollector _collector = ModelRegistry
 					.getPathCollectorForProject(collector.getProject());
+			
 			Plugin.getDefault().getWorkbench().getDisplay()
 					.asyncExec(new Runnable() {
 
 						@Override
 						public void run() {
+							//MM to refresh the part of the tree start at _collector.
 							viewer.refresh(_collector);
 						}
 					});
@@ -312,9 +336,9 @@ public class AnnotationView extends ViewPart implements PropertyChangeListener {
 		if (source instanceof Path) {
 			
 			final Path path = (Path) source;
-			PathCollector parent = (PathCollector) path.getParent();
+			ModelCollector parent = (ModelCollector) path.getParent();
 			
-			final PathCollector collector = ModelRegistry
+			final ModelCollector collector = ModelRegistry
 					.getPathCollectorForProject(parent.getProject());
 			
 			Plugin.getDefault().getWorkbench().getDisplay()
@@ -329,10 +353,36 @@ public class AnnotationView extends ViewPart implements PropertyChangeListener {
 									break;
 								}
 							}
-
+//MM to refresh the part of the tree start at _parent.
 							viewer.refresh(_parent);
 						}
 					});
+
+		}
+		if (source instanceof Point) {
+
+			final Point point = (Point) source;
+			ModelCollector parent = (ModelCollector) point.getParent();
+
+			final ModelCollector collector = ModelRegistry
+					.getPathCollectorForProject(parent.getProject());
+
+			Plugin.getDefault().getWorkbench().getDisplay()
+			.asyncExec(new Runnable() {
+
+				@Override
+				public void run() {
+					Point _parent = point;
+					for (InputValidationPoint kid : collector.getAllInputValidationPoints()) {
+						if (kid.equalsTo(point)) {
+							_parent = kid;
+							break;
+						}
+					}
+					//MM to refresh the part of the tree start at _parent.
+					viewer.refresh(_parent);
+				}
+			});
 
 		}
 

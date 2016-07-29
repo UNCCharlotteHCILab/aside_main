@@ -19,10 +19,10 @@ import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.PartInitException;
 
 import edu.uncc.aside.codeannotate.Plugin;
-import edu.uncc.aside.utils.ASIDEMarkerAndAnnotationUtil;
+import edu.uncc.aside.codeannotate.PluginConstants;
+import edu.uncc.aside.utils.MarkerAndAnnotationUtil;
 import edu.uncc.aside.utils.Converter;
 import edu.uncc.sis.aside.AsidePlugin;
-import edu.uncc.sis.aside.constants.PluginConstants;
 import edu.uncc.sis.aside.views.ExplanationView;
 
 public class AsideMarkerOutputResolutionGenerator implements
@@ -30,7 +30,7 @@ public class AsideMarkerOutputResolutionGenerator implements
 
 	private static final Logger logger = Plugin.getLogManager().getLogger(
 			AsideMarkerOutputResolutionGenerator.class.getName());
-	private static final String EXPLANATION_VIEW_ID = "edu.uncc.sis.aside.views.complimentaryExplanationView";
+	
 
 	// It is a batch model, one click will lead to multi-fixes
 
@@ -76,7 +76,7 @@ public class AsideMarkerOutputResolutionGenerator implements
 			String markerType = marker.getType();
 
 			if (markerType == null
-					|| !markerType.equals(PluginConstants.ASIDE_MARKER_TYPE)) {
+					|| !markerType.equals(PluginConstants.MARKER_INPUT_VALIDATION)) {
 				return false;
 			}
 
@@ -104,10 +104,10 @@ public class AsideMarkerOutputResolutionGenerator implements
 
 	private IMarkerResolution[] internalGetResolutions(IMarker marker) {
 
-		fCompilationUnit = ASIDEMarkerAndAnnotationUtil
+		fCompilationUnit = MarkerAndAnnotationUtil
 				.getCompilationUnit(marker);
 
-		IProject project = ASIDEMarkerAndAnnotationUtil.getProjectFromICompilationUnit(fCompilationUnit);
+		IProject project = MarkerAndAnnotationUtil.getProjectFromICompilationUnit(fCompilationUnit);
 		  DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 		  
 		    //get current date time with Date()
@@ -125,7 +125,7 @@ public class AsideMarkerOutputResolutionGenerator implements
 		LinkedList<IMarkerResolution> resolutions = new LinkedList<IMarkerResolution>();
 		//for test use
 				IMarkerResolution readMoreResolution = new ReadMoreResolution(
-						fCompilationUnit, marker, project, "output");
+						 marker,  "output", "");
 				resolutions.add(readMoreResolution);
 				
 		String type = null;
@@ -140,9 +140,9 @@ public class AsideMarkerOutputResolutionGenerator implements
 		resolutions.add(ignoreResolution);
 
 		//newly added
-				IMarkerResolution noticeResolution = new NoticeResolution(
-						fCompilationUnit, PluginConstants.OUTPUT_NOTICE_LABEL_RANK_NUM);
-				resolutions.add(noticeResolution);
+		IMarkerResolution noticeResolution = new NoticeResolution(
+				fCompilationUnit, PluginConstants.OUTPUT_NOTICE_LABEL_RANK_NUM);
+		resolutions.add(noticeResolution);
 				
 		return resolutions.toArray(new IMarkerResolution[resolutions.size()]);
 

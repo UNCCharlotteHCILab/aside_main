@@ -11,10 +11,7 @@ import org.eclipse.ui.texteditor.IAnnotationImageProvider;
  */
 public class AnnotationImageProvider implements IAnnotationImageProvider {
 
-	private final static String ANNOTATION_QUESTION = "CodeAnnotate.annotationQuestionAnnotation";
-	private final static String ANNOTATION_QUESTION_CHECKED = "CodeAnnotate.annotationQuestionCheckedAnnotation";
-	private final static String ANNOTATION_ANSWER = "CodeAnnotate.annotationAnswerAnnotation";
-	private final static String UNKNOWN = "unknown";
+		private final static String UNKNOWN = "unknown";
 
 	/*
 	 * 0-argument constructor as required by extension point
@@ -28,13 +25,13 @@ public class AnnotationImageProvider implements IAnnotationImageProvider {
 		
 		ImageDescriptor descriptor = null;
 		
-		if (imageDescritporId.equals(ANNOTATION_QUESTION)) {
+		if (imageDescritporId.equals(PluginConstants.MARKER_ANNOTATION_REQUEST)) {
 			descriptor = Plugin.getImageDescriptor("red.jpeg");
 
-		} else if (imageDescritporId.equals(ANNOTATION_ANSWER)) {
+		} else if (imageDescritporId.equals(PluginConstants.MARKER_ANNOTATION_ANSWER)) {
 			descriptor = Plugin.getImageDescriptor("green.jpeg");
 
-		} else if(imageDescritporId.equals(ANNOTATION_QUESTION_CHECKED)){
+		} else if(imageDescritporId.equals(PluginConstants.MARKER_ANNOTATION_CHECKED)){
 			descriptor = Plugin.getImageDescriptor("yellow.jpeg");
 			
 		}else{
@@ -49,12 +46,12 @@ public class AnnotationImageProvider implements IAnnotationImageProvider {
 
 		String type = annotation.getType();
 		
-		if (type.equals(ANNOTATION_QUESTION)) {
-			return ANNOTATION_QUESTION;
-		} else if (type.equals(ANNOTATION_ANSWER)) {
-			return ANNOTATION_ANSWER;
-		} else if(type.equals(ANNOTATION_QUESTION_CHECKED)){
-			return ANNOTATION_QUESTION_CHECKED;
+		if (type.equals(PluginConstants.MARKER_ANNOTATION_REQUEST)) {
+			return PluginConstants.MARKER_ANNOTATION_REQUEST;
+		} else if (type.equals(PluginConstants.MARKER_ANNOTATION_ANSWER)) {
+			return PluginConstants.MARKER_ANNOTATION_ANSWER;
+		} else if(type.equals(PluginConstants.MARKER_ANNOTATION_CHECKED)){
+			return PluginConstants.MARKER_ANNOTATION_CHECKED;
 		}else {
 			return UNKNOWN;
 		}

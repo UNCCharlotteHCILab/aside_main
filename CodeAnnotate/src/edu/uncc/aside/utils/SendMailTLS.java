@@ -14,7 +14,6 @@ import java.util.Properties;
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
 import javax.activation.FileDataSource;
-
 import javax.mail.BodyPart;
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -35,11 +34,11 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.osgi.framework.Bundle;
 
-import edu.uncc.aside.codeannotate.Plugin;
+import edu.uncc.aside.codeannotate.PluginConstants;
 import edu.uncc.sis.aside.AsidePlugin;
 
 public class SendMailTLS {
-	private final static String ESAPI_CONFIG_DIR_NAME = "ASIDE-ESAPI";
+	private final static String ESAPI_CONFIG_DIR_NAME = "ESAPI-Lib";
 	private final static String PROJECT_SRC_PATH = "src";
 	private final static String LOG_DIR = "/.metadata/.plugins/edu.uncc.sis.aside/aside.log";
 	
@@ -136,7 +135,7 @@ public class SendMailTLS {
 	public static String getLogFileFullPath(IProject project){
 		String logFileFullPath = null;
 		
-		Bundle bundle = Platform.getBundle(Plugin.PLUGIN_ID);
+		Bundle bundle = Platform.getBundle(PluginConstants.PLUGIN_ID);
 		Path path = new Path(IPath.SEPARATOR + ESAPI_CONFIG_DIR_NAME);
 		URL fileURL = FileLocator.find(bundle, path, null);
 		if (fileURL == null) {

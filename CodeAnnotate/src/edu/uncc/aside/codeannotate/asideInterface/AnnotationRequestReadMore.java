@@ -13,6 +13,7 @@ import java.util.Date;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -32,6 +33,7 @@ import org.eclipse.ui.browser.IWebBrowser;
 
 import edu.uncc.aside.codeannotate.Constants;
 import edu.uncc.aside.codeannotate.Plugin;
+import edu.uncc.aside.codeannotate.PluginConstants;
 
 /*
 import edu.uncc.sis.aside.AsidePlugin;
@@ -55,8 +57,9 @@ IMarkerResolution2{
     {
     	 try 
     	 {
-    		 IWebBrowser webBrowser = PlatformUI.getWorkbench().getBrowserSupport().createBrowser(1, "myId", "ASIDE More Information", "ASIDE More Information");
-    		 URL url = new URL("https://3a3f55c7a88ea8fa30228719dabc9ba137fbf338.googledrive.com/host/0B_sYP_Y3om2XZ2RaZUttQXp0dEE/ASIDE_AccessControl.html");
+    		 IWebBrowser webBrowser = PlatformUI.getWorkbench().getBrowserSupport().createBrowser(1, "myId", "" + Plugin.PLUGIN_NAME + " More Information", "" + Plugin.PLUGIN_NAME + " More Information");
+    		 URL url = Platform.getBundle(PluginConstants.PLUGIN_ID).getEntry("files\\ASIDE_AccessControl.html");
+    		 //URL url = new URL("https://3a3f55c7a88ea8fa30228719dabc9ba137fbf338.googledrive.com/host/0B_sYP_Y3om2XZ2RaZUttQXp0dEE/ASIDE_AccessControl.html");
     		 webBrowser.openURL(url);
     		 URLConnection urlConnection = url.openConnection();
     		 urlConnection.setDoOutput(true);

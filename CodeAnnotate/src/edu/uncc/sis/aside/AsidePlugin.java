@@ -48,14 +48,14 @@ import org.eclipse.ui.internal.WorkbenchWindow;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
+import edu.uncc.aside.codeannotate.PluginConstants;
 import edu.uncc.aside.utils.AuthenCenter;
 import edu.uncc.aside.utils.ConsentForm;
 import edu.uncc.aside.utils.MakerManagement;
 import edu.uncc.aside.utils.SendMailTLS;
-import edu.uncc.sis.aside.auxiliary.core.TestRunOnAllProjects;
-import edu.uncc.sis.aside.constants.PluginConstants;
+import edu.uncc.sis.aside.auxiliary.core.RunAnalysisOnAllProjects;
+import edu.uncc.sis.aside.auxiliary.core.sample1;
 import edu.uncc.sis.aside.logging.AsideLoggingManager;
-import edu.uncc.sis.aside.preferences.IPreferenceConstants;
 
 /**
  * The activator class controls the plug-in life cycle
@@ -65,19 +65,11 @@ import edu.uncc.sis.aside.preferences.IPreferenceConstants;
  */
 public class AsidePlugin extends AbstractUIPlugin {
 
-	// The plug-in ID
-	public static final String PLUGIN_ID = "ESIDE";
-	//edu.uncc.sis.aside
-    
 	public static Date END_DAY_SEND_LOGS;
 	// The shared instance
 	private static AsidePlugin plugin;
 	
 	private static String userId;
-
-	private static final String LOG_PROPERTIES_FILE = "logger.properties";
-	
-	private static final String ASIDE_USERID_FILE = "userID.txt";
 
 	// The shared AST matcher instance
 	private static ASTMatcher astMatcher;
@@ -213,7 +205,7 @@ public class AsidePlugin extends AbstractUIPlugin {
 									System.err.println("UserId file is not created properly!");
 								}
 							}
-							TestRunOnAllProjects testRunOnAllProjects = new TestRunOnAllProjects();
+							RunAnalysisOnAllProjects runAnalysisOnAllProjects = new RunAnalysisOnAllProjects();
 						//	testRunOnAllProjects.runOnAllProjects();
 
 						}else{
@@ -231,7 +223,7 @@ public class AsidePlugin extends AbstractUIPlugin {
 		try {
 			this.END_DAY_SEND_LOGS = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").parse(PluginConstants.LOG_SEND_END_DATE);   //the date needs to be verified
 			
-			URL url = getBundle().getEntry("/" + LOG_PROPERTIES_FILE);
+			URL url = getBundle().getEntry("/" + PluginConstants.LOG_PROPERTIES_FILE);
 			InputStream propertiesInputStream = url.openStream();
 			
 			if (propertiesInputStream != null) {
@@ -307,7 +299,7 @@ public class AsidePlugin extends AbstractUIPlugin {
 	 * @return the image descriptor
 	 */
 	public static ImageDescriptor getImageDescriptor(String path) {
-		return imageDescriptorFromPlugin(PLUGIN_ID, path);
+		return imageDescriptorFromPlugin(PluginConstants.PLUGIN_ID, path);
 	}
 
 	public IWorkbenchWindow getActiveWorkbenchWindow() {
@@ -337,12 +329,12 @@ public class AsidePlugin extends AbstractUIPlugin {
 	 */
 	public String[] getDefaultTBPathsPreference() {
 		return convert(getPreferenceStore().getDefaultString(
-				IPreferenceConstants.EXTERNAL_TB_PATH_PREFERENCE));
+				PluginConstants.EXTERNAL_TB_PATH_PREFERENCE));
 	}
 
 	public String[] getTBPathsPreference() {
 		return convert(getPreferenceStore().getString(
-				IPreferenceConstants.EXTERNAL_TB_PATH_PREFERENCE));
+				PluginConstants.EXTERNAL_TB_PATH_PREFERENCE));
 	}
 
 	public void setTBPathPreference(String[] elements) {
@@ -354,53 +346,53 @@ public class AsidePlugin extends AbstractUIPlugin {
 		StringBuffer buffer = new StringBuffer();
 		for (int i = 0; i < elements.length; i++) {
 			buffer.append(elements[i]);
-			buffer.append(IPreferenceConstants.PATH_DELIMITER);
+			buffer.append(PluginConstants.PATH_DELIMITER);
 		}
 		getPreferenceStore().setValue(
-				IPreferenceConstants.EXTERNAL_TB_PATH_PREFERENCE,
+				PluginConstants.EXTERNAL_TB_PATH_PREFERENCE,
 				buffer.toString());
 	}
 
 	public boolean getAsideTBCheckPreference() {
 		return getPreferenceStore().getBoolean(
-				IPreferenceConstants.ASIDE_TB_PREFERENCE);
+				PluginConstants.ASIDE_TB_PREFERENCE);
 	}
 
 	public void setAsideTBCheckPreference(boolean check) {
-		getPreferenceStore().setValue(IPreferenceConstants.ASIDE_TB_PREFERENCE,
+		getPreferenceStore().setValue(PluginConstants.ASIDE_TB_PREFERENCE,
 				check);
 	}
 
 	public boolean getProjectTBCheckPreference() {
 		return getPreferenceStore().getBoolean(
-				IPreferenceConstants.PROJECT_TB_PREFERENCE);
+				PluginConstants.PROJECT_TB_PREFERENCE);
 	}
 
 	public void setProjectTBCheckPreference(boolean check) {
 		getPreferenceStore().setValue(
-				IPreferenceConstants.PROJECT_TB_PREFERENCE, check);
+				PluginConstants.PROJECT_TB_PREFERENCE, check);
 	}
 
 	public boolean getExternalTBCheckPreference() {
 		return getPreferenceStore().getBoolean(
-				IPreferenceConstants.EXTERNAL_TB_PREFERENCE);
+				PluginConstants.EXTERNAL_TB_PREFERENCE);
 	}
 
 	public void setExternalTBCheckPreference(boolean check) {
 		getPreferenceStore().setValue(
-				IPreferenceConstants.EXTERNAL_TB_PREFERENCE, check);
+				PluginConstants.EXTERNAL_TB_PREFERENCE, check);
 	}
 
 	// ========================================//
 
 	public String[] getDefaultVRPathsPreference() {
 		return convert(getPreferenceStore().getDefaultString(
-				IPreferenceConstants.EXTERNAL_VR_PATH_PREFERENCE));
+				PluginConstants.EXTERNAL_VR_PATH_PREFERENCE));
 	}
 
 	public String[] getVRPathsPreference() {
 		return convert(getPreferenceStore().getString(
-				IPreferenceConstants.EXTERNAL_VR_PATH_PREFERENCE));
+				PluginConstants.EXTERNAL_VR_PATH_PREFERENCE));
 	}
 
 	public void setVRPathPreference(String[] elements) {
@@ -412,46 +404,46 @@ public class AsidePlugin extends AbstractUIPlugin {
 		StringBuffer buffer = new StringBuffer();
 		for (int i = 0; i < elements.length; i++) {
 			buffer.append(elements[i]);
-			buffer.append(IPreferenceConstants.PATH_DELIMITER);
+			buffer.append(PluginConstants.PATH_DELIMITER);
 		}
 		getPreferenceStore().setValue(
-				IPreferenceConstants.EXTERNAL_VR_PATH_PREFERENCE,
+				PluginConstants.EXTERNAL_VR_PATH_PREFERENCE,
 				buffer.toString());
 	}
 
 	public boolean getAsideVRCheckPreference() {
 		return getPreferenceStore().getBoolean(
-				IPreferenceConstants.ASIDE_VR_PREFERENCE);
+				PluginConstants.ASIDE_VR_PREFERENCE);
 	}
 
 	public void setAsideVRCheckPreference(boolean check) {
-		getPreferenceStore().setValue(IPreferenceConstants.ASIDE_VR_PREFERENCE,
+		getPreferenceStore().setValue(PluginConstants.ASIDE_VR_PREFERENCE,
 				check);
 	}
 
 	public boolean getProjectVRCheckPreference() {
 		return getPreferenceStore().getBoolean(
-				IPreferenceConstants.PROJECT_VR_PREFERENCE);
+				PluginConstants.PROJECT_VR_PREFERENCE);
 	}
 
 	public void setProjectVRCheckPreference(boolean check) {
 		getPreferenceStore().setValue(
-				IPreferenceConstants.PROJECT_VR_PREFERENCE, check);
+				PluginConstants.PROJECT_VR_PREFERENCE, check);
 	}
 
 	public boolean getExternalVRCheckPreference() {
 		return getPreferenceStore().getBoolean(
-				IPreferenceConstants.EXTERNAL_VR_PREFERENCE);
+				PluginConstants.EXTERNAL_VR_PREFERENCE);
 	}
 
 	public void setExternalVRCheckPreference(boolean check) {
 		getPreferenceStore().setValue(
-				IPreferenceConstants.EXTERNAL_VR_PREFERENCE, check);
+				PluginConstants.EXTERNAL_VR_PREFERENCE, check);
 	}
 
 	private String[] convert(String preferenceValue) {
 		StringTokenizer tokenizer = new StringTokenizer(preferenceValue,
-				IPreferenceConstants.PATH_DELIMITER);
+				PluginConstants.PATH_DELIMITER);
 		int tokenCount = tokenizer.countTokens();
 		String[] elements = new String[tokenCount];
 
@@ -518,7 +510,7 @@ public class AsidePlugin extends AbstractUIPlugin {
 	}
 
 	public static String getAsideUseridFile() {
-		return ASIDE_USERID_FILE;
+		return PluginConstants.ASIDE_USERID_FILE;
 	}
 	
 

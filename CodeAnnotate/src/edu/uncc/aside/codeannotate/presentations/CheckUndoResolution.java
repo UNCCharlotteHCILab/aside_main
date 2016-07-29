@@ -17,13 +17,13 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IMarkerResolution2;
 import org.eclipse.ui.ISharedImages;
 
-import edu.uncc.aside.codeannotate.Constants;
 import edu.uncc.aside.codeannotate.Plugin;
+import edu.uncc.aside.codeannotate.PluginConstants;
 import edu.uncc.aside.codeannotate.Utils;
 import edu.uncc.aside.codeannotate.models.ModelRegistry;
 import edu.uncc.aside.codeannotate.models.Path;
-import edu.uncc.aside.codeannotate.models.PathCollector;
-import edu.uncc.aside.codeannotate.models.Point;
+import edu.uncc.aside.codeannotate.models.ModelCollector;
+import edu.uncc.aside.codeannotate.models.AccessControlPoint;
 /**
  * 
  * @author Jing Xie (jxie2 at uncc dot edu)
@@ -34,7 +34,7 @@ public class CheckUndoResolution implements IMarkerResolution2 {
 	private IProject project;
 	private IResource resource;
 	private Path path = null; 
-	private Point check = null;
+	private AccessControlPoint check = null;
 	
 	private final static String LABEL = "1. Click me to undo this check";
 	
@@ -82,15 +82,15 @@ public class CheckUndoResolution implements IMarkerResolution2 {
 		NodeFinder finder = new NodeFinder(astRoot, charStart, length);
 
 		ASTNode node = finder.getCoveringNode();
-		Point nodePoint = new Point(node, astRoot, resource);
+		AccessControlPoint nodePoint = new AccessControlPoint(node, astRoot, resource);
 		
-		PathCollector pathCollector = ModelRegistry
+		ModelCollector modelCollector = ModelRegistry
 				.getPathCollectorForProject(project);
-		List<Path> paths = pathCollector.getAllPaths();
-		List<Point> checks = null;
+		List<Path> paths = modelCollector.getAllPaths();
+		List<AccessControlPoint> checks = null;
 		for (Path _path : paths) {
 			checks = _path.getChecks();
-			for(Point _check : checks){
+			for(AccessControlPoint _check : checks){
 				if(_check.equalsTo(nodePoint)){
 					check = _check;
 					path = _path;
@@ -102,7 +102,7 @@ public class CheckUndoResolution implements IMarkerResolution2 {
 	}
 
 	private void replaceAccessorMarkerOnPath(Path path) {
-		Point accessor = path.getAccessor();
+		AccessControlPoint accessor = path.getSensitiveOperation();
 		ASTNode node = accessor.getNode();
 		IResource resource = accessor.getResource();
 		CompilationUnit unit = accessor.getUnit();
@@ -111,7 +111,7 @@ public class CheckUndoResolution implements IMarkerResolution2 {
 			// First, gotta check whether there is a marker for the accessor node
 			int char_start, length;
 			
-			IMarker[] questionMarkers = resource.findMarkers(Plugin.ANNOTATION_QUESTION,
+			IMarker[] questionMarkers = resource.findMarkers(PluginConstants.MARKER_ANNOTATION_REQUEST,
 					false, IResource.DEPTH_ONE);
 			for (IMarker marker : questionMarkers) {
 				char_start = marker.getAttribute(IMarker.CHAR_START, -1);
@@ -124,7 +124,7 @@ public class CheckUndoResolution implements IMarkerResolution2 {
 					
 			}
 			
-			IMarker[] markers = resource.findMarkers(Plugin.ANNOTATION_QUESTION_CHECKED,
+			IMarker[] markers = resource.findMarkers(PluginConstants.MARKER_ANNOTATION_CHECKED,
 					false, IResource.DEPTH_ONE);
 			
 			for (IMarker marker : markers) {
@@ -149,7 +149,7 @@ public class CheckUndoResolution implements IMarkerResolution2 {
 	@Override
 	public String getDescription() {
 		
-		return Constants.CHECK_UNDO_RESOLUTION_DESC;
+		return PluginConstants.CHECK_UNDO_RESOLUTION_DESC;
 	}
 
 	@Override

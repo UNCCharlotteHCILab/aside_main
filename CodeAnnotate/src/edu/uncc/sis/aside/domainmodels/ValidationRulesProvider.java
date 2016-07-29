@@ -14,10 +14,9 @@ import org.eclipse.core.runtime.IPath;
 import org.w3c.dom.Document;
 
 import edu.uncc.aside.codeannotate.Plugin;
+import edu.uncc.aside.codeannotate.PluginConstants;
 import edu.uncc.aside.utils.DocumentWrapper;
 import edu.uncc.sis.aside.AsidePlugin;
-import edu.uncc.sis.aside.constants.PluginConstants;
-import edu.uncc.sis.aside.preferences.IPreferenceConstants;
 import edu.uncc.sis.aside.xml.ValidationRulesReader;
 import edu.uncc.sis.aside.xml.XMLFileUtil;
 
@@ -71,7 +70,7 @@ public final class ValidationRulesProvider {
 
 		boolean asideRulesChecked = Plugin.getDefault()
 				.getPreferenceStore()
-				.getBoolean(IPreferenceConstants.ASIDE_VR_PREFERENCE);
+				.getBoolean(PluginConstants.ASIDE_VR_PREFERENCE);
 		if (asideRulesChecked) {
 			// add default ruleset into file path array
 			Document defaultRulesDocument = XMLFileUtil
@@ -86,7 +85,7 @@ public final class ValidationRulesProvider {
 		try {
 			boolean projectRulesChecked = Plugin.getDefault()
 					.getPreferenceStore()
-					.getBoolean(IPreferenceConstants.PROJECT_VR_PREFERENCE);
+					.getBoolean(PluginConstants.PROJECT_VR_PREFERENCE);
 			if (projectRulesChecked) {
 
 				if (fProject != null) {
@@ -112,7 +111,7 @@ public final class ValidationRulesProvider {
 
 		boolean externalRulesChecked = Plugin.getDefault()
 				.getPreferenceStore()
-				.getBoolean(IPreferenceConstants.EXTERNAL_VR_PREFERENCE);
+				.getBoolean(PluginConstants.EXTERNAL_VR_PREFERENCE);
 		if (externalRulesChecked) {
 			String[] elements = Plugin.getDefault().getVRPathsPreference();
 

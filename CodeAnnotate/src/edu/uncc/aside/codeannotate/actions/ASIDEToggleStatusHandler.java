@@ -16,6 +16,7 @@ import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.commands.State;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -41,9 +42,10 @@ import org.eclipse.ui.handlers.HandlerUtil;
 
 import edu.uncc.aside.codeannotate.PathFinder;
 import edu.uncc.aside.codeannotate.Plugin;
+import edu.uncc.aside.codeannotate.PluginConstants;
 import edu.uncc.aside.codeannotate.listeners.CodeAnnotateDocumentEditListener;
 import edu.uncc.aside.utils.MakerManagement;
-import edu.uncc.sis.aside.auxiliary.core.TestRunOnAllProjects;
+import edu.uncc.sis.aside.auxiliary.core.RunAnalysisOnAllProjects;
 
 /**
  * 
@@ -53,16 +55,20 @@ import edu.uncc.sis.aside.auxiliary.core.TestRunOnAllProjects;
 public class ASIDEToggleStatusHandler extends AbstractHandler {
 	
 	private static final Logger logger = Plugin.getLogManager().getLogger(
-			TestRunOnAllProjects.class.getName());
+			RunAnalysisOnAllProjects.class.getName());
 
 	private IWorkbenchPart targetPart;
 	IProject selectProject = null;
 
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
-
+	
 		Command command = event.getCommand();
-	     boolean oldValue = HandlerUtil.toggleCommandState(command);
+		State state = command.getState("org.eclipse.ui.commands.toggleState");
+		
+	     boolean oldValue = (Boolean)state.getValue(); 
+	     
+	     HandlerUtil.toggleCommandState(command);
 	     
 	     
 		targetPart = HandlerUtil.getActivePart(event);
@@ -71,11 +77,13 @@ public class ASIDEToggleStatusHandler extends AbstractHandler {
 		
 		ISelectionProvider selectionProvider = site.getSelectionProvider();
 
+		//MessageDialog.openInformation(null, "sd", "selectionProvider");
 		if (selectionProvider == null)
 			return null;
 
 		ISelection selection = selectionProvider.getSelection();
 
+	//	MessageDialog.openInformation(null, "sd", "selection");
 		if (selection == null)
 			return null;
 
@@ -83,12 +91,14 @@ public class ASIDEToggleStatusHandler extends AbstractHandler {
 
 			IStructuredSelection sSelection = (IStructuredSelection) selection;
 
+		//	MessageDialog.openInformation(null, "sd", "empty");
 			if (sSelection.isEmpty())
 				return null;
 
 			Object fElement = sSelection.getFirstElement();
 
 			if (fElement != null && fElement instanceof IResource) {
+				
 				IResource element = (IResource) fElement;
 				selectProject = element.getProject();
 			}
@@ -99,29 +109,20 @@ public class ASIDEToggleStatusHandler extends AbstractHandler {
 
 		}
 
+	//	MessageDialog.openInformation(null, "sd", "selectionProject");
 		if (selectProject == null)
 			return null;
 
 		if(  oldValue ){ // ASIDE is ON and is going to be turned OFF
-			
-			// create a dialog with ok and cancel buttons and a question icon
-			/*MessageBox dialog = 
-			  new MessageBox(shell, SWT.ICON_QUESTION | SWT.OK| SWT.CANCEL);
-			dialog.setText("All Markers will be removed!! ");
-			dialog.setMessage("Do you really want to do this?");
-*/
-			// open dialog and await user selection
-		//	returnCode = dialog.open(); 
+			state.setValue(false);
 			
 			boolean result = 
 					  MessageDialog.openConfirm(null, "Confirm", 
-							  "All Markers will be removed!! "+
-									  "Do you really want to do this?");
-
+							  "Turning ESIDE off will remove all the ESIDE markers but keeps the generated codes. "+
+									  "Do you want to proceed?");
 			if (! result){
 				return null;
 			} 
-
 			
 			// Turn ASIDE Off.
 			Plugin.setAllowed(false);
@@ -131,28 +132,30 @@ public class ASIDEToggleStatusHandler extends AbstractHandler {
 
 			IJavaProject javaProject = JavaCore.create(selectProject);
 
-			MakerManagement.deleteProjectMarkers(javaProject ,Plugin.ROOT_MARKER);
+			MakerManagement.deleteProjectMarkers(javaProject ,PluginConstants.MARKER_ROOT_TYPE);
 
 			
-
-			//get current date time with Date()
 			DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-
-			logger.info(dateFormat.format(new Date()) + " : " + Plugin.getUserId() + " turned ASIDE off and ALL markers removed in the project " + 
+			logger.info(dateFormat.format(new Date()) + " : " + Plugin.getUserId() + " turned " + Plugin.PLUGIN_NAME + " off and ALL markers removed in the project " + 
 					javaProject.getElementName().toUpperCase() +". Inserted codes are kept unchanged.");
 
-			MessageDialog.openInformation(null, "Info", "All Markers removed. ESIDE is now OFF.");
+			MessageDialog.openInformation(null, "Info", "All the ESIDE markers removed. " + Plugin.PLUGIN_NAME + " is now Off.");
+			
 			return null;
 		}
 		else { // ASIDE is going to be turned ON
 
+			state.setValue(true);
 
 			Plugin.setAllowed(true);
 			
-			TestRunOnAllProjects testRunOnAllProjects = new TestRunOnAllProjects();
-			testRunOnAllProjects.runOnAllProjects();
+			MessageDialog.openInformation(null, "Info", "" + Plugin.PLUGIN_NAME + " is turning on. Please wait until it scans the source codes.");
+			
+			
+			RunAnalysisOnAllProjects runAnalysisOnAllProjects = new RunAnalysisOnAllProjects();
+			runAnalysisOnAllProjects.runOnAllProjects();
 
-			MessageDialog.openInformation(null, "Info", "ESIDE is now ON.");
+			// Adding the ASIDE window and showing the found vulnerabilities.
 			
 			return null;
 		}

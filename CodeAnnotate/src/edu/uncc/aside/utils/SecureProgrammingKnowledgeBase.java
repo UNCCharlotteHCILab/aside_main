@@ -8,7 +8,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import edu.uncc.sis.aside.constants.PluginConstants;
+import edu.uncc.aside.codeannotate.PluginConstants;
 import edu.uncc.sis.aside.domainmodels.VulnerabilityKnowledge;
 import edu.uncc.sis.aside.xml.XMLFileUtil;
 import edu.uncc.sis.aside.xml.XMLReader;

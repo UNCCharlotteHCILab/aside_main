@@ -7,8 +7,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
 import java.util.ArrayDeque;
+
 
 
 
@@ -31,8 +31,9 @@ import org.eclipse.jdt.core.dom.MethodInvocation;
 import edu.uncc.aside.codeannotate.XMLConfig.SinkDescription;
 import edu.uncc.aside.codeannotate.models.ModelRegistry;
 import edu.uncc.aside.codeannotate.models.Path;
-import edu.uncc.aside.codeannotate.models.PathCollector;
-import edu.uncc.aside.codeannotate.models.Point;
+import edu.uncc.aside.codeannotate.models.ModelCollector;
+import edu.uncc.aside.codeannotate.models.AccessControlPoint;
+import edu.uncc.aside.utils.MarkerAndAnnotationUtil;
 
 /**
  * 
@@ -45,7 +46,8 @@ public class PathFinder {
 
 	private static IProject selectProject;
 	private IJavaProject javaProject;
-	private PathCollector pathCollector;	
+	private ModelCollector modelCollector;
+	
 	private List<Path> paths;
 	
 	private ArrayDeque<String> pathStack ;
@@ -57,6 +59,7 @@ public class PathFinder {
 
 	public static PathFinder getInstance(IProject project) {
 		PathFinder projectFinder = null;
+		
 		if (projectFinderMap == null) {
 			projectFinderMap = Collections
 					.synchronizedMap(new HashMap<IProject, PathFinder>());
@@ -75,21 +78,23 @@ public class PathFinder {
 	}
 
 	public void run(IProgressMonitor monitor) {
-		Collection<SinkDescription> accessors = XMLConfig
-				.readSinks(Plugin.SENSITIVE_ACCESSORS_CONFIG);
+		
+		Collection<SinkDescription> sensitiveOperations = XMLConfig
+				.readSinks(PluginConstants.SENSITIVE_OPERATIONS_CONFIG_FILE);
 
 		
 			monitor.beginTask(
 					"Finding paths...",
-					accessors.size());
-			pathCollector = ModelRegistry
+					sensitiveOperations.size());
+			
+			modelCollector = ModelRegistry
 					.getPathCollectorForProject(selectProject);
 
-			if (pathCollector == null) {
-				pathCollector = new PathCollector(selectProject);
+			if (modelCollector == null) {
+				modelCollector = new ModelCollector(selectProject);
 			}
 
-			paths = pathCollector.getAllPaths();
+			paths = modelCollector.getAllPaths();
 
 			if (paths == null)
 				paths = Collections.synchronizedList(new ArrayList<Path>());
@@ -103,15 +108,15 @@ public class PathFinder {
 			pathStack = new ArrayDeque<String>();
 			Plugin.callGraph = new  ArrayList<Object>();
 			
-			for (SinkDescription accessor : accessors) {
-				String accessor_id = accessor.getID();
+			for (SinkDescription sink : sensitiveOperations) {
+				String sinkId = sink.getID();
 				
 				
-				pathStack.addFirst(accessor_id);
+				pathStack.addFirst(sinkId);
 				
-				System.err.println("\n========================== New Accessor :(" + ++j + ") " + accessor_id);
+				System.err.println("\n========================== New Accessor :(" + ++j + ") " + sinkId);
 				Collection<?> callers = CallerFinder.findCallers(monitor,
-						accessor_id, javaProject, false);
+						sinkId, javaProject, false);
 				
 			//	System.err.println(" number of callers = " + callers.size() );
 				int i= 0;
@@ -198,7 +203,7 @@ public class PathFinder {
 			/* Mahmoud */
 		//	System.err.println(ind +" Called By --> " + new_accessor_id) ;
 			
-			Point tmp = new Point(pair.getExpression(),
+			AccessControlPoint tmp = new AccessControlPoint(pair.getExpression(),
 					pair.getCompilationUnit(), resource);
 			
 			String callPoint = tmp.getResource().getName()+"( Line # "+ 
@@ -215,7 +220,11 @@ public class PathFinder {
 			 */
 			if (Utils.isEntranceMethod(method.getElementName())) {
 				
-				Utils.markAccessor(mi, resource, pair.getCompilationUnit());
+				
+				MarkerAndAnnotationUtil.createAnnotationAtPosition(
+						Utils.getCompilationUnitOf(mResource), mi);
+				
+				Utils.markSensitiveOperation(mi, resource, pair.getCompilationUnit());
 				/*
 				 * build a path from the entrance method to caller, but first,
 				 * we need to check to see whether an existing path instance of
@@ -224,11 +233,12 @@ public class PathFinder {
 				 */
 			//	System.out.println(ind +"--->  Entrance Found:");
 				
-				Point accessor = new Point(pair.getExpression(),
+				AccessControlPoint accessor = new AccessControlPoint(pair.getExpression(),
 						pair.getCompilationUnit(), resource);
-				Point entrance = new Point(enclosingMethodDeclaration,
+				AccessControlPoint entrance = new AccessControlPoint(enclosingMethodDeclaration,
 						Utils.getCompilationUnit(method.getCompilationUnit()),
 						mResource);
+				
 				Path path = hasPath(entrance, accessor);
 				
 				
@@ -244,9 +254,9 @@ public class PathFinder {
 				//	System.out.println(ind +"MM..: " + accessor.toString() ) ;
 				//	accessor.getResource().getName() + accessor.getUnit().getLineNumber(0)
 				//	System.out.println("MM..: " + entrance.getResource().getName()+ "..>"+ entrance.getNode().toString() ) ;
-					pathCollector.addPath(path);
+					modelCollector.addPath(path);
 					
-					System.err.println(ind +"************* New Path # " + pathCollector.getAllPaths().size());
+					System.err.println(ind +"************* New Path # " + modelCollector.getAllPaths().size());
 					String callPath=" ";
 					
 					Plugin.callGraph.add(pathStack.clone());
@@ -301,10 +311,10 @@ public class PathFinder {
 		}
 	}
 
-	private Path hasPath(Point entrance, Point accessor) {
+	private Path hasPath(AccessControlPoint entrance, AccessControlPoint accessor) {
 
 		for (Path path : paths) {
-			if (path.getAccessor().equalsTo(accessor)
+			if (path.getSensitiveOperation().equalsTo(accessor)
 					&& path.getEntrance().equalsTo(entrance))
 				return path;
 
@@ -317,8 +327,8 @@ public class PathFinder {
 		return javaProject;
 	}
 
-	public PathCollector getPathCollector() {
-		return pathCollector;
+	public ModelCollector getPathCollector() {
+		return modelCollector;
 	}
 
 	public ArrayList<Path> getPathsRelatedToUnit(ICompilationUnit unit) {

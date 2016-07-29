@@ -22,16 +22,14 @@ import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
 
 import edu.uncc.aside.codeannotate.Plugin;
+import edu.uncc.aside.codeannotate.PluginConstants;
 import edu.uncc.sis.aside.AsidePlugin;
-import edu.uncc.sis.aside.constants.PluginConstants;
 
 public class AddAsideRulesAction implements IObjectActionDelegate {
 
 	private static final Logger logger = Plugin.getLogManager()
 	.getLogger(AddAsideRulesAction.class.getName());
 	
-	private static final String ASIDE_NATURE_ID = "edu.uncc.sis.aside.AsideNature";
-
 	private IWorkbenchPart workbenchPart;
 	private IAction targetAction;
 
@@ -96,7 +94,7 @@ public class AddAsideRulesAction implements IObjectActionDelegate {
 				return;
 			}
 
-			IFolder asideRulesFolder = project.getFolder(PluginConstants.USER_DEFINED_ASIDE_RULES_Folder);
+			IFolder asideRulesFolder = project.getFolder(PluginConstants.USER_DEFINED_ASIDE_RULES_FOLDER);
 
 			IFile trustBoundariesFile, validationRulesFile;
 
@@ -151,13 +149,13 @@ public class AddAsideRulesAction implements IObjectActionDelegate {
 			IProjectDescription description = project.getDescription();
 			String[] natures = description.getNatureIds();
 
-			if (project.hasNature(ASIDE_NATURE_ID)) {
+			if (project.hasNature(PluginConstants.ASIDE_NATURE_ID)) {
 
 				String[] new_natures = new String[natures.length - 1];
 
 				// Remove the nature
 				for (int i = 0; i < natures.length; ++i) {
-					if (natures[i].equals(ASIDE_NATURE_ID)) {
+					if (natures[i].equals(PluginConstants.ASIDE_NATURE_ID)) {
 						System.arraycopy(natures, 0, new_natures, 0, i);
 						System.arraycopy(natures, i + 1, new_natures, i,
 								natures.length - i - 1);
@@ -168,17 +166,17 @@ public class AddAsideRulesAction implements IObjectActionDelegate {
 
 				}
 
-			} else if (!project.hasNature(ASIDE_NATURE_ID)) {
+			} else if (!project.hasNature(PluginConstants.ASIDE_NATURE_ID)) {
 
 				for (int j = 0; j < natures.length; ++j) {
-					if (natures[j].equals(ASIDE_NATURE_ID)) {
+					if (natures[j].equals(PluginConstants.ASIDE_NATURE_ID)) {
 						return;
 					}
 				}
 
 				String[] newNatures = new String[natures.length + 1];
 				System.arraycopy(natures, 0, newNatures, 0, natures.length);
-				newNatures[natures.length] = ASIDE_NATURE_ID;
+				newNatures[natures.length] = PluginConstants.ASIDE_NATURE_ID;
 				description.setNatureIds(newNatures);
 				project.setDescription(description, null);
 			}

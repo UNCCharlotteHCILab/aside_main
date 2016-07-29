@@ -35,10 +35,10 @@ import org.eclipse.ui.PartInitException;
 
 import edu.uncc.aside.ast.ASTResolving;
 import edu.uncc.aside.codeannotate.Plugin;
-import edu.uncc.aside.utils.ASIDEMarkerAndAnnotationUtil;
+import edu.uncc.aside.codeannotate.PluginConstants;
+import edu.uncc.aside.utils.MarkerAndAnnotationUtil;
 import edu.uncc.sis.aside.AsidePlugin;
 import edu.uncc.sis.aside.auxiliary.core.CodeGenerator;
-import edu.uncc.sis.aside.constants.PluginConstants;
 
 public class OnlyWarningResolution implements IMarkerResolution,
 		IMarkerResolution2 {
@@ -54,8 +54,8 @@ public class OnlyWarningResolution implements IMarkerResolution,
 	/**
 	 * Constructor for SyntacticValidationResolution
 	 * 
-	 * @param cu
-	 * @param validationRule
+	 * @param cu Compilation Unit
+	 * @param validationRule Validation Rule
 	 */
 	public OnlyWarningResolution(ICompilationUnit cu, IMarker marker,
 			String inputType, IProject project) {
@@ -128,7 +128,7 @@ public class OnlyWarningResolution implements IMarkerResolution,
 
 	@Override
 	public void run(IMarker marker) {
-		IProject project = ASIDEMarkerAndAnnotationUtil.getProjectFromICompilationUnit(fCompilationUnit);
+		IProject project = MarkerAndAnnotationUtil.getProjectFromICompilationUnit(fCompilationUnit);
 		   DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 			  
 		    //get current date time with Date()

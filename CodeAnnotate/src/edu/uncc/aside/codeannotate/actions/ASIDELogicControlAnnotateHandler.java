@@ -2,6 +2,7 @@ package edu.uncc.aside.codeannotate.actions;
 
 import java.util.ArrayDeque;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -39,11 +40,13 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.handlers.HandlerUtil;
 
 import edu.uncc.aside.codeannotate.Plugin;
+import edu.uncc.aside.codeannotate.PluginConstants;
 import edu.uncc.aside.codeannotate.Utils;
 import edu.uncc.aside.codeannotate.models.Path;
-import edu.uncc.aside.codeannotate.models.Point;
+import edu.uncc.aside.codeannotate.models.AccessControlPoint;
 import edu.uncc.aside.codeannotate.CallerFinder;
 import edu.uncc.aside.codeannotate.asideInterface.InterfaceUtil;
+import edu.uncc.aside.utils.MarkerAndAnnotationUtil;
 
 import java.util.Arrays;
 import java.util.Iterator;
@@ -62,7 +65,7 @@ public class ASIDELogicControlAnnotateHandler extends AbstractHandler {
 	private ASTNode node;
 	private Shell shell;
 	private Map<String, Path> map;
-	private Point annotatedControlLogic;
+	private AccessControlPoint annotatedControlLogic;
 
 	private Path annotationPath;
 
@@ -126,7 +129,7 @@ public class ASIDELogicControlAnnotateHandler extends AbstractHandler {
 			binding = sn.resolveTypeBinding();
 			fullyQualifiedName = binding.getQualifiedName();
 			if (fullyQualifiedName.equals("boolean")) {
-				annotatedControlLogic = new Point(node, astRoot, file);
+				annotatedControlLogic = new AccessControlPoint(node, astRoot, file);
 				annotatePath();
 			}
 			break;
@@ -136,7 +139,7 @@ public class ASIDELogicControlAnnotateHandler extends AbstractHandler {
 			binding = mBinding.getReturnType();
 			fullyQualifiedName = binding.getQualifiedName();
 	//		if (fullyQualifiedName.equals("boolean")) {
-				annotatedControlLogic = new Point(node, astRoot, file);
+				annotatedControlLogic = new AccessControlPoint(node, astRoot, file);
 				annotatePath();
 	//		}
 			break;
@@ -151,7 +154,7 @@ public class ASIDELogicControlAnnotateHandler extends AbstractHandler {
 					IfStatement ifNode = (IfStatement)infixExpression.getParent();
 					//	is.getExpression();
 					
-						Point accessor= annotationPath.getAccessor();
+						AccessControlPoint accessor= annotationPath.getSensitiveOperation();
 						
 						ASTNode parent_accsr= accessor.getNode().getParent();	
 						/*
@@ -203,7 +206,7 @@ public class ASIDELogicControlAnnotateHandler extends AbstractHandler {
 						{
 							node = (ASTNode)ifNode.getExpression();
 							
-							annotatedControlLogic = new Point(node, astRoot, file);
+							annotatedControlLogic = new AccessControlPoint(node, astRoot, file);
 							
 							annotatePath();
 						}
@@ -237,7 +240,9 @@ public class ASIDELogicControlAnnotateHandler extends AbstractHandler {
 		
 		if (annotationPath.containsCheck(annotatedControlLogic))
 			return;
+		
 		annotationPath.addCheck(annotatedControlLogic);
+		
 		annotatedControlLogic.setParent(annotationPath);
 
 		markControlLogic();
@@ -252,7 +257,7 @@ public class ASIDELogicControlAnnotateHandler extends AbstractHandler {
 			// First, gotta check whether there is a marker for the node
 			if (file == null)
 				return;
-			IMarker[] markers = file.findMarkers(Plugin.ANNOTATION_ANSWER,
+			IMarker[] markers = file.findMarkers(PluginConstants.MARKER_ANNOTATION_ANSWER,
 					false, IResource.DEPTH_ONE);
 			int char_start = -1, length = 0;
 			for (IMarker marker : markers) {
@@ -264,7 +269,25 @@ public class ASIDELogicControlAnnotateHandler extends AbstractHandler {
 					return;
 			}
 
-			IMarker answerMarker = file.createMarker(Plugin.ANNOTATION_ANSWER);
+			Map<String, Object> markerAttributes = new HashMap<String, Object>();			
+			
+			markerAttributes.put(IMarker.CHAR_START,
+					node.getStartPosition());
+			markerAttributes.put(IMarker.CHAR_END, node.getStartPosition()
+					+ node.getLength());
+			markerAttributes.put(IMarker.MESSAGE,
+					"This is an annotated access control logic.");
+			markerAttributes.put(IMarker.LINE_NUMBER,
+					astRoot.getLineNumber(node.getStartPosition()));
+			markerAttributes.put(IMarker.SEVERITY, IMarker.SEVERITY_INFO);
+			markerAttributes.put(IMarker.PRIORITY, IMarker.PRIORITY_HIGH);
+			
+			IMarker answerMarker = MarkerAndAnnotationUtil
+					.addMarker(astRoot,
+							markerAttributes, PluginConstants.MARKER_ANNOTATION_ANSWER);
+
+		/*	
+			IMarker answerMarker = file.createMarker(PluginConstants.ANNOTATION_ANSWER);
 
 			answerMarker.setAttribute(IMarker.CHAR_START,
 					node.getStartPosition());
@@ -276,6 +299,7 @@ public class ASIDELogicControlAnnotateHandler extends AbstractHandler {
 					astRoot.getLineNumber(node.getStartPosition()));
 			answerMarker.setAttribute(IMarker.SEVERITY, IMarker.SEVERITY_INFO);
 			answerMarker.setAttribute(IMarker.PRIORITY, IMarker.PRIORITY_HIGH);
+			*/
 			
 			InterfaceUtil.prepareAnnotationRequest(answerMarker, null);
 
@@ -287,7 +311,7 @@ public class ASIDELogicControlAnnotateHandler extends AbstractHandler {
 	}
 
 	private void replaceAccessorMarkerOnPath(Path path) {
-		Point accessor = path.getAccessor();
+		AccessControlPoint accessor = path.getSensitiveOperation();
 		ASTNode node = accessor.getNode();
 		IResource resource = accessor.getResource();
 		CompilationUnit unit = accessor.getUnit();
@@ -298,7 +322,7 @@ public class ASIDELogicControlAnnotateHandler extends AbstractHandler {
 			int char_start, length;
 
 			IMarker[] checkedMarkers = resource.findMarkers(
-					Plugin.ANNOTATION_QUESTION_CHECKED, false,
+					PluginConstants.MARKER_ANNOTATION_CHECKED, false,
 					IResource.DEPTH_ONE);
 			for (IMarker marker : checkedMarkers) {
 				char_start = marker.getAttribute(IMarker.CHAR_START, -1);
@@ -312,7 +336,7 @@ public class ASIDELogicControlAnnotateHandler extends AbstractHandler {
 			}
 
 			IMarker[] markers = resource.findMarkers(
-					Plugin.ANNOTATION_QUESTION, false, IResource.DEPTH_ONE);
+					PluginConstants.MARKER_ANNOTATION_REQUEST, false, IResource.DEPTH_ONE);
 
 			for (IMarker marker : markers) {
 				char_start = marker.getAttribute(IMarker.CHAR_START, -1);
@@ -334,12 +358,28 @@ public class ASIDELogicControlAnnotateHandler extends AbstractHandler {
 	}
 
 	private void createCheckedMarker(ASTNode node, IResource resource,
-			CompilationUnit unit, List<Point> checks) throws CoreException {
+			CompilationUnit unit, List<AccessControlPoint> checks) throws CoreException {
 		String message = "Access control checks are at "
 				+ unit.getLineNumber(node.getStartPosition());
+		
+		Map<String, Object> markerAttributes = new HashMap<String, Object>();	
+		markerAttributes.put(IMarker.CHAR_START,
+				node.getStartPosition());
+		markerAttributes.put(IMarker.CHAR_END, node.getStartPosition()
+				+ node.getLength());
+		markerAttributes.put(IMarker.MESSAGE,	message);
+		markerAttributes.put(IMarker.LINE_NUMBER,
+				unit.getLineNumber(node.getStartPosition()));
+		markerAttributes.put(IMarker.SEVERITY, IMarker.SEVERITY_INFO);
+		markerAttributes.put(IMarker.PRIORITY, IMarker.PRIORITY_HIGH);
+		
+		IMarker questionCheckedMarker = MarkerAndAnnotationUtil
+				.addMarker(resource,
+						markerAttributes, PluginConstants.MARKER_ANNOTATION_CHECKED);
 
+		/*
 		IMarker questionCheckedMarker = resource
-				.createMarker(Plugin.ANNOTATION_QUESTION_CHECKED);
+				.createMarker(PluginConstants.PluginConstants.MARKER_ANNOTATION_CHECKED);
 
 		questionCheckedMarker.setAttribute(IMarker.CHAR_START,
 				node.getStartPosition());
@@ -352,6 +392,7 @@ public class ASIDELogicControlAnnotateHandler extends AbstractHandler {
 				IMarker.SEVERITY_INFO);
 		questionCheckedMarker.setAttribute(IMarker.PRIORITY,
 				IMarker.PRIORITY_HIGH);
+		*/
 		
 		InterfaceUtil.prepareAnnotationRequest(questionCheckedMarker, resource);
 
@@ -370,7 +411,7 @@ public class ASIDELogicControlAnnotateHandler extends AbstractHandler {
 		MessageDialog
 				.openInformation(
 						shell,
-						"ASIDE Code Annotation",
+						"" + Plugin.PLUGIN_NAME + " Code Annotation",
 						"Please choose a sensitive information access point that is marked by a red flag.");
 
 	}

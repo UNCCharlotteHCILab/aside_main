@@ -16,8 +16,7 @@ import org.osgi.framework.Bundle;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
-import edu.uncc.aside.codeannotate.Plugin;
-import edu.uncc.sis.aside.constants.PluginConstants;
+import edu.uncc.aside.codeannotate.PluginConstants;
 
 /**
  * Think about file read/write lock
@@ -35,7 +34,7 @@ public class XMLFileUtil {
 
 	public static Document getDefaultRuleSetDocument(int type) {
 
-		Bundle bundle = Platform.getBundle(Plugin.PLUGIN_ID);
+		Bundle bundle = Platform.getBundle(PluginConstants.PLUGIN_ID);
 		Path path = null;
 		Document doc = null;
 		//System.out.println("MM getDefaultRuleSetDocument");

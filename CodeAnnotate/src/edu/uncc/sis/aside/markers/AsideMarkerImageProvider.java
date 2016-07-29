@@ -22,7 +22,7 @@ public class AsideMarkerImageProvider implements IAnnotationImageProvider {
 	public ImageDescriptor getImageDescriptor(String imageDescritporId) {
 		//not by path like AsidePlugin
 		//return AsidePlugin.getImageDescriptor("icons/devil.png")
-		return Plugin.getImageDescriptor("devil.png");
+		return Plugin.getImageDescriptor("icons/redFlag.png");
 	}
 
 	@Override

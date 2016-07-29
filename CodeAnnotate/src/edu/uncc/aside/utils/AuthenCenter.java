@@ -12,16 +12,19 @@ import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+
 import java.util.*;
+
 import javax.mail.*;
 import javax.mail.Flags.Flag;
 import javax.mail.internet.*;
+
+import edu.uncc.aside.codeannotate.PluginConstants;
 /*
 import com.sun.mail.imap.IMAPFolder;
 import com.sun.mail.imap.IMAPMessage;
 */
 import edu.uncc.sis.aside.AsidePlugin;
-import edu.uncc.sis.aside.constants.PluginConstants;
 
 public class AuthenCenter {
 	

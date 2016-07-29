@@ -22,13 +22,13 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IMarkerResolution2;
 
-import edu.uncc.aside.codeannotate.Constants;
 import edu.uncc.aside.codeannotate.Plugin;
+import edu.uncc.aside.codeannotate.PluginConstants;
 import edu.uncc.aside.codeannotate.Utils;
 import edu.uncc.aside.codeannotate.models.ModelRegistry;
 import edu.uncc.aside.codeannotate.models.Path;
-import edu.uncc.aside.codeannotate.models.PathCollector;
-import edu.uncc.aside.codeannotate.models.Point;
+import edu.uncc.aside.codeannotate.models.ModelCollector;
+import edu.uncc.aside.codeannotate.models.AccessControlPoint;
 
 /**
  * 
@@ -61,7 +61,7 @@ public class AnnotationResolution implements IMarkerResolution2 {
 	@Override
 	public String getDescription() {
 
-		return Constants.ANNOTATION_RESOLUTION_DESC;
+		return PluginConstants.ANNOTATION_RESOLUTION_DESC;
 	}
 
 	@Override
@@ -102,23 +102,23 @@ public class AnnotationResolution implements IMarkerResolution2 {
 		NodeFinder finder = new NodeFinder(astRoot, charStart, length);
 
 		ASTNode node = finder.getCoveringNode();
-		Point nodePoint = new Point(node, astRoot, resource);
+		AccessControlPoint nodePoint = new AccessControlPoint(node, astRoot, resource);
 
 		return getPathByAccessor(nodePoint);
 
 	}
 
-	private Path getPathByAccessor(Point nodePoint) {
+	private Path getPathByAccessor(AccessControlPoint nodePoint) {
 
 		if (nodePoint == null)
 			return null;
 
-		PathCollector pathCollector = ModelRegistry
+		ModelCollector modelCollector = ModelRegistry
 				.getPathCollectorForProject(project);
-		List<Path> paths = pathCollector.getAllPaths();
-		Point accessor = null;
+		List<Path> paths = modelCollector.getAllPaths();
+		AccessControlPoint accessor = null;
 		for (Path path : paths) {
-			accessor = path.getAccessor();
+			accessor = path.getSensitiveOperation();
 			if (accessor.equalsTo(nodePoint)) {
 				return path;
 			}

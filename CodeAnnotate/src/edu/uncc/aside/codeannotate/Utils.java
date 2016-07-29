@@ -4,7 +4,9 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
@@ -32,9 +34,11 @@ import org.eclipse.jdt.core.dom.MethodInvocation;
 
 import edu.uncc.aside.codeannotate.XMLConfig.SinkDescription;
 import edu.uncc.aside.codeannotate.models.Path;
-import edu.uncc.aside.codeannotate.models.Point;
+import edu.uncc.aside.codeannotate.models.AccessControlPoint;
 import edu.uncc.aside.codeannotate.asideInterface.InterfaceUtil;
+import edu.uncc.aside.utils.MarkerAndAnnotationUtil;
 
+ import edu.uncc.aside.utils.MarkerAndAnnotationUtil;
 
 /*
  * Very useful utility class, currently copied from LapsePlus
@@ -277,8 +281,11 @@ public class Utils {
 		try {
 			ICompilationUnit iCompilationUnit = JavaCore
 					.createCompilationUnitFrom((IFile) resource);
+			
 			int startPos = methodDecl.getStartPosition();
+			
 			IJavaElement element = iCompilationUnit.getElementAt(startPos);
+			
 			if (element instanceof IMethod) {
 				return (IMethod) element;
 			}
@@ -320,14 +327,14 @@ public class Utils {
 		return isEntranceMethod(name);
 	}
 
-	public static void markAccessor(MethodInvocation mi, IResource resource,
+	public static void markSensitiveOperation(MethodInvocation mi, IResource resource,
 			CompilationUnit cu) {
 		int char_start, length;
 		try {
 			// First, gotta check whether there is a marker for the method
 			// invocation
 			IMarker[] markers = resource.findMarkers(
-					Plugin.ROOT_MARKER, true, IResource.DEPTH_INFINITE);
+					PluginConstants.MARKER_ROOT_TYPE, true, IResource.DEPTH_INFINITE);
 			
 			
 			for (IMarker marker : markers) {
@@ -340,17 +347,31 @@ public class Utils {
 				if (char_start == mi.getStartPosition()
 						&& length == mi.getLength())
 				{
-					if(marker.getType().equalsIgnoreCase(Plugin.ANNOTATION_QUESTION) ||
-							marker.getType().equalsIgnoreCase(Plugin.ANNOTATION_QUESTION_CHECKED)||
-							marker.getType().equalsIgnoreCase("green.check.box"))
+					if(marker.getType().equalsIgnoreCase(PluginConstants.MARKER_ANNOTATION_REQUEST) ||
+							marker.getType().equalsIgnoreCase(PluginConstants.MARKER_ANNOTATION_CHECKED)||
+							marker.getType().equalsIgnoreCase(PluginConstants.MARKER_GREEN_CHECK_BOX))
 						return;
 				}
 					
 			}
+			Map<String, Object> markerAttributes = new HashMap<String, Object>();	
+			markerAttributes.put(IMarker.CHAR_START,mi.getStartPosition() );
+			markerAttributes.put(IMarker.CHAR_END, mi.getStartPosition()+ mi.getLength() );
+			markerAttributes.put(IMarker.LINE_NUMBER,	mi.getStartPosition());
+			markerAttributes.put(IMarker.MESSAGE,"Where is the corresponding authentication process?");
+			markerAttributes.put(IMarker.SEVERITY, IMarker.SEVERITY_ERROR);
+			markerAttributes.put(IMarker.PRIORITY, IMarker.PRIORITY_HIGH);
+			
+			IMarker questionMarker = MarkerAndAnnotationUtil
+					.addMarker(resource,
+							markerAttributes, PluginConstants.MARKER_ANNOTATION_REQUEST);
 
+			
+			
+			/*
 			IMarker questionMarker= InterfaceUtil.createMarker(
 					resource
-					,Plugin.ANNOTATION_QUESTION
+					,PluginConstants.ANNOTATION_QUESTION
 					,mi.getStartPosition() 
 					,mi.getStartPosition()+ mi.getLength() 
 					,cu.getLineNumber(mi.getStartPosition())
@@ -358,6 +379,7 @@ public class Utils {
 					,IMarker.PRIORITY_HIGH
 					,"Where is the corresponding authentication process?", "0", "0"										
 					);
+					*/
 			
 			/*
 			IMarker questionMarker = resource
@@ -391,8 +413,21 @@ public class Utils {
 			CompilationUnit unit) throws CoreException {
 		String message = "What is the corresponding authentication?";
 
+		Map<String, Object> markerAttributes = new HashMap<String, Object>();	
+		markerAttributes.put(IMarker.CHAR_START,node.getStartPosition() );
+		markerAttributes.put(IMarker.CHAR_END,node.getStartPosition() + node.getLength() );
+		markerAttributes.put(IMarker.LINE_NUMBER,	unit.getLineNumber(node.getStartPosition()));
+		markerAttributes.put(IMarker.MESSAGE,message);
+		markerAttributes.put(IMarker.SEVERITY, IMarker.SEVERITY_ERROR);
+		markerAttributes.put(IMarker.PRIORITY, IMarker.PRIORITY_HIGH);
+		
+		IMarker questionCheckedMarker = MarkerAndAnnotationUtil
+				.addMarker(resource,
+						markerAttributes, PluginConstants.MARKER_ANNOTATION_REQUEST);
+
+		/*
 		IMarker questionCheckedMarker = resource
-				.createMarker(Plugin.ANNOTATION_QUESTION);
+				.createMarker(PluginConstants.ANNOTATION_QUESTION);
 
 		questionCheckedMarker.setAttribute(IMarker.CHAR_START,
 				node.getStartPosition());
@@ -405,6 +440,7 @@ public class Utils {
 				IMarker.SEVERITY_WARNING);
 		questionCheckedMarker.setAttribute(IMarker.PRIORITY,
 				IMarker.PRIORITY_HIGH);
+				*/
 		InterfaceUtil.prepareAnnotationRequest(questionCheckedMarker, resource);
 	}
 
@@ -419,6 +455,7 @@ public class Utils {
 			return false;
 		String methodName = binding.getName();
 		String className = typeBinding.getQualifiedName();
+		
 		for (SinkDescription accessor : accessors) {
 			if (accessor.getMethodName().equals(className + "." + methodName)
 					&& accessor.getTypeName().equals(className)) {
@@ -438,7 +475,7 @@ public class Utils {
 	 */
 	
 
-	public static ICompilationUnit compilationUnitOfInterest(IResource resource) {
+	public static ICompilationUnit getCompilationUnitOf(IResource resource) {
 		IFile file = (IFile) resource.getAdapter(IFile.class);
 		return (ICompilationUnit) JavaCore.create(file);
 	}
@@ -446,29 +483,29 @@ public class Utils {
 	public static void removeMarkersOnPath(Path path) {
 		if(path == null)
 			return;
-		Point accessor = path.getAccessor();
+		AccessControlPoint accessor = path.getSensitiveOperation();
 		removeMarkerOnPoint(accessor);
-		List<Point> checks = path.getChecks();
-		for (Point check : checks) {
+		List<AccessControlPoint> checks = path.getChecks();
+		for (AccessControlPoint check : checks) {
 			removeMarkerOnPoint(check);
 		}
 
 	}
 
-	public static void removeMarkerOnPoint(Point point) {
-		ASTNode node = point.getNode();
-		IResource resource = point.getResource();
+	public static void removeMarkerOnPoint(AccessControlPoint accessControlPoint) {
+		ASTNode node = accessControlPoint.getNode();
+		IResource resource = accessControlPoint.getResource();
 
 		try {
 			int char_start, length;
 
 			IMarker[] questionMarkers = resource.findMarkers(
-					Plugin.ANNOTATION_QUESTION, false, IResource.DEPTH_ONE);
+					PluginConstants.MARKER_ANNOTATION_REQUEST, false, IResource.DEPTH_ONE);
 			IMarker[] checkedMarkers = resource.findMarkers(
-					Plugin.ANNOTATION_QUESTION_CHECKED, false,
+					PluginConstants.MARKER_ANNOTATION_CHECKED, false,
 					IResource.DEPTH_ONE);
 			IMarker[] answerMarkers = resource.findMarkers(
-					Plugin.ANNOTATION_ANSWER, false, IResource.DEPTH_ONE);
+					PluginConstants.MARKER_ANNOTATION_ANSWER, false, IResource.DEPTH_ONE);
 
 			for (IMarker marker : questionMarkers) {
 				char_start = marker.getAttribute(IMarker.CHAR_START, -1);
@@ -514,9 +551,9 @@ public class Utils {
 			int char_start, length;
 
 			IMarker[] questionMarkers = resource.findMarkers(
-					Plugin.ANNOTATION_QUESTION, false, IResource.DEPTH_ONE);
+					PluginConstants.MARKER_ANNOTATION_REQUEST, false, IResource.DEPTH_ONE);
 			IMarker[] checkedMarkers = resource.findMarkers(
-					Plugin.ANNOTATION_QUESTION_CHECKED, false,
+					PluginConstants.MARKER_ANNOTATION_CHECKED, false,
 					IResource.DEPTH_ONE);
 
 			for (IMarker marker : questionMarkers) {
@@ -553,9 +590,9 @@ public class Utils {
 			int char_start, length;
 
 			IMarker[] questionMarkers = resource.findMarkers(
-					Plugin.ANNOTATION_QUESTION, false, IResource.DEPTH_ONE);
+					PluginConstants.MARKER_ANNOTATION_REQUEST, false, IResource.DEPTH_ONE);
 			IMarker[] checkedMarkers = resource.findMarkers(
-					Plugin.ANNOTATION_QUESTION_CHECKED, false,
+					PluginConstants.MARKER_ANNOTATION_CHECKED, false,
 					IResource.DEPTH_ONE);
 
 			for (IMarker marker : questionMarkers) {

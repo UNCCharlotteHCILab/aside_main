@@ -28,8 +28,8 @@ import edu.uncc.aside.codeannotate.Utils;
 import edu.uncc.aside.codeannotate.jobs.GarbagePathCollector;
 import edu.uncc.aside.codeannotate.models.ModelRegistry;
 import edu.uncc.aside.codeannotate.models.Path;
-import edu.uncc.aside.codeannotate.models.PathCollector;
-import edu.uncc.aside.codeannotate.models.Point;
+import edu.uncc.aside.codeannotate.models.ModelCollector;
+import edu.uncc.aside.codeannotate.models.AccessControlPoint;
 import edu.uncc.aside.codeannotate.visitors.MethodInvocationAccessorVisitor;
 /**
  * 
@@ -54,11 +54,13 @@ public class CodeAnnotateElementChangeListener implements
 
 	@Override
 	public void elementChanged(ElementChangedEvent event) {
+		
 		int type = event.getType();
 		IJavaElementDelta delta = event.getDelta();
 		IJavaElement element = delta.getElement();
 		int elementType = element.getElementType();
-		String elementName = element.getElementName();
+
+		
 		int flags = delta.getFlags();
 
 		if (type == ElementChangedEvent.POST_RECONCILE) {
@@ -71,16 +73,25 @@ public class CodeAnnotateElementChangeListener implements
 					|| (flags & IJavaElementDelta.F_MOVED_FROM) == 0) {
 
 				if (elementType == IJavaElement.COMPILATION_UNIT) {
+					
 					ICompilationUnit unitOfInterest = (ICompilationUnit) element;
+					
 					IProject projectOfInterest = unitOfInterest
 							.getJavaProject().getProject();
+					
+				/*MM Not required	
 					PathFinder finderOfInterest = PathFinder
 							.getInstance(projectOfInterest);
+					
+				 	
 					ArrayList<Path> pathsOfInterest = finderOfInterest
 							.getPathsRelatedToUnit(unitOfInterest);
-
+				*/
+				
 					BufferChangedEvent evt = Messenger.getInstance()
 							.getDocumentEvent();
+					
+					// Why do we need this event from Messenger: To get start and length of chenged characters
 					if (evt == null) {
 						return;
 					} else {
@@ -102,15 +113,17 @@ public class CodeAnnotateElementChangeListener implements
 
 						CompilationUnit astRoot = Utils
 								.getCompilationUnit(unitOfInterest);
+						
 						int changedLine = astRoot.getLineNumber(offset);
 
 						try {
 							Document doc = new Document(
 									unitOfInterest.getSource());
+							
 							int changedLineStartOffset = doc.getLineOffset(changedLine-1);
-							int nextStartOffset = doc
-									.getLineOffset(changedLine);
+							int nextStartOffset = doc.getLineOffset(changedLine);
 
+							//
 							NodeFinder finder = new NodeFinder(
 									Utils.getCompilationUnit(unitOfInterest),
 									changedLineStartOffset, nextStartOffset - changedLineStartOffset);
@@ -130,13 +143,17 @@ public class CodeAnnotateElementChangeListener implements
 									"Job for Removing Destroyed Paths",
 									projectOfInterest, unitOfInterest,
 									changedLineStartOffset, nextStartOffset, modificationType, offset, length, text);
+							
 							job.setPriority(Job.INTERACTIVE);
 							job.schedule();
 							
+							// Investigating the new method for Access Control Annotations
 							MethodInvocationAccessorVisitor visitor = new MethodInvocationAccessorVisitor(
-									nodeFound, pathsOfInterest, unitOfInterest,
-									projectOfInterest, changedLineStartOffset, nextStartOffset);
-							visitor.process();
+									nodeFound, unitOfInterest, projectOfInterest,
+									changedLineStartOffset, nextStartOffset);
+							
+							nodeFound.accept(visitor);
+						//	visitor.process();
 
 						} catch (JavaModelException e) {
 							e.printStackTrace();
@@ -144,11 +161,11 @@ public class CodeAnnotateElementChangeListener implements
 							e.printStackTrace();
 						}
 
-					}
+					}//else event == null
 
-				}
-			}
-		}
+				}// if elementType == IJavaElement.COMPILATION_UNIT
+			}//if flags & IJavaElementDelta.F_CONTENT
+		}//if ElementChangedEvent.POST_RECONCILE
 
 	}
 }

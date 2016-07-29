@@ -36,9 +36,10 @@ import org.eclipse.ui.handlers.HandlerUtil;
 
 import edu.uncc.aside.codeannotate.PathFinder;
 import edu.uncc.aside.codeannotate.Plugin;
+import edu.uncc.aside.codeannotate.PluginConstants;
 import edu.uncc.aside.codeannotate.listeners.CodeAnnotateDocumentEditListener;
 import edu.uncc.aside.utils.MakerManagement;
-import edu.uncc.sis.aside.auxiliary.core.TestRunOnAllProjects;
+import edu.uncc.sis.aside.auxiliary.core.RunAnalysisOnAllProjects;
 
 /**
  * 
@@ -48,7 +49,7 @@ import edu.uncc.sis.aside.auxiliary.core.TestRunOnAllProjects;
 public class ASIDECodeAnnotateHandler extends AbstractHandler {
 	
 	private static final Logger logger = Plugin.getLogManager().getLogger(
-			TestRunOnAllProjects.class.getName());
+			RunAnalysisOnAllProjects.class.getName());
 	
 	private IWorkbenchPart targetPart;
 	IProject selectProject = null;
@@ -100,13 +101,13 @@ public class ASIDECodeAnnotateHandler extends AbstractHandler {
 			
 			IJavaProject javaProject = JavaCore.create(selectProject);
 			
-			MakerManagement.deleteWorkspaceMarkers(Plugin.ROOT_MARKER);
+			MakerManagement.deleteWorkspaceMarkers(PluginConstants.MARKER_ROOT_TYPE);
 			
 					
 			 //get current date time with Date()
 			DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 			
-		    logger.info(dateFormat.format(new Date()) + " : " + Plugin.getUserId() + " turned ASIDE off and ALL markers removed in the project " + 
+		    logger.info(dateFormat.format(new Date()) + " : " + Plugin.getUserId() + " turned ESIDE off and ALL markers removed in the project " + 
 		    		javaProject.getElementName().toUpperCase() +". Inserted codes are kept unchanged.");
 
 			return null;

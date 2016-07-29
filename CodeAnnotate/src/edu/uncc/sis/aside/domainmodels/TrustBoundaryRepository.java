@@ -15,19 +15,16 @@ import org.eclipse.jdt.core.dom.StringLiteral;
 import org.w3c.dom.Document;
 
 import edu.uncc.aside.codeannotate.Plugin;
-import edu.uncc.aside.utils.ASIDEMarkerAndAnnotationUtil;
+import edu.uncc.aside.codeannotate.PluginConstants;
+import edu.uncc.aside.utils.MarkerAndAnnotationUtil;
 import edu.uncc.aside.utils.Converter;
 import edu.uncc.aside.utils.Validator;
 import edu.uncc.sis.aside.AsidePlugin;
-import edu.uncc.sis.aside.constants.PluginConstants;
-import edu.uncc.sis.aside.preferences.IPreferenceConstants;
 import edu.uncc.sis.aside.preferences.PreferencesSet;
 import edu.uncc.sis.aside.xml.TrustBoundariesReader;
 import edu.uncc.sis.aside.xml.XMLFileUtil;
 
 public final class TrustBoundaryRepository {
-
-	private static final String TRUST_BOUNDARY_RULESET_PATH = PluginConstants.USER_DEFINED_ASIDE_RULES_Folder + IPath.SEPARATOR + "trust-boundaries.xml";
 
 	private static TrustBoundaryRepository handler;
 	private static LinkedList<Document> boundaryFileDocuments = new LinkedList<Document>();
@@ -46,7 +43,7 @@ public final class TrustBoundaryRepository {
 	// When to update this inventory and how? see ASTView
 
 	private TrustBoundaryRepository(IProject project, PreferencesSet prefSet) {
-    System.out.println("TRUST_BOUNDARY_RULESET_PATH " + TRUST_BOUNDARY_RULESET_PATH);
+    System.out.println("TRUST_BOUNDARY_RULESET_PATH " + PluginConstants.TRUST_BOUNDARY_RULESET_PATH);
 		fProject = project;
 
 		if (inventory == null || prefSet != null) {
@@ -105,6 +102,7 @@ public final class TrustBoundaryRepository {
 		return handler;
 	}
 
+	
 	public boolean isExist(IMethodBinding methodBinding,
 			boolean isMethodInvocation, String returnClass) {
 		ITypeBinding classBinding = null;
@@ -135,6 +133,7 @@ public final class TrustBoundaryRepository {
 				// use iterator to avoid ConcurrentModificationException
 				synchronized (inventory) {
 					Iterator<TrustBoundary> iterator = inventory.iterator();
+					
 					while (iterator.hasNext()) {
 						TrustBoundary entry = iterator.next();
 
@@ -288,7 +287,7 @@ public final class TrustBoundaryRepository {
 				if (fProject != null) {
 					IPath fullPath = fProject.getLocation();
 					IPath newPath = fullPath
-							.append(TRUST_BOUNDARY_RULESET_PATH);
+							.append(PluginConstants.TRUST_BOUNDARY_RULESET_PATH);
 					File rulesFile = newPath.toFile();
 
 					if (rulesFile != null && rulesFile.exists()) {
@@ -316,7 +315,7 @@ public final class TrustBoundaryRepository {
 		} else if (prefSet == null) {
 			boolean asideRulesChecked = Plugin.getDefault()
 					.getPreferenceStore()
-					.getBoolean(IPreferenceConstants.ASIDE_TB_PREFERENCE);
+					.getBoolean(PluginConstants.ASIDE_TB_PREFERENCE);
 			if (asideRulesChecked) {
 				// add default ruleset into file path array
 				Document defaultRulesDocument = XMLFileUtil
@@ -328,13 +327,13 @@ public final class TrustBoundaryRepository {
 
 			boolean projectRulesChecked = Plugin.getDefault()
 					.getPreferenceStore()
-					.getBoolean(IPreferenceConstants.PROJECT_TB_PREFERENCE);
+					.getBoolean(PluginConstants.PROJECT_TB_PREFERENCE);
 			if (projectRulesChecked) {
 
 				if (fProject != null) {
 					IPath fullPath = fProject.getLocation();
 					IPath newPath = fullPath
-							.append(TRUST_BOUNDARY_RULESET_PATH);
+							.append(PluginConstants.TRUST_BOUNDARY_RULESET_PATH);
 					File rulesFile = newPath.toFile();
 
 					if (rulesFile != null && rulesFile.exists()) {
@@ -351,7 +350,7 @@ public final class TrustBoundaryRepository {
 
 			boolean externalRulesChecked = Plugin.getDefault()
 					.getPreferenceStore()
-					.getBoolean(IPreferenceConstants.EXTERNAL_TB_PREFERENCE);
+					.getBoolean(PluginConstants.EXTERNAL_TB_PREFERENCE);
 			if (externalRulesChecked) {
 				String[] elements = Plugin.getDefault()
 						.getTBPathsPreference();

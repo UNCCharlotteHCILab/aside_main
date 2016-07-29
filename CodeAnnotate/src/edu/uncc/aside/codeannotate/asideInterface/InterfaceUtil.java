@@ -6,7 +6,9 @@ import java.lang.reflect.Array;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 import org.eclipse.core.resources.IFile;
@@ -21,6 +23,7 @@ import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaCore;
+import org.eclipse.jdt.core.dom.NodeFinder;
 import org.eclipse.jdt.ui.JavaUI;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextSelection;
@@ -43,6 +46,9 @@ import org.eclipse.ui.texteditor.AnnotationTypeLookup;
 import org.eclipse.ui.texteditor.IDocumentProvider;
 
 import edu.uncc.aside.codeannotate.Plugin;
+import edu.uncc.aside.codeannotate.PluginConstants;
+import edu.uncc.aside.codeannotate.models.AccessControlPoint;
+import edu.uncc.aside.utils.MarkerAndAnnotationUtil;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -94,6 +100,20 @@ public  class InterfaceUtil
 				//create new marker and delete the old one
 				IResource targetResource = oldMarker.getResource();	
 				
+				Map<String, Object> markerAttributes = new HashMap<String, Object>();	
+				markerAttributes.put(IMarker.CHAR_START,
+						markerStart);
+				markerAttributes.put(IMarker.CHAR_END, markerEnd);
+				markerAttributes.put(IMarker.MESSAGE,	"Change Marker: " + srcMarkerType + " To " + targetMarkerName);
+				markerAttributes.put("markerIndex", markerIndex);
+				markerAttributes.put(IMarker.SEVERITY, IMarker.SEVERITY_ERROR);
+				markerAttributes.put(IMarker.PRIORITY, IMarker.PRIORITY_HIGH);
+				
+				IMarker newMarker = MarkerAndAnnotationUtil
+						.addMarker(targetResource,
+								markerAttributes, targetMarkerName);
+
+				/*
  			    IMarker newMarker = targetResource.createMarker(targetMarkerName);
  			   annotationMarkerName=targetMarkerName;
  			    newMarker.setAttribute(IMarker.CHAR_START, markerStart);
@@ -102,7 +122,7 @@ public  class InterfaceUtil
  			  	newMarker.setAttribute(IMarker.MESSAGE, "Change Marker: " + srcMarkerType + " To " + targetMarkerName);
  			 	newMarker.setAttribute(IMarker.PRIORITY, IMarker.PRIORITY_HIGH);
  				newMarker.setAttribute(IMarker.SEVERITY, IMarker.SEVERITY_ERROR);
- 				
+ 				*/
  				//System.out.println("Char_start is "+ theMarker.getAttribute(IMarker.CHAR_START));
  				//System.out.println("Char_end is "+ theMarker.getAttribute(IMarker.CHAR_END));
  				
@@ -142,50 +162,10 @@ public  class InterfaceUtil
 		}
 	}
 	
-	public static IMarker createMarker(IResource theResource, String markerType, int charStart, int charEnd, int lineNumber, int severity, int priority, String message, String creationTime, String userID)
-	{
-		try
-		{
-			//String message = "Where is the access control?";
-			if(markerType.equals("yellow.question"))
-			{
-				message = "Where is the access control?";
-			}
-			
-			IMarker theMarker = theResource.createMarker(markerType);
-			
-			theMarker.setAttribute(IMarker.CHAR_START, charStart);
-		   	theMarker.setAttribute(IMarker.CHAR_END, charEnd);
-		   	//not setting marker index in this function
-		   	//theMarker.setAttribute("markerIndex", markerIndex);
-		   	theMarker.setAttribute(IMarker.LINE_NUMBER, lineNumber);
-		  	theMarker.setAttribute(IMarker.MESSAGE, message);
-		 	theMarker.setAttribute(IMarker.PRIORITY, (priority == 0)? IMarker.PRIORITY_HIGH:priority);
-			theMarker.setAttribute(IMarker.SEVERITY, (severity == 0)? IMarker.SEVERITY_WARNING:severity);
-			
-			Calendar cal = Calendar.getInstance();		    
-			theMarker.setAttribute("creationTime",
-					creationTime.equals("0") ? Long.toString(cal.getTimeInMillis()): creationTime);			
-			    
-			theMarker.setAttribute("userID",
-					creationTime.equals("0") ? Plugin.userId: userID);			
-
-			
-			
-			//InterfaceUtil.prepareAnnotationRequest(theMarker, theResource);
-			
-			return theMarker;
-		}
-		catch(Exception e)
-		{
-			System.out.println("Exception creating marker in createMarker");
-			return null;
-		}
-	}
-	
-	//this method prepares each annotation request before it is displayed
+		//this method prepares each annotation request before it is displayed
 	public static void prepareAnnotationRequest(IMarker theMarker, IResource resource)
 	{
+		System.err.println("MM");
 		try
 		{
 			
@@ -242,7 +222,7 @@ public  class InterfaceUtil
 	 */
 	public static void prepareAnnotationRequestSimple(IMarker theMarker, IResource resource)
 	{
-		
+		System.err.println("MM Simple");
 		try
 		{
 			//save the marker index
@@ -457,7 +437,7 @@ public  class InterfaceUtil
 			}
 			else
 			{
-				annotationType = Plugin.ANNOTATION_QUESTION; //  "yellow.question.box";
+				annotationType = PluginConstants.MARKER_ANNOTATION_REQUEST; //  PluginConstants.MARKER_ANNOTATION_REQUEST;
 			}
 			//set all missing annotations to red flag or reset them to yellow question
 			for(int q = 0; q < missingAnnotationsCounter; q++) //for every missing annotation
@@ -610,16 +590,41 @@ public  class InterfaceUtil
 		try
 		{
 			int char_end = char_start + length;
-			IMarker marker = iResource.createMarker(Plugin.ANNOTATION_ANSWER); //"green.diamond");
+			
+			Map<String, Object> markerAttributes = new HashMap<String, Object>();	
+			markerAttributes.put(IMarker.CHAR_START,
+					char_start);
+			markerAttributes.put(IMarker.CHAR_END, char_end);
+			markerAttributes.put(IMarker.MESSAGE,	PluginConstants.MARKER_ANNOTATION_ANSWER + " Access Control Plugin Marker");
+		
+			markerAttributes.put(IMarker.SEVERITY, IMarker.SEVERITY_INFO);
+			markerAttributes.put(IMarker.PRIORITY, IMarker.PRIORITY_HIGH);
+			markerAttributes.put("markerIndex", VariablesAndConstants.currentIndex);
+			markerAttributes.put("secondIndex", VariablesAndConstants.annotationMarkerCounters[VariablesAndConstants.currentIndex]);
+	  
+			
+			IMarker marker = MarkerAndAnnotationUtil
+					.addMarker(iResource,
+							markerAttributes, PluginConstants.MARKER_ANNOTATION_ANSWER);
+			
+			//MM Add annotation to the ASIDE windows
+			
+		//	NodeFinder nodeFinder = new NodeFinder(astRoot, char_start, length);
+			
+			AccessControlPoint accessControlPoint= new AccessControlPoint(null, null, iResource);
+			
+			
+			/*
+			IMarker marker = iResource.createMarker(PluginConstants.ANNOTATION_ANSWER); //"green.diamond");
 			
 			marker.setAttribute(IMarker.CHAR_START, char_start);
 			marker.setAttribute(IMarker.CHAR_END, char_end);
-			marker.setAttribute(IMarker.MESSAGE, Plugin.ANNOTATION_ANSWER + " Access Control Plugin Marker");
+			marker.setAttribute(IMarker.MESSAGE, PluginConstants.ANNOTATION_ANSWER + " Access Control Plugin Marker");
 			marker.setAttribute(IMarker.PRIORITY, IMarker.PRIORITY_HIGH);
 	   		marker.setAttribute(IMarker.SEVERITY, IMarker.SEVERITY_ERROR);
 	   		marker.setAttribute("markerIndex", VariablesAndConstants.currentIndex);
 	   		marker.setAttribute("secondIndex", VariablesAndConstants.annotationMarkerCounters[VariablesAndConstants.currentIndex]);
-	   
+	   */
 	   		//references the marker in the array, associated with the request
 	   		VariablesAndConstants.annotationMarkers[VariablesAndConstants.currentIndex][VariablesAndConstants.annotationMarkerCounters[VariablesAndConstants.currentIndex]] = marker;
 	   		
@@ -635,7 +640,7 @@ public  class InterfaceUtil
 	//changes annotation requests
 	public static void bindRequest()
 	{
-		InterfaceUtil.changeMarker(Plugin.ANNOTATION_QUESTION_CHECKED , VariablesAndConstants.currentIndex, 0, VariablesAndConstants.annotationMarkerCounters[VariablesAndConstants.currentIndex]);
+		InterfaceUtil.changeMarker(PluginConstants.MARKER_ANNOTATION_CHECKED , VariablesAndConstants.currentIndex, 0, VariablesAndConstants.annotationMarkerCounters[VariablesAndConstants.currentIndex]);
    		
 		InterfaceUtil.checkForVulnerabilities();
 	}
@@ -671,6 +676,7 @@ public  class InterfaceUtil
 	//this method sets all markers to boxes and then sets highlighting for active markers
 	public static void clearAndSetHighlighting(int markerNumber, IMarker callingMarker,String randomID)
 	{
+		// Maybe commenting out all lines removes the problem
 		randomId=randomID;
 
 		
@@ -681,6 +687,7 @@ public  class InterfaceUtil
 		int secondIndex = -5;
 		if(callingMarker != null) //calling marker is null when this is called after annotation is completed
 		{
+			// Default = -1 it cannot detect the markerindex attribute 
 			callingIndex = callingMarker.getAttribute("markerIndex", -1);
 			secondIndex = callingMarker.getAttribute("secondIndex", -1); //this will be -1 if the marker is an annotation request. This is ok since changeAnnotationHighlighting handles it properly
 			
@@ -714,9 +721,9 @@ public  class InterfaceUtil
 				{
 					markerType = VariablesAndConstants.annotationRequestMarkers[i].getType();
 										
-					if(markerType.equals("green.check") == true)
+					if(markerType.equals(PluginConstants.MARKER_ANNOTATION_CHECKED) == true)
 					{
-						changeMarker("green.check.box", tempIndex, 0, 0);
+						changeMarker(PluginConstants.MARKER_GREEN_CHECK_BOX, tempIndex, 0, 0);
 						
 					}
 					else if(markerType.equals("red.flag") == true)
@@ -726,7 +733,7 @@ public  class InterfaceUtil
 					}
 					else if(markerType.equals("yellow.question") == true)
 					{
-						changeMarker("yellow.question.box", tempIndex, 0, 0);
+						changeMarker(PluginConstants.MARKER_ANNOTATION_REQUEST, tempIndex, 0, 0);
 						
 					}
 					
@@ -748,8 +755,8 @@ public  class InterfaceUtil
 			String markerName=callingMarker.getType();
 			System.out.println("MarkerNameCheck"+markerName);
 			
-			if(markerName.equals("yellow.question.box") == true)
-				annotationMarkerName="green.check.box";
+			if(markerName.equals(PluginConstants.MARKER_ANNOTATION_REQUEST) == true)
+				annotationMarkerName=PluginConstants.MARKER_GREEN_CHECK_BOX;
 			
 			else if(markerName.equals("red.question.box") == true)
 				annotationMarkerName="red.flag.box";
@@ -769,7 +776,7 @@ public  class InterfaceUtil
 			case 0:
 			{
 				//case 0 means green diamond called it so change the check
-				changeMarker("green.check", callingIndex, 0, 0);
+				changeMarker(PluginConstants.MARKER_ANNOTATION_CHECKED, callingIndex, 0, 0);
 				break;
 			}
 			case 1:

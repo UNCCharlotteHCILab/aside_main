@@ -42,11 +42,11 @@ import org.eclipse.ui.texteditor.ITextEditor;
 
 import edu.uncc.aside.ast.ASTResolving;
 import edu.uncc.aside.codeannotate.Plugin;
-import edu.uncc.aside.utils.ASIDEMarkerAndAnnotationUtil;
+import edu.uncc.aside.codeannotate.PluginConstants;
+import edu.uncc.aside.utils.MarkerAndAnnotationUtil;
 import edu.uncc.sis.aside.AsidePlugin;
 import edu.uncc.sis.aside.auxiliary.core.AsideScanOneICompilationUnit;
 import edu.uncc.sis.aside.auxiliary.core.CodeGenerator;
-import edu.uncc.sis.aside.constants.PluginConstants;
 
 public class EncodingResolution implements IMarkerResolution,
 		IMarkerResolution2 {
@@ -187,7 +187,7 @@ public class EncodingResolution implements IMarkerResolution,
 //				return;
 //			}
 			//System.out.println("replacementPositionTracking start="+replacementPositionTracking.getStartPosition() + " length="+replacementPositionTracking.getLength());
-			ASIDEMarkerAndAnnotationUtil.createAnnotationAtPosition(fCompilationUnit, replacementPositionTracking.getStartPosition(), replacementPositionTracking.getLength());
+			MarkerAndAnnotationUtil.createAnnotationAtPosition(fCompilationUnit, replacementPositionTracking.getStartPosition(), replacementPositionTracking.getLength());
 			
 //			int startPosition = replacementPositionTracking.getStartPosition();
 //			int nodeLength = replacementPositionTracking.getLength();
@@ -221,7 +221,7 @@ public class EncodingResolution implements IMarkerResolution,
 				ImportRewrite newImportRewrite = ImportRewrite.create(newAstRoot, true);
 				CodeGenerator.getInstance().insertEncodingImports(document, newImportRewrite);
 						
-			IProject fProject = ASIDEMarkerAndAnnotationUtil.getProjectFromICompilationUnit(fCompilationUnit);
+			IProject fProject = MarkerAndAnnotationUtil.getProjectFromICompilationUnit(fCompilationUnit);
 			
 			new AsideScanOneICompilationUnit(fProject, fCompilationUnit);
 			

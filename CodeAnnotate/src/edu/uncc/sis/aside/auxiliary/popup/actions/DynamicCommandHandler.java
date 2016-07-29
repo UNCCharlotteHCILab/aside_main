@@ -25,7 +25,7 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.handlers.HandlerUtil;
 
 import edu.uncc.aside.ast.ASTResolving;
-import edu.uncc.aside.utils.ASIDEMarkerAndAnnotationUtil;
+import edu.uncc.aside.utils.MarkerAndAnnotationUtil;
 import edu.uncc.sis.aside.auxiliary.core.CodeGenerator;
 
 public class DynamicCommandHandler extends AbstractHandler {
@@ -136,7 +136,7 @@ public class DynamicCommandHandler extends AbstractHandler {
 		
 		//TODO check for the validity of the selection
 		MethodDeclaration methodDeclaration = ASTResolving.findParentMethodDeclaration(node);
-		String returnTypeOfMethodDeclarationStr = ASIDEMarkerAndAnnotationUtil.getReturnTypeStr(methodDeclaration);
+		String returnTypeOfMethodDeclarationStr = MarkerAndAnnotationUtil.getReturnTypeStr(methodDeclaration);
 		
 		CodeGenerator.getInstance().generateValidationCodeAndAddASIDE_Flag(document, root, fImportRewrite, ast, node, key, returnTypeOfMethodDeclarationStr);
 	

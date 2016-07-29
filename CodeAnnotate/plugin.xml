@@ -21,54 +21,39 @@
           id="ASIDE.codeannotate"
           name="ASIDE CodeAnnotate MM">
     </category>
-    <!--
-    <command
-          categoryId="ASIDE.codeannotate"
-          description="Annotate Access Control Logic"
-          id="annotateLogic"
-          name="ASIDE Annotate Access Control Logic">
-    </command>
-    -->
+   
     <command
           categoryId="ASIDE.codeannotate"
           description="Annotate paths"
           id="annotatePath"
-          name="ASIDE Code Annotate NN">
+          name="ASIDE Code Annotate ">
     </command>
-    
     <command
-          categoryId="ASIDE.codeannotate"
-          description="Turn ASIDE Off/On"
+          categoryId="ASIDE.codeannotate" 
+          description="Make ESIDE OFF/ON"
           id="ToggleAside"
-          name="ToggleAside NN">
-          <state
-         class="org.eclipse.ui.handlers.RegistryToggleState"
+          name="ASIDE Code Annotate Toggle Name" >   
+         <state
+         class="org.eclipse.ui.handlers.RegistryToggleState:false"
          id="org.eclipse.ui.commands.toggleState">
-         <class
-                  class="org.eclipse.ui.handlers.RegistryToggleState">
-               <parameter
+           <parameter
                      name="persisted"
                      value="true">
-               </parameter>
-            </class>
-   </state>
-    </command>
+               </parameter>   
+                   
+   		</state>               
+     </command>
+   
 </extension>
 
 <extension
        point="org.eclipse.ui.handlers">
-       <!--
-    <handler
-          class="edu.uncc.aside.codeannotate.actions.ASIDELogicControlAnnotateHandler"
-          commandId="annotateLogic">
-      
-    </handler>
-    -->
-    <handler
+       <handler
           class="edu.uncc.aside.codeannotate.actions.ASIDEToggleStatusHandler"
           commandId="ToggleAside">
       
     </handler>
+       
     <handler
           class="edu.uncc.aside.codeannotate.actions.ASIDECodeAnnotateHandler"
           commandId="annotatePath">
@@ -84,8 +69,17 @@
   -->
     </handler>
 </extension>
-<extension
-         point="org.eclipse.ui.menus">-->
+<extension     point="org.eclipse.ui.menus">
+    <menuContribution 
+      	locationURI="popup:org.eclipse.ui.popup.any?after=additions">       
+            <command
+                  commandId="ToggleAside"
+                  label="Turn ESIDE On/Off"                 
+                  style="toggle"
+                  tooltip="Turn ESIDE On/Off"   >  
+            </command>
+        
+      </menuContribution>
       <!--
       <menuContribution
             locationURI="popup:org.eclipse.ui.popup.any?after=additions">
@@ -110,20 +104,7 @@
             </command>
       </menuContribution>
       -->
-      <menuContribution 
-      	locationURI="popup:org.eclipse.ui.popup.any?after=additions">
       
-      <!-- icon="icons/greenCheck.png"> -->
-     
-            <command
-                  commandId="ToggleAside"
-                  label="Turn ASIDE On/Off"
-                 
-                  style="toggle"
-                  tooltip="Turn ESIDE On/Off"
-                  >                  
-            </command>
-      </menuContribution>
       
    </extension>  
    <extension
@@ -251,13 +232,12 @@
 			markertype="CodeAnnotate.annotationQuestionChecked">
 		</imageprovider>
 	</extension>
-   
+   <!--
     <extension
          point="org.eclipse.ui.views">
       <category
             name="ASIDE CodeAnnotate333"
-            id="codeannotate">
-         
+            id="codeannotate">         
       </category>
       <view
             allowMultiple="false"
@@ -268,7 +248,7 @@
             id="relationships">
       </view>    
    </extension>
-   
+   -->
    <extension
          point="org.eclipse.ui.ide.markerResolution">
    <markerResolutionGenerator
@@ -292,82 +272,34 @@
             id="CodeAnnotate.codeAnnotationCompilerParticipant">
       </compilationParticipant>
    </extension>
-    <!--     
-       <extension
-         id="my.marker"
-         name="Testing Marker"
+   
+    
+<extension
+         id="green.check"
+         name="Green Check"
          point="org.eclipse.core.resources.markers">
          <super type="org.eclipse.core.resources.textmarker"/>
-         <persistent value="false"/>
+         <super type="ASIDE.RootMarker"/>
+         <persistent value="true"/>
    </extension>
    <extension
-   		 id="my.annotationType"
-   		 name="Testing Marker Annotation"
+   		 id="greenCheckAnnotationType"
+   		 name="Green Check Marker Annotation"
          point="org.eclipse.ui.editors.annotationTypes">
       <type
-            markerType="my.marker"
-            name="my.annotationType">
+            markerType="green.check"
+            name="greenCheckAnnotationType">
       </type>
    </extension>
 	<extension
          point="org.eclipse.ui.editors.markerAnnotationSpecification"
-         id="my.annotationSpec">
+         id="greenCheckAnnotationSpec">
       <specification
-            annotationType="my.annotationType"
+            annotationType="greenCheckAnnotationType"
             includeOnPreferencePage="true"
             overviewRulerPreferenceKey="clruler"
-            label="Testing"
-            icon="icons/yellowQuestion.png"
-			overviewRulerPreferenceValue="true"
-			colorPreferenceKey="clcolor"
-			colorPreferenceValue="0,255,0"
-			textPreferenceKey="cltext"
-			textPreferenceValue="true"
-			presentationLayer="0"
-			verticalRulerPreferenceKey="clvertical"
-			verticalRulerPreferenceValue="true"
-			textStylePreferenceKey="clstyle"
-			textStylePreferenceValue="BOX">
-      </specification>
-   </extension> 
-    
-    <extension point="org.eclipse.ui.ide.markerResolution">
-      <markerResolutionGenerator
-         markerType="my.marker"
-         class="edu.uncc.aside.codeannotate.asideInterface.InterfaceResolutionGenerator"/>
-   </extension>
-    -->
-    <!-- WARNING All marker ids MUST be all lowercase and contain one peroid. If they do not, they will vanish as soon as the editor tab containing them is closed. -->
-    <!-- All colorPreferenceKeys should be different. They can only be the same if the colorPreferenceValues are the same. -->
-    <!-- to get a colored border around the text instead of highlighting, delete the highlightpreferencekey and highlightpreference value attributes and make sure that when the marker is used in code that it spans a lenght from char start to char finish rather than line number -->
-    
-    <!-- here is the xml required to specify one marker type and its resolution generator. -->
-    <!--
-   <extension
-         id="my.marker"
-         name="Testing Marker"
-         point="org.eclipse.core.resources.markers">
-         <super type="org.eclipse.core.resources.textmarker"/>
-         <persistent value="false"/>
-   </extension>
-   <extension
-   		 id="my.annotationType"
-   		 name="Testing Marker Annotation"
-         point="org.eclipse.ui.editors.annotationTypes">
-      <type
-            markerType="my.marker"
-            name="my.annotationType">
-      </type>
-   </extension>
-	<extension
-         point="org.eclipse.ui.editors.markerAnnotationSpecification"
-         id="my.annotationSpec">
-      <specification
-            annotationType="my.annotationType"
-            includeOnPreferencePage="true"
-            overviewRulerPreferenceKey="clruler"
-            label="Testing"
-            icon="icons/yellowQuestion.png"
+            label="Bound Access Control Annotation Request"
+            icon="icons/greenCheck.png"
 			overviewRulerPreferenceValue="true"
 			highlightPreferenceKey="highlight.background"
 			highlightPreferenceValue="true"
@@ -385,22 +317,127 @@
     
     <extension point="org.eclipse.ui.ide.markerResolution">
       <markerResolutionGenerator
-         markerType="my.marker"
-         class="edu.uncc.aside.codeannotate.asideInterface.InterfaceResolutionGenerator"/>
+         markerType="green.check"
+         class="edu.uncc.aside.codeannotate.asideInterface.CheckedResolutionGenerator"/>
    </extension>
-    -->
-    <!-- end spec for one marker and resolution generator -->
+    <!-- -->
+	<extension id="edu.uncc.aside.AsideMarker" 
+	point="org.eclipse.core.resources.markers"
+		name="Bad Security Practice" >      
+       <super type="org.eclipse.core.resources.marker"/>
+       <super type="org.eclipse.core.resources.textmarker"/>
+       <super type="ASIDE.RootMarker"/>
+         <persistent value="true"/>	
     
-    
-    <!-- here is the xml required to specify one marker type and its resolution generator -->
-    
+		<super type="org.eclipse.core.resources.problemmarker"></super>
+		<attribute name="type">
+		</attribute>
+		<attribute name="edu.uncc.sis.aside.marker.flow">
+		</attribute>
+		<attribute name="edu.uncc.sis.aside.marker.validationType">
+		</attribute>
+		<attribute name="edu.uncc.sis.aside.marker.targetPosition">
+		</attribute>
+  		<attribute
+        name="edu.uncc.sis.aside.marker.ruleNameBelongTo">
+  		</attribute>
+  		<attribute
+        name="edu.uncc.sis.aside.marker.typeNameBelongTo">
+  		</attribute>
+ 		 <attribute
+        name="edu.uncc.sis.aside.marker.returnTypeOfMethodDeclarationBelongTo">
+  		</attribute>
+  		
+	</extension>
+
+	<extension id="AsideMarkerAnnnotation" 
+	point="org.eclipse.ui.editors.annotationTypes">
+		<type markerType="edu.uncc.aside.AsideMarker"
+			name="edu.uncc.aside.asideMarkerAnnotation">
+		</type>
+		<type name="edu.uncc.sis.aside.invisibleAnnotation"></type>
+	</extension>
+
+	<extension id="AsideMarkerAnnotationSpecification"
+		point="org.eclipse.ui.editors.markerAnnotationSpecification">
+		
+		<specification annotationImageProvider="edu.uncc.sis.aside.markers.AsideMarkerImageProvider"
+			annotationType="edu.uncc.aside.asideMarkerAnnotation"
+			colorPreferenceKey="asideColorPreference" 
+			colorPreferenceValue="255,193,193"
+			contributesToHeader="true" 
+			highlightPreferenceKey="asideHighlightPreference"
+			highlightPreferenceValue="false" 
+			icon="icons/devil.png"
+			includeOnPreferencePage="true" 
+			isGoToNextNavigationTarget="true"
+			isGoToNextNavigationTargetKey="asideIsGoToNextNavigationTarget"
+			isGoToPreviousNavigationTarget="true"
+			isGoToPreviousNavigationTargetKey="asideIsGoToPreviousNavigationTarget"
+			label="ASIDE Warnings" 
+			overviewRulerPreferenceKey="asideOverviewRulerPreference"
+			overviewRulerPreferenceValue="true" 
+			presentationLayer="10"
+			quickFixIcon="icons/devil.png" 
+			showInNextPrevDropdownToolbarAction="true"
+			showInNextPrevDropdownToolbarActionKey="asideShowInNextPrevDropdownToolbarAction"
+			symbolicIcon="warning" 
+			textPreferenceKey="asideTextPreference"
+			textPreferenceValue="false" 
+			textStylePreferenceKey="asideTextStylePreference"
+			textStylePreferenceValue="false" 
+			verticalRulerPreferenceKey="asideVerticalRulerPreference"
+			verticalRulerPreferenceValue="true">
+		</specification>
+	</extension>
+
+	<extension id="AsideMarkerImageProvider" point="org.eclipse.ui.ide.markerImageProviders">
+		<imageprovider class="edu.uncc.sis.aside.markers.AsideMarkerImageProvider"
+			icon="icons/ydevil.png" id="edu.uncc.sis.aside.AsideImageProvider"
+			markertype="edu.uncc.aside.AsideMarker">
+		</imageprovider>
+	</extension>
+
+	<extension id="AsideMarkerHelp" point="org.eclipse.ui.ide.markerHelp">
+		<markerHelp helpContextId="edu.uncc.sis.aside.AsideHelpContext"
+			markerType="edu.uncc.aside.AsideMarker">
+		</markerHelp>
+	</extension>
+	
+	<extension id="AsideMarkerResolution" point="org.eclipse.ui.ide.markerResolution">
+		<markerResolutionGenerator
+			class="edu.uncc.sis.aside.markers.AsideMarkerInputResolutionGenerator"
+			markerType="edu.uncc.aside.AsideMarker">
+			<!--
+				<attribute name="edu.uncc.sis.aside.marker.flow" value="input">
+				</attribute>
+			-->
+		</markerResolutionGenerator>
+		<markerResolutionGenerator
+			class="edu.uncc.sis.aside.markers.AsideMarkerOutputResolutionGenerator"
+			markerType="edu.uncc.aside.AsideMarker">
+			<!--
+				<attribute name="edu.uncc.sis.aside.marker.flow" value="output">
+				</attribute>
+			-->
+		</markerResolutionGenerator>
+  <markerResolutionGenerator
+        class="edu.uncc.sis.aside.markers.AsideMarkerSpecialOutputResolutionGenerator"
+        markerType="edu.uncc.aside.AsideMarker">
+  </markerResolutionGenerator>
+  <markerResolutionGenerator
+        class="edu.uncc.sis.aside.markers.AsideMarkerOnlyWarningResolutionGenerator"
+        markerType="edu.uncc.aside.AsideMarker">
+  </markerResolutionGenerator>
+	</extension>
+	<!-- -->
    <extension
          id="green.diamond"
          name="Green Diamond"
          point="org.eclipse.core.resources.markers">
          <super type="org.eclipse.core.resources.textmarker"/>
          <super type="ASIDE.RootMarker"/>
-         <persistent value="false"/>
+         <persistent value="true"/>
    </extension>
    <extension
    		 id="greenDiamondAnnotationType"
@@ -549,53 +586,7 @@
     
         <!-- here is the xml required to specify one marker type and its resolution generator -->
     
-   <extension
-         id="green.check"
-         name="Green Check"
-         point="org.eclipse.core.resources.markers">
-         <super type="org.eclipse.core.resources.textmarker"/>
-         <super type="ASIDE.RootMarker"/>
-         <persistent value="false"/>
-   </extension>
-   <extension
-   		 id="greenCheckAnnotationType"
-   		 name="Green Check Marker Annotation"
-         point="org.eclipse.ui.editors.annotationTypes">
-      <type
-            markerType="green.check"
-            name="greenCheckAnnotationType">
-      </type>
-   </extension>
-	<extension
-         point="org.eclipse.ui.editors.markerAnnotationSpecification"
-         id="greenCheckAnnotationSpec">
-      <specification
-            annotationType="greenCheckAnnotationType"
-            includeOnPreferencePage="true"
-            overviewRulerPreferenceKey="clruler"
-            label="Bound Access Control Annotation Request"
-            icon="icons/greenCheck.png"
-			overviewRulerPreferenceValue="true"
-			highlightPreferenceKey="highlight.background"
-			highlightPreferenceValue="true"
-			colorPreferenceKey="clcolor"
-			colorPreferenceValue="0,255,0"
-			textPreferenceKey="cltext"
-			textPreferenceValue="true"
-			presentationLayer="0"
-			verticalRulerPreferenceKey="clvertical"
-			verticalRulerPreferenceValue="true"
-			textStylePreferenceKey="clstyle"
-			textStylePreferenceValue="BOX">
-      </specification>
-   </extension> 
-    
-    <extension point="org.eclipse.ui.ide.markerResolution">
-      <markerResolutionGenerator
-         markerType="green.check"
-         class="edu.uncc.aside.codeannotate.asideInterface.CheckedResolutionGenerator"/>
-   </extension>
-    
+   
     <!-- end spec for one marker and resolution generator -->
     
     
@@ -670,7 +661,7 @@
          point="org.eclipse.core.resources.markers">
          <super type="org.eclipse.core.resources.textmarker"/>
          <super type="ASIDE.RootMarker"/>
-         <persistent value="false"/>
+         <persistent value="true"/>
    </extension>
    <extension
    		 id="greenDiamondBoxAnnotationType"
@@ -772,7 +763,7 @@
          point="org.eclipse.core.resources.markers">
          <super type="org.eclipse.core.resources.textmarker"/>
          <super type="ASIDE.RootMarker"/>
-         <persistent value="false"/>
+         <persistent value="true"/>
    </extension>
    <extension
    		 id="greenCheckBoxAnnotationType"
@@ -822,7 +813,7 @@
          point="org.eclipse.core.resources.markers">
          <super type="org.eclipse.core.resources.marker"/>
          <super type="ASIDE.RootMarker"/>
-         <persistent value="false"/>
+         <persistent value="true"/>
    </extension>
    <extension
    		 id="yellowQuestionBoxAnnotationType"
@@ -1075,74 +1066,7 @@
       </handler>
    </extension>
    
-
-	<extension id="edu.uncc.sis.aside.AsideMarker" point="org.eclipse.core.resources.markers"
-		name="Bad Security Practice" >
-          <super type="ASIDE.RootMarker"/>
-         <persistent value="false"/>		
-		<super type="org.eclipse.core.resources.textmarker">
-		</super>
-		<super type="org.eclipse.core.resources.problemmarker"></super>
-		<attribute name="type">
-		</attribute>
-		<attribute name="edu.uncc.sis.aside.marker.flow">
-		</attribute>
-		<attribute name="edu.uncc.sis.aside.marker.validationType">
-		</attribute>
-		<attribute name="edu.uncc.sis.aside.marker.targetPosition">
-		</attribute>
-  <attribute
-        name="edu.uncc.sis.aside.marker.ruleNameBelongTo">
-  </attribute>
-  <attribute
-        name="edu.uncc.sis.aside.marker.typeNameBelongTo">
-  </attribute>
-  <attribute
-        name="edu.uncc.sis.aside.marker.returnTypeOfMethodDeclarationBelongTo">
-  </attribute>
-	</extension>
-
-	<extension id="AsideMarkerAnnnotation" point="org.eclipse.ui.editors.annotationTypes">
-		<type markerSeverity="1" markerType="edu.uncc.sis.aside.AsideMarker"
-			name="edu.uncc.sis.aside.asideMarkerAnnotation">
-		</type>
-		<type name="edu.uncc.sis.aside.invisibleAnnotation"></type>
-	</extension>
-
-	<extension id="AsideMarkerAnnotationSpecification"
-		point="org.eclipse.ui.editors.markerAnnotationSpecification">
-		<specification annotationImageProvider="edu.uncc.sis.aside.markers.AsideMarkerImageProvider"
-			annotationType="edu.uncc.sis.aside.asideMarkerAnnotation"
-			colorPreferenceKey="asideColorPreference" colorPreferenceValue="255,193,193"
-			contributesToHeader="true" highlightPreferenceKey="asideHighlightPreference"
-			highlightPreferenceValue="false" icon="icons/devil.png"
-			includeOnPreferencePage="true" isGoToNextNavigationTarget="true"
-			isGoToNextNavigationTargetKey="asideIsGoToNextNavigationTarget"
-			isGoToPreviousNavigationTarget="true"
-			isGoToPreviousNavigationTargetKey="asideIsGoToPreviousNavigationTarget"
-			label="ASIDE Warnings" overviewRulerPreferenceKey="asideOverviewRulerPreference"
-			overviewRulerPreferenceValue="true" presentationLayer="10"
-			quickFixIcon="icons/devil.png" showInNextPrevDropdownToolbarAction="true"
-			showInNextPrevDropdownToolbarActionKey="asideShowInNextPrevDropdownToolbarAction"
-			symbolicIcon="warning" textPreferenceKey="asideTextPreference"
-			textPreferenceValue="false" textStylePreferenceKey="asideTextStylePreference"
-			textStylePreferenceValue="false" verticalRulerPreferenceKey="asideVerticalRulerPreference"
-			verticalRulerPreferenceValue="true">
-		</specification>
-	</extension>
-
-	<extension id="AsideMarkerImageProvider" point="org.eclipse.ui.ide.markerImageProviders">
-		<imageprovider class="edu.uncc.sis.aside.markers.AsideMarkerImageProvider"
-			icon="icons/ydevil.png" id="edu.uncc.sis.aside.AsideImageProvider"
-			markertype="edu.uncc.sis.aside.AsideMarker">
-		</imageprovider>
-	</extension>
-
-	<extension id="AsideMarkerHelp" point="org.eclipse.ui.ide.markerHelp">
-		<markerHelp helpContextId="edu.uncc.sis.aside.AsideHelpContext"
-			markerType="edu.uncc.sis.aside.AsideMarker">
-		</markerHelp>
-	</extension>
+   
 
     <!-- attribute state is a flag that indicates whether the decorator is on by default, lightweight decoration is processed in a background thread other then UI thread -->
 	<extension id="AsideDecorator" point="org.eclipse.ui.decorators">
@@ -1158,48 +1082,23 @@
 		</decorator>
 	</extension>
 
-	<extension id="AsideMarkerResolution" point="org.eclipse.ui.ide.markerResolution">
-		<markerResolutionGenerator
-			class="edu.uncc.sis.aside.markers.AsideMarkerInputResolutionGenerator"
-			markerType="edu.uncc.sis.aside.AsideMarker">
-			<!--
-				<attribute name="edu.uncc.sis.aside.marker.flow" value="input">
-				</attribute>
-			-->
-		</markerResolutionGenerator>
-		<markerResolutionGenerator
-			class="edu.uncc.sis.aside.markers.AsideMarkerOutputResolutionGenerator"
-			markerType="edu.uncc.sis.aside.AsideMarker">
-			<!--
-				<attribute name="edu.uncc.sis.aside.marker.flow" value="output">
-				</attribute>
-			-->
-		</markerResolutionGenerator>
-  <markerResolutionGenerator
-        class="edu.uncc.sis.aside.markers.AsideMarkerSpecialOutputResolutionGenerator"
-        markerType="edu.uncc.sis.aside.AsideMarker">
-  </markerResolutionGenerator>
-  <markerResolutionGenerator
-        class="edu.uncc.sis.aside.markers.AsideMarkerOnlyWarningResolutionGenerator"
-        markerType="edu.uncc.sis.aside.AsideMarker">
-  </markerResolutionGenerator>
-	</extension>
-<!--
+
 	<extension
        id="AsideCompilationParticipant"
        point="org.eclipse.jdt.core.compilationParticipant">
 		<compilationParticipant
 			class="edu.uncc.sis.aside.builder.AsideCompilationParticipant"
-			createsProblems="false" id="edu.uncc.sis.aside.AsideCompilationParticipant"
+			createsProblems="false" id="edu.uncc.sis.aside.builder.AsideCompilationParticipant"
 			modifiesEnvironment="true" requiredSourceLevel="1.5">
 		</compilationParticipant>
 	</extension>
--->
-<!--	
+
+
+
 <extension
        id="AsideStartup"
        point="org.eclipse.ui.startup">
     <startup class="edu.uncc.sis.aside.AsideStartup"/>
  </extension>
-   -->
+
 </plugin>

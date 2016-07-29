@@ -3,6 +3,8 @@ package edu.uncc.aside.codeannotate.asideInterface;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.ui.ISelectionListener;
 
+import edu.uncc.aside.codeannotate.Plugin;
+
 public class VariablesAndConstants 
 {
 		public final static String ANNOTATION_REQUEST_BOUND_RESOLUTION_DESC = "This annotation request has been bound to an annotation";
@@ -11,10 +13,10 @@ public class VariablesAndConstants
 		public final static String annotationURL = "https://www.owasp.org/index.php/Access_Control_Cheat_Sheet";
 		//these "chunks" are pieces of the description which are put together with some dynamic content by a method
 		public final static String chunkOne = "This annotation is linked to the following security sensitive operation:<P><P>Line ";
-		public final static String chunkTwo = "<P><P>Double click \"**********ASIDE Annotation**********\" on the left to navigate to the operation.";
-		public final static String ANNOTATION_VULNERABILITY_DESC = "ASIDE believes that this may be vulnerable. This same sensitive operation has appeared before but has different annotations";
-		public final static String ANNOTATION_VULNERABILITY_ONE_DESC = "ASIDE believes that this may be vulnerable. This same sensitive operation has appeared before but has different annotations. It has appeared at the following location <P><P> AccountsServlet.java line 66 AccountMapperImpl.updateAcc...";
-		public final static String ANNOTATION_VULNERABILITY_TWO_DESC = "ASIDE believes that this may be vulnerable. This same sensitive operation has appeared before but has different annotations. It has appeared at the following location <P><P> TransactionsServlet.java line 46 accounts.getAccount...";
+		public final static String chunkTwo = "<P><P>Double click \"**********" + Plugin.PLUGIN_NAME + " Annotation**********\" on the left to navigate to the operation.";
+		public final static String ANNOTATION_VULNERABILITY_DESC = "" + Plugin.PLUGIN_NAME + " believes that this may be vulnerable. This same sensitive operation has appeared before but has different annotations";
+		public final static String ANNOTATION_VULNERABILITY_ONE_DESC = "" + Plugin.PLUGIN_NAME + " believes that this may be vulnerable. This same sensitive operation has appeared before but has different annotations. It has appeared at the following location <P><P> AccountsServlet.java line 66 AccountMapperImpl.updateAcc...";
+		public final static String ANNOTATION_VULNERABILITY_TWO_DESC = "" + Plugin.PLUGIN_NAME + " believes that this may be vulnerable. This same sensitive operation has appeared before but has different annotations. It has appeared at the following location <P><P> TransactionsServlet.java line 46 accounts.getAccount...";
 		public final static String ANNOTATION_DELETE_DESC = "Deletes the annotation";
 		public final static String ANNOTATION_CHECKED_DELETE_DESC = "Deletes all annotations associated with this annotation request";
 		public final static String PLACEHOLDER_TEXT = "Placeholder for description";

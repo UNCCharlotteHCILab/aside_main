@@ -22,6 +22,7 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
 import edu.uncc.aside.codeannotate.Plugin;
+import edu.uncc.aside.codeannotate.PluginConstants;
 import edu.uncc.sis.aside.AsidePlugin;
 import edu.uncc.sis.aside.jobs.TrustBoundariesResetJob;
 import edu.uncc.sis.aside.jobs.ValidationRulesResetJob;
@@ -58,7 +59,7 @@ public class AsideRulePreferencePage extends PreferencePage implements
 
 		// Set the preference store for this preference page
 		setPreferenceStore(Plugin.getDefault().getPreferenceStore());
-		setDescription("General Settings for ASIDE Rules");
+		setDescription("General Settings for " + Plugin.PLUGIN_NAME + " Rules");
 	}
 
 	/*
@@ -101,9 +102,9 @@ public class AsideRulePreferencePage extends PreferencePage implements
 		GridData _asideRulesCheckData = new GridData(GridData.FILL_HORIZONTAL);
 		_asideRulesCheckData.horizontalIndent = 5;
 		_asideRulesCheck.setLayoutData(_asideRulesCheckData);
-		_asideRulesCheck.setText("Use default trust boundaries from ASIDE");
+		_asideRulesCheck.setText("Use default trust boundaries from " + Plugin.PLUGIN_NAME + "");
 		pre_asideRulesCheck = getPreferenceStore().getBoolean(
-				IPreferenceConstants.ASIDE_TB_PREFERENCE);
+				PluginConstants.ASIDE_TB_PREFERENCE);
 		_asideRulesCheck.setSelection(pre_asideRulesCheck);
 
 		_projectRulesCheck = new Button(trustBoundariesTabComposite, SWT.CHECK);
@@ -113,7 +114,7 @@ public class AsideRulePreferencePage extends PreferencePage implements
 		_projectRulesCheck
 				.setText("Use trust boundaries from the project under detection");
 		pre_projectRulesCheck = getPreferenceStore().getBoolean(
-				IPreferenceConstants.PROJECT_TB_PREFERENCE);
+				PluginConstants.PROJECT_TB_PREFERENCE);
 		_projectRulesCheck.setSelection(pre_projectRulesCheck);
 
 		_externalComposite = new Composite(trustBoundariesTabComposite,
@@ -137,7 +138,7 @@ public class AsideRulePreferencePage extends PreferencePage implements
 				if (checked) {
 					_pathList.setEnabled(true);
 					_pathList.setItems(convert(getPreferenceStore().getString(
-							IPreferenceConstants.EXTERNAL_TB_PATH_PREFERENCE)));
+							PluginConstants.EXTERNAL_TB_PATH_PREFERENCE)));
 					_addPathButton.setEnabled(true);
 					_removePathButton.setEnabled(_pathList.getSelectionIndex() >= 0);
 
@@ -150,7 +151,7 @@ public class AsideRulePreferencePage extends PreferencePage implements
 
 		});
 		pre_externalRulesCheck = getPreferenceStore().getBoolean(
-				IPreferenceConstants.EXTERNAL_TB_PREFERENCE);
+				PluginConstants.EXTERNAL_TB_PREFERENCE);
 		_externalRulesCheck.setSelection(pre_externalRulesCheck);
 
 		_pathComposite = new Composite(_externalComposite, SWT.SHADOW_NONE);
@@ -164,8 +165,8 @@ public class AsideRulePreferencePage extends PreferencePage implements
 
 		GridData _layoutData = new GridData();
 		_layoutData.horizontalSpan = 2;
-		_layoutData.heightHint = convertVerticalDLUsToPixels(IPreferenceConstants.LIST_HEIGHT_IN_DLUS);
-		_layoutData.widthHint = convertHorizontalDLUsToPixels(IPreferenceConstants.LIST_WIDTH_IN_DLUS);
+		_layoutData.heightHint = convertVerticalDLUsToPixels(PluginConstants.LIST_HEIGHT_IN_DLUS);
+		_layoutData.widthHint = convertHorizontalDLUsToPixels(PluginConstants.LIST_WIDTH_IN_DLUS);
 		_pathList.setLayoutData(_layoutData);
 		_pathList.addSelectionListener(new SelectionAdapter() {
 
@@ -284,9 +285,9 @@ public class AsideRulePreferencePage extends PreferencePage implements
 		GridData asideRulesCheckData = new GridData(GridData.FILL_HORIZONTAL);
 		asideRulesCheckData.horizontalIndent = 5;
 		asideRulesCheck.setLayoutData(asideRulesCheckData);
-		asideRulesCheck.setText("Use default validation rules from ASIDE");
+		asideRulesCheck.setText("Use default validation rules from " + Plugin.PLUGIN_NAME + "");
 		preasideRulesCheck = getPreferenceStore().getBoolean(
-				IPreferenceConstants.ASIDE_VR_PREFERENCE);
+				PluginConstants.ASIDE_VR_PREFERENCE);
 		asideRulesCheck.setSelection(preasideRulesCheck);
 
 		projectRulesCheck = new Button(validationRulesTabComposite, SWT.CHECK);
@@ -296,7 +297,7 @@ public class AsideRulePreferencePage extends PreferencePage implements
 		projectRulesCheck
 				.setText("Use validation rules from the project under detection");
 		preprojectRulesCheck = getPreferenceStore().getBoolean(
-				IPreferenceConstants.PROJECT_VR_PREFERENCE);
+				PluginConstants.PROJECT_VR_PREFERENCE);
 		projectRulesCheck.setSelection(preprojectRulesCheck);
 
 		externalComposite = new Composite(validationRulesTabComposite, SWT.NONE);
@@ -316,7 +317,7 @@ public class AsideRulePreferencePage extends PreferencePage implements
 				boolean checked = externalRulesCheck.getSelection();
 				if (checked) {
 					pathList.setEnabled(true);
-					prepathList = getPreferenceStore().getString(IPreferenceConstants.EXTERNAL_VR_PATH_PREFERENCE);
+					prepathList = getPreferenceStore().getString(PluginConstants.EXTERNAL_VR_PATH_PREFERENCE);
 					pathList.setItems(convert(prepathList));
 					addPathButton.setEnabled(true);
 
@@ -331,7 +332,7 @@ public class AsideRulePreferencePage extends PreferencePage implements
 
 		});
 		preexternalRulesCheck = getPreferenceStore().getBoolean(
-				IPreferenceConstants.EXTERNAL_VR_PREFERENCE);
+				PluginConstants.EXTERNAL_VR_PREFERENCE);
 		externalRulesCheck.setSelection(preexternalRulesCheck);
 
 		pathComposite = new Composite(externalComposite, SWT.NONE);
@@ -344,8 +345,8 @@ public class AsideRulePreferencePage extends PreferencePage implements
 		pathList.setSize(150, 115);
 		GridData layoutData = new GridData();
 		layoutData.horizontalSpan = 2;
-		layoutData.heightHint = convertVerticalDLUsToPixels(IPreferenceConstants.LIST_HEIGHT_IN_DLUS);
-		layoutData.widthHint = convertHorizontalDLUsToPixels(IPreferenceConstants.LIST_WIDTH_IN_DLUS);
+		layoutData.heightHint = convertVerticalDLUsToPixels(PluginConstants.LIST_HEIGHT_IN_DLUS);
+		layoutData.widthHint = convertHorizontalDLUsToPixels(PluginConstants.LIST_WIDTH_IN_DLUS);
 		pathList.setLayoutData(layoutData);
 
 		pathList.addSelectionListener(new SelectionAdapter() {
@@ -460,13 +461,13 @@ public class AsideRulePreferencePage extends PreferencePage implements
 		// Apply these default settings to controls
 		_asideRulesCheck.setSelection(Plugin.getDefault()
 				.getPreferenceStore()
-				.getBoolean(IPreferenceConstants.ASIDE_TB_PREFERENCE));
+				.getBoolean(PluginConstants.ASIDE_TB_PREFERENCE));
 		_projectRulesCheck.setSelection(Plugin.getDefault()
 				.getPreferenceStore()
-				.getBoolean(IPreferenceConstants.PROJECT_TB_PREFERENCE));
+				.getBoolean(PluginConstants.PROJECT_TB_PREFERENCE));
 		_externalRulesCheck.setSelection(Plugin.getDefault()
 				.getPreferenceStore()
-				.getBoolean(IPreferenceConstants.EXTERNAL_TB_PREFERENCE));
+				.getBoolean(PluginConstants.EXTERNAL_TB_PREFERENCE));
 
 		externalSwitchON = _externalRulesCheck.getSelection();
 		if (externalSwitchON) {
@@ -483,13 +484,13 @@ public class AsideRulePreferencePage extends PreferencePage implements
 
 		asideRulesCheck.setSelection(Plugin.getDefault()
 				.getPreferenceStore()
-				.getBoolean(IPreferenceConstants.ASIDE_VR_PREFERENCE));
+				.getBoolean(PluginConstants.ASIDE_VR_PREFERENCE));
 		projectRulesCheck.setSelection(Plugin.getDefault()
 				.getPreferenceStore()
-				.getBoolean(IPreferenceConstants.PROJECT_VR_PREFERENCE));
+				.getBoolean(PluginConstants.PROJECT_VR_PREFERENCE));
 		externalRulesCheck.setSelection(Plugin.getDefault()
 				.getPreferenceStore()
-				.getBoolean(IPreferenceConstants.EXTERNAL_VR_PREFERENCE));
+				.getBoolean(PluginConstants.EXTERNAL_VR_PREFERENCE));
 
 		externalSwitchON = externalRulesCheck.getSelection();
 		if (externalSwitchON) {
@@ -593,7 +594,7 @@ public class AsideRulePreferencePage extends PreferencePage implements
 
 	private String[] convert(String preferenceValue) {
 		StringTokenizer tokenizer = new StringTokenizer(preferenceValue,
-				IPreferenceConstants.PATH_DELIMITER);
+				PluginConstants.PATH_DELIMITER);
 		int tokenCount = tokenizer.countTokens();
 		String[] elements = new String[tokenCount];
 

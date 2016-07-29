@@ -14,8 +14,8 @@ import org.eclipse.jface.viewers.ILightweightLabelDecorator;
 import org.eclipse.jface.viewers.LabelProvider;
 
 import edu.uncc.aside.codeannotate.Plugin;
+import edu.uncc.aside.codeannotate.PluginConstants;
 import edu.uncc.sis.aside.AsidePlugin;
-import edu.uncc.sis.aside.constants.PluginConstants;
 
 public class AsideLightweightDecorator extends LabelProvider implements
 		ILightweightLabelDecorator {
@@ -66,13 +66,15 @@ public class AsideLightweightDecorator extends LabelProvider implements
 				if (javaElement.getElementType() != IJavaElement.JAVA_PROJECT)
 					return;
 
-				IMarker[] markers = project.findMarkers(PluginConstants.ASIDE_MARKER_TYPE,
+				IMarker[] markers = project.findMarkers(PluginConstants.MARKER_INPUT_VALIDATION,
 						false, IResource.DEPTH_INFINITE);
 				if (markers.length != 0) {
+					
 					decoration.addOverlay(
-							Plugin.getImageDescriptor("reddot.jpg"),
+							Plugin.getImageDescriptor(PluginConstants.ICON_DECORATING_OVERLAY),
 							IDecoration.TOP_LEFT);
-					decoration.addSuffix(" [ASIDED]");
+					
+					decoration.addSuffix(" [" + Plugin.PLUGIN_NAME + "D]");
 				}
 
 			} else if (resource.getType() == IResource.FOLDER) {
@@ -85,12 +87,12 @@ public class AsideLightweightDecorator extends LabelProvider implements
 						&& javaElement.getElementType() != IJavaElement.PACKAGE_FRAGMENT)
 					return;
 
-				IMarker[] markers = folder.findMarkers(PluginConstants.ASIDE_MARKER_TYPE,
+				IMarker[] markers = folder.findMarkers(PluginConstants.MARKER_INPUT_VALIDATION,
 						false, IResource.DEPTH_INFINITE);
 				if (markers.length != 0) {
-					decoration.addSuffix(" [ASIDED]");
+					decoration.addSuffix(" [" + Plugin.PLUGIN_NAME + "D]");
 					decoration.addOverlay(
-							Plugin.getImageDescriptor("reddot.jpg"),
+							Plugin.getImageDescriptor(PluginConstants.ICON_DECORATING_OVERLAY),
 							IDecoration.TOP_LEFT);
 				}
 
@@ -105,14 +107,14 @@ public class AsideLightweightDecorator extends LabelProvider implements
 				if (javaElement.getElementType() != IJavaElement.COMPILATION_UNIT)
 					return;
 
-				IMarker[] markers = file.findMarkers(PluginConstants.ASIDE_MARKER_TYPE, false,
+				IMarker[] markers = file.findMarkers(PluginConstants.MARKER_INPUT_VALIDATION, false,
 						IResource.DEPTH_INFINITE);
 				// markers should not be null according to spec
 				if (markers.length != 0) {
 
-					decoration.addSuffix(" [ASIDED]");
+					decoration.addSuffix(" [" + Plugin.PLUGIN_NAME + "D]");
 					decoration.addOverlay(
-							Plugin.getImageDescriptor("reddot.jpg"),
+							Plugin.getImageDescriptor(PluginConstants.ICON_DECORATING_OVERLAY),
 							IDecoration.TOP_LEFT);
 				}
 			} else {
