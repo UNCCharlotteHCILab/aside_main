@@ -7,7 +7,7 @@ import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.ASTVisitor;
 
 import edu.uncc.aside.codeannotate.Plugin;
-import edu.uncc.sis.aside.AsidePlugin;
+import edu.uncc.sis.aside.Old_AsidePlugin;
 
 public class FindNodeListVisitor extends ASTVisitor {
 

@@ -49,13 +49,13 @@
 <extension
        point="org.eclipse.ui.handlers">
        <handler
-          class="edu.uncc.aside.codeannotate.actions.ASIDEToggleStatusHandler"
+          class="edu.uncc.aside.actions.ASIDEToggleStatusHandler"
           commandId="ToggleAside">
       
     </handler>
        
     <handler
-          class="edu.uncc.aside.codeannotate.actions.ASIDECodeAnnotateHandler"
+          class="edu.uncc.aside.actions.ASIDECodeAnnotateHandler"
           commandId="annotatePath">
           <!--
            <activeWhen>
@@ -318,7 +318,7 @@
     <extension point="org.eclipse.ui.ide.markerResolution">
       <markerResolutionGenerator
          markerType="green.check"
-         class="edu.uncc.aside.codeannotate.asideInterface.CheckedResolutionGenerator"/>
+         class="edu.uncc.aside.asideInterface.CheckedResolutionGenerator"/>
    </extension>
     <!-- -->
 	<extension id="edu.uncc.aside.AsideMarker" 
@@ -475,7 +475,7 @@
     <extension point="org.eclipse.ui.ide.markerResolution">
       <markerResolutionGenerator
          markerType="green.diamond"
-         class="edu.uncc.aside.codeannotate.asideInterface.AnnotationResolutionGenerator"/>
+         class="edu.uncc.aside.asideInterface.AnnotationResolutionGenerator"/>
    </extension>
     
     <!-- end spec for one marker and resolution generator -->
@@ -529,7 +529,7 @@
     <extension point="org.eclipse.ui.ide.markerResolution">
       <markerResolutionGenerator
          markerType="red.flag"
-         class="edu.uncc.aside.codeannotate.asideInterface.VulnerabilityResolutionGenerator"/>
+         class="edu.uncc.aside.asideInterface.VulnerabilityResolutionGenerator"/>
    </extension>
     
     <!-- end spec for one marker and resolution generator -->
@@ -579,7 +579,7 @@
     <extension point="org.eclipse.ui.ide.markerResolution">
       <markerResolutionGenerator
          markerType="red.question"
-         class="edu.uncc.aside.codeannotate.asideInterface.VulnerabilityResolutionGenerator"/>
+         class="edu.uncc.aside.asideInterface.VulnerabilityResolutionGenerator"/>
    </extension>
     <!-- end spec for one marker and resolution generator -->
     
@@ -650,7 +650,7 @@
     <extension point="org.eclipse.ui.ide.markerResolution">
       <markerResolutionGenerator
          markerType="yellow.question"
-         class="edu.uncc.aside.codeannotate.asideInterface.QuestionResolutionGenerator"/>
+         class="edu.uncc.aside.asideInterface.QuestionResolutionGenerator"/>
    </extension>
     
     <!-- end spec for one marker and resolution generator -->
@@ -697,7 +697,7 @@
     <extension point="org.eclipse.ui.ide.markerResolution">
       <markerResolutionGenerator
          markerType="green.diamond.box"
-         class="edu.uncc.aside.codeannotate.asideInterface.AnnotationResolutionGenerator"/>
+         class="edu.uncc.aside.asideInterface.AnnotationResolutionGenerator"/>
    </extension>
     
     <!-- end spec for one marker and resolution generator -->
@@ -749,7 +749,7 @@
     <extension point="org.eclipse.ui.ide.markerResolution">
       <markerResolutionGenerator
          markerType="red.flag.box"
-         class="edu.uncc.aside.codeannotate.asideInterface.VulnerabilityResolutionGenerator"/>
+         class="edu.uncc.aside.asideInterface.VulnerabilityResolutionGenerator"/>
    </extension>
     
     <!-- end spec for one marker and resolution generator -->
@@ -799,7 +799,7 @@
     <extension point="org.eclipse.ui.ide.markerResolution">
       <markerResolutionGenerator
          markerType="green.check.box"
-         class="edu.uncc.aside.codeannotate.asideInterface.CheckedResolutionGenerator"/>
+         class="edu.uncc.aside.asideInterface.CheckedResolutionGenerator"/>
    </extension>
     
     <!-- end spec for one marker and resolution generator -->
@@ -858,7 +858,7 @@
     <extension point="org.eclipse.ui.ide.markerResolution">
       <markerResolutionGenerator
          markerType="yellow.question.box"
-         class="edu.uncc.aside.codeannotate.asideInterface.QuestionResolutionGenerator"/>
+         class="edu.uncc.aside.asideInterface.QuestionResolutionGenerator"/>
    </extension>
    
    
@@ -907,7 +907,7 @@
     <extension point="org.eclipse.ui.ide.markerResolution">
       <markerResolutionGenerator
          markerType="red.question.box"
-         class="edu.uncc.aside.codeannotate.asideInterface.VulnerabilityResolutionGenerator"/>
+         class="edu.uncc.aside.asideInterface.VulnerabilityResolutionGenerator"/>
    </extension>
     
     <!-- end spec for one marker and resolution generator -->
@@ -1098,7 +1098,7 @@
 <extension
        id="AsideStartup"
        point="org.eclipse.ui.startup">
-    <startup class="edu.uncc.sis.aside.AsideStartup"/>
+    <startup class="edu.uncc.sis.aside.Old_AsideStartup"/>
  </extension>
 
 </plugin>

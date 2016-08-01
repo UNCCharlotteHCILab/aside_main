@@ -6,7 +6,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.texteditor.IAnnotationImageProvider;
 
 import edu.uncc.aside.codeannotate.Plugin;
-import edu.uncc.sis.aside.AsidePlugin;
+import edu.uncc.sis.aside.Old_AsidePlugin;
 
 public class AsideMarkerImageProvider implements IAnnotationImageProvider {
 
@@ -20,8 +20,8 @@ public class AsideMarkerImageProvider implements IAnnotationImageProvider {
 
 	@Override
 	public ImageDescriptor getImageDescriptor(String imageDescritporId) {
-		//not by path like AsidePlugin
-		//return AsidePlugin.getImageDescriptor("icons/devil.png")
+		//not by path like Old_AsidePlugin
+		//return Old_AsidePlugin.getImageDescriptor("icons/devil.png")
 		return Plugin.getImageDescriptor("icons/redFlag.png");
 	}
 

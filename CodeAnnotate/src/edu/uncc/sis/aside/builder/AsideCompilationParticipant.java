@@ -40,7 +40,7 @@ import org.eclipse.text.edits.TextEdit;
 
 import edu.uncc.aside.codeannotate.Plugin;
 import edu.uncc.aside.utils.ESAPIConfigProcess;
-import edu.uncc.sis.aside.AsidePlugin;
+import edu.uncc.sis.aside.Old_AsidePlugin;
 import edu.uncc.sis.aside.jobs.ESAPIConfigurationJob;
 import edu.uncc.sis.aside.visitors.MethodDeclarationVisitor;
 import edu.uncc.sis.aside.visitors.MethodInvocationVisitor;
@@ -343,7 +343,7 @@ public class AsideCompilationParticipant extends CompilationParticipant {
 							if (value != null && !value.isEmpty()) {
 								for (IMarker marker : value) {
 									if (marker.exists()) {
-										marker.delete();
+									//marker.delete();
 									}
 								}
 							}

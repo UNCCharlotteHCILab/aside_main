@@ -2,7 +2,7 @@ Bundle-ActivationPolicy: lazy
 Bundle-SymbolicName: ESIDE_Logging;singleton:=true
 Bundle-Vendor: UNC Charlotte
 Bundle-Version: 1.0.0.qualifier
-Bundle-Name: ASIDE Logging Facility
+Bundle-Name: ESIDE Logging Facility
 Require-Bundle: org.eclipse.core.runtime;bundle-version="3.0.0",
  org.apache.log4j;bundle-version="1.2.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6

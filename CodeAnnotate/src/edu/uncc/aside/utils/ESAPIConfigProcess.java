@@ -29,7 +29,7 @@ import org.eclipse.jdt.launching.JavaRuntime;
 import org.osgi.framework.Bundle;
 
 import edu.uncc.aside.codeannotate.PluginConstants;
-import edu.uncc.sis.aside.AsidePlugin;
+import edu.uncc.sis.aside.Old_AsidePlugin;
 
 public class ESAPIConfigProcess{
 

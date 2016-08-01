@@ -23,12 +23,12 @@ import org.eclipse.ui.IMarkerResolution2;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.browser.IWebBrowser;
 
+import edu.uncc.aside.asideInterface.VariablesAndConstants;
 import edu.uncc.aside.codeannotate.Plugin;
 import edu.uncc.aside.codeannotate.PluginConstants;
-import edu.uncc.aside.codeannotate.asideInterface.VariablesAndConstants;
 import edu.uncc.aside.utils.MarkerAndAnnotationUtil;
 import edu.uncc.aside.utils.Converter;
-import edu.uncc.sis.aside.AsidePlugin;
+import edu.uncc.sis.aside.Old_AsidePlugin;
 
 public class ReadMoreResolution implements IMarkerResolution,
 IMarkerResolution2{

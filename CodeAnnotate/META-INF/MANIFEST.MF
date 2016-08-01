@@ -1,10 +1,10 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: ESIDE CodeAnnotate
+Bundle-Name: ESIDE
 Bundle-SymbolicName: ESIDE;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: edu.uncc.aside.codeannotate.Plugin
-Bundle-Vendor: UNCC
+Bundle-Vendor: UNC Charlotte
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.eclipse.core.resources,
@@ -26,10 +26,10 @@ Import-Package: edu.uncc.sis.aside.logging,
 Export-Package: edu,
  edu.uncc,
  edu.uncc.aside,
+ edu.uncc.aside.actions,
+ edu.uncc.aside.asideInterface,
  edu.uncc.aside.ast,
  edu.uncc.aside.codeannotate,
- edu.uncc.aside.codeannotate.actions,
- edu.uncc.aside.codeannotate.asideInterface,
  edu.uncc.aside.codeannotate.interactive,
  edu.uncc.aside.codeannotate.jobs,
  edu.uncc.aside.codeannotate.listeners,

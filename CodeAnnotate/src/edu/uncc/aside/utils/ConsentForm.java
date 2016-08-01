@@ -4,7 +4,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
-import edu.uncc.sis.aside.AsidePlugin;
+import edu.uncc.sis.aside.Old_AsidePlugin;
 import edu.uncc.sis.aside.views.UserIDDialog;
 
 public class ConsentForm {

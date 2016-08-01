@@ -34,7 +34,7 @@ import edu.uncc.aside.codeannotate.visitors.MethodInvocationAccessorVisitor;
 /**
  * 
  * @author Jing Xie (jxie2 at uncc dot edu)
- *
+ * 
  */
 public class CodeAnnotateElementChangeListener implements
 		IElementChangedListener {
@@ -79,19 +79,11 @@ public class CodeAnnotateElementChangeListener implements
 					IProject projectOfInterest = unitOfInterest
 							.getJavaProject().getProject();
 					
-				/*MM Not required	
-					PathFinder finderOfInterest = PathFinder
-							.getInstance(projectOfInterest);
-					
-				 	
-					ArrayList<Path> pathsOfInterest = finderOfInterest
-							.getPathsRelatedToUnit(unitOfInterest);
-				*/
 				
 					BufferChangedEvent evt = Messenger.getInstance()
 							.getDocumentEvent();
 					
-					// Why do we need this event from Messenger: To get start and length of chenged characters
+					// Why do we need this event from Messenger: To get start and length of changed characters
 					if (evt == null) {
 						return;
 					} else {
@@ -139,6 +131,8 @@ public class CodeAnnotateElementChangeListener implements
 								return;
 							}
 
+							//MM Removing the Annotation requests and answers
+							/*MM
 							GarbagePathCollector job = new GarbagePathCollector(
 									"Job for Removing Destroyed Paths",
 									projectOfInterest, unitOfInterest,
@@ -146,6 +140,7 @@ public class CodeAnnotateElementChangeListener implements
 							
 							job.setPriority(Job.INTERACTIVE);
 							job.schedule();
+							*/
 							
 							// Investigating the new method for Access Control Annotations
 							MethodInvocationAccessorVisitor visitor = new MethodInvocationAccessorVisitor(

@@ -23,7 +23,7 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 
 import edu.uncc.aside.codeannotate.Plugin;
 import edu.uncc.aside.codeannotate.PluginConstants;
-import edu.uncc.sis.aside.AsidePlugin;
+import edu.uncc.sis.aside.Old_AsidePlugin;
 import edu.uncc.sis.aside.jobs.TrustBoundariesResetJob;
 import edu.uncc.sis.aside.jobs.ValidationRulesResetJob;
 

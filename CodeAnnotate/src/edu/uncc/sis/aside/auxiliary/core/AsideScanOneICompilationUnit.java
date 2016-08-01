@@ -30,7 +30,7 @@ import org.eclipse.ui.IWorkbenchPart;
 import edu.uncc.aside.codeannotate.Plugin;
 import edu.uncc.aside.codeannotate.PluginConstants;
 import edu.uncc.aside.utils.Converter;
-import edu.uncc.sis.aside.AsidePlugin;
+import edu.uncc.sis.aside.Old_AsidePlugin;
 import edu.uncc.sis.aside.jobs.ESAPIConfigurationJob;
 import edu.uncc.sis.aside.visitors.MethodDeclarationVisitor;
 

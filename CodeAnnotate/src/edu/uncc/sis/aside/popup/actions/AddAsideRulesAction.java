@@ -23,7 +23,7 @@ import org.eclipse.ui.IWorkbenchPart;
 
 import edu.uncc.aside.codeannotate.Plugin;
 import edu.uncc.aside.codeannotate.PluginConstants;
-import edu.uncc.sis.aside.AsidePlugin;
+import edu.uncc.sis.aside.Old_AsidePlugin;
 
 public class AddAsideRulesAction implements IObjectActionDelegate {
 

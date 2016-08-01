@@ -48,7 +48,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 
 import edu.uncc.aside.codeannotate.Plugin;
-import edu.uncc.sis.aside.AsidePlugin;
+import edu.uncc.sis.aside.Old_AsidePlugin;
 import edu.uncc.sis.aside.domainmodels.RuleType;
 import edu.uncc.sis.aside.domainmodels.ValidationRule;
 import edu.uncc.sis.aside.domainmodels.ValidationRulesProvider;

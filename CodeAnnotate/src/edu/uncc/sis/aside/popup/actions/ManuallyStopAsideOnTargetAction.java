@@ -38,8 +38,8 @@ import edu.uncc.aside.codeannotate.Plugin;
 import edu.uncc.aside.codeannotate.PluginConstants;
 import edu.uncc.aside.utils.ConsentForm;
 import edu.uncc.aside.utils.Converter;
-import edu.uncc.aside.utils.MakerManagement;
-import edu.uncc.sis.aside.AsidePlugin;
+import edu.uncc.aside.utils.InterfaceUtil;
+import edu.uncc.sis.aside.Old_AsidePlugin;
 import edu.uncc.sis.aside.jobs.ESAPIConfigurationJob;
 import edu.uncc.sis.aside.visitors.MethodDeclarationVisitor;
 
@@ -68,7 +68,7 @@ public class ManuallyStopAsideOnTargetAction implements IObjectActionDelegate {
 		
 		if(Plugin.getDefault().isAllowed()){
 		
-			MakerManagement.deleteWorkspaceMarkers("");
+			InterfaceUtil.deleteWorkspaceMarkers("");
 			Plugin.getDefault().setAllowed(false);
 	}
 	}

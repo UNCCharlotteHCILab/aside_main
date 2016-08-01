@@ -16,7 +16,7 @@ import org.w3c.dom.Document;
 import edu.uncc.aside.codeannotate.Plugin;
 import edu.uncc.aside.codeannotate.PluginConstants;
 import edu.uncc.aside.utils.DocumentWrapper;
-import edu.uncc.sis.aside.AsidePlugin;
+import edu.uncc.sis.aside.Old_AsidePlugin;
 import edu.uncc.sis.aside.xml.ValidationRulesReader;
 import edu.uncc.sis.aside.xml.XMLFileUtil;
 

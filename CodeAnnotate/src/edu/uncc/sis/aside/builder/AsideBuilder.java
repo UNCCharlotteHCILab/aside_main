@@ -28,7 +28,7 @@ import org.eclipse.jdt.core.dom.MethodDeclaration;
 import edu.uncc.aside.ast.ASTBuilder;
 import edu.uncc.aside.codeannotate.Plugin;
 import edu.uncc.aside.codeannotate.PluginConstants;
-import edu.uncc.sis.aside.AsidePlugin;
+import edu.uncc.sis.aside.Old_AsidePlugin;
 import edu.uncc.sis.aside.visitors.MethodDeclarationVisitor;
 
 public class AsideBuilder extends IncrementalProjectBuilder {

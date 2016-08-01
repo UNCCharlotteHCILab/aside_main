@@ -76,7 +76,7 @@ import org.eclipse.ui.PartInitException;
 
 import edu.uncc.aside.codeannotate.Plugin;
 import edu.uncc.aside.codeannotate.PluginConstants;
-import edu.uncc.sis.aside.AsidePlugin;
+import edu.uncc.sis.aside.Old_AsidePlugin;
 import edu.uncc.sis.aside.visitors.FindNodeVisitor;
 
 /**
@@ -137,7 +137,6 @@ public class MarkerAndAnnotationUtil {
 			
 		return marker;
 	}
-
 
 	public static void clearStaleMarkers(ArrayList<IMarker> markers) {
 		try {

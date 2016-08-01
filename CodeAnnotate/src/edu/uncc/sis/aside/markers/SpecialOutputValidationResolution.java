@@ -36,7 +36,7 @@ import org.eclipse.ui.PartInitException;
 import edu.uncc.aside.ast.ASTResolving;
 import edu.uncc.aside.codeannotate.Plugin;
 import edu.uncc.aside.utils.MarkerAndAnnotationUtil;
-import edu.uncc.sis.aside.AsidePlugin;
+import edu.uncc.sis.aside.Old_AsidePlugin;
 import edu.uncc.sis.aside.auxiliary.core.AsideScanOneICompilationUnit;
 import edu.uncc.sis.aside.auxiliary.core.CodeGenerator;
 

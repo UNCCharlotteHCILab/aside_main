@@ -29,7 +29,7 @@ import edu.uncc.aside.codeannotate.PluginConstants;
 import edu.uncc.aside.utils.MarkerAndAnnotationUtil;
 import edu.uncc.aside.utils.Converter;
 import edu.uncc.aside.utils.SecureProgrammingKnowledgeBase;
-import edu.uncc.sis.aside.AsidePlugin;
+import edu.uncc.sis.aside.Old_AsidePlugin;
 import edu.uncc.sis.aside.auxiliary.properties.ESAPIPropertiesReader;
 import edu.uncc.sis.aside.domainmodels.VulnerabilityKnowledge;
 import edu.uncc.sis.aside.views.ExplanationView;

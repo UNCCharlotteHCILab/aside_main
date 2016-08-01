@@ -36,7 +36,7 @@ import org.osgi.framework.Bundle;
 
 import edu.uncc.aside.codeannotate.PluginConstants;
 import edu.uncc.aside.utils.ConsentForm;
-import edu.uncc.sis.aside.AsidePlugin;
+import edu.uncc.sis.aside.Old_AsidePlugin;
 
 public class ESAPIConfigurationJob extends Job {
 

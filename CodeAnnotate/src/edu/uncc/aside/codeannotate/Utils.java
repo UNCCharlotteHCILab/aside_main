@@ -5,8 +5,11 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
@@ -35,15 +38,35 @@ import org.eclipse.jdt.core.dom.MethodInvocation;
 import edu.uncc.aside.codeannotate.XMLConfig.SinkDescription;
 import edu.uncc.aside.codeannotate.models.Path;
 import edu.uncc.aside.codeannotate.models.AccessControlPoint;
-import edu.uncc.aside.codeannotate.asideInterface.InterfaceUtil;
+import edu.uncc.aside.utils.InterfaceUtil;
 import edu.uncc.aside.utils.MarkerAndAnnotationUtil;
-
- import edu.uncc.aside.utils.MarkerAndAnnotationUtil;
+import edu.uncc.aside.utils.MarkerAndAnnotationUtil;
 
 /*
  * Very useful utility class, currently copied from LapsePlus
  */
 public class Utils {
+	/**
+	 * @return
+	 */
+	public static Set<IProject> getActiveProjects() {
+		
+		IProject[] allProjects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
+		
+		Set<IProject> activeProjects= new HashSet<IProject>();
+		
+		for (IProject p : allProjects){
+			if(p.getName().equalsIgnoreCase("RemoteSystemsTempFiles") || 
+	    			p.getName().equalsIgnoreCase("Servers")  
+	    			|| p.getName().equalsIgnoreCase("Server") ){
+	    		continue;
+	    	}
+		    if(p.isOpen())
+			        activeProjects.add(p);
+     	}
+		return activeProjects;
+	}
+	
 /*	
 	public static class RetrievalImplementation 
 	{
@@ -483,22 +506,48 @@ public class Utils {
 	public static void removeMarkersOnPath(Path path) {
 		if(path == null)
 			return;
-		AccessControlPoint accessor = path.getSensitiveOperation();
-		removeMarkerOnPoint(accessor);
+		AccessControlPoint sesnsitiveSink = path.getSensitiveOperation();
+		
+		removeAnnotationMarkerOfPoint(sesnsitiveSink);
+		
 		List<AccessControlPoint> checks = path.getChecks();
+		
 		for (AccessControlPoint check : checks) {
-			removeMarkerOnPoint(check);
+			removeAnnotationMarkerOfPoint(check);
 		}
 
 	}
 
-	public static void removeMarkerOnPoint(AccessControlPoint accessControlPoint) {
-		ASTNode node = accessControlPoint.getNode();
-		IResource resource = accessControlPoint.getResource();
+	public static void removeAnnotationMarkerOfPoint(AccessControlPoint point) {
+		ASTNode node = point.getNode();
+		IResource resource = point.getResource();
 
 		try {
 			int char_start, length;
 
+			IMarker[] allMarkers = resource.findMarkers(
+					PluginConstants.MARKER_ROOT_TYPE, true, IResource.DEPTH_INFINITE);
+			
+			for (IMarker marker : allMarkers) {
+
+				if( marker.getType().equals(PluginConstants.MARKER_ANNOTATION_REQUEST)
+						|| marker.getType().equals(PluginConstants.MARKER_ANNOTATION_CHECKED)
+						|| marker.getType().equals(PluginConstants.MARKER_ANNOTATION_ANSWER)
+						)
+				{
+					char_start = marker.getAttribute(IMarker.CHAR_START, -1);
+					length = marker.getAttribute(IMarker.CHAR_END, -1) - char_start;
+
+					if (char_start == node.getStartPosition()
+							&& length == node.getLength()) {
+						
+						InterfaceUtil.removeMarker(marker);
+					}
+				}
+
+			}
+			
+			/*
 			IMarker[] questionMarkers = resource.findMarkers(
 					PluginConstants.MARKER_ANNOTATION_REQUEST, false, IResource.DEPTH_ONE);
 			IMarker[] checkedMarkers = resource.findMarkers(
@@ -537,6 +586,7 @@ public class Utils {
 				}
 
 			}
+			*/
 
 		} catch (CoreException e) {
 			e.printStackTrace();

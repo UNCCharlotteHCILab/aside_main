@@ -15,7 +15,7 @@ import org.eclipse.jface.viewers.LabelProvider;
 
 import edu.uncc.aside.codeannotate.Plugin;
 import edu.uncc.aside.codeannotate.PluginConstants;
-import edu.uncc.sis.aside.AsidePlugin;
+import edu.uncc.sis.aside.Old_AsidePlugin;
 
 public class AsideLightweightDecorator extends LabelProvider implements
 		ILightweightLabelDecorator {

@@ -24,7 +24,7 @@ import edu.uncc.aside.codeannotate.PluginConstants;
 import com.sun.mail.imap.IMAPFolder;
 import com.sun.mail.imap.IMAPMessage;
 */
-import edu.uncc.sis.aside.AsidePlugin;
+import edu.uncc.sis.aside.Old_AsidePlugin;
 
 public class AuthenCenter {
 	

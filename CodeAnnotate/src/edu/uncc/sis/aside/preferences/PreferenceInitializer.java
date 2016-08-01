@@ -5,7 +5,7 @@ import org.eclipse.jface.preference.IPreferenceStore;
 
 import edu.uncc.aside.codeannotate.Plugin;
 import edu.uncc.aside.codeannotate.PluginConstants;
-import edu.uncc.sis.aside.AsidePlugin;
+import edu.uncc.sis.aside.Old_AsidePlugin;
 
 /**
  * Class used to initialize default preference values.

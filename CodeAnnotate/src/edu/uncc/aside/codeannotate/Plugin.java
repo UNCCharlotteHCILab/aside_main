@@ -49,15 +49,16 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
 import edu.uncc.sis.aside.logging.AsideLoggingManager;
-import edu.uncc.sis.aside.auxiliary.core.RunAnalysisOnAllProjects;
+import edu.uncc.sis.aside.auxiliary.core.RunAnalysis;
 import edu.uncc.sis.aside.auxiliary.core.sample1;
-import edu.uncc.aside.codeannotate.asideInterface.InterfaceUtil;
 import edu.uncc.aside.codeannotate.listeners.CodeAnnotateElementChangeListener;
 import edu.uncc.aside.codeannotate.models.Path;
 import edu.uncc.aside.codeannotate.presentations.AnnotationView;
 import edu.uncc.aside.utils.AuthenCenter;
 import edu.uncc.aside.utils.ConsentForm;
+import edu.uncc.aside.utils.InterfaceUtil;
 import edu.uncc.aside.utils.MakerManagement;
+import edu.uncc.aside.utils.MarkerAndAnnotationUtil;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
@@ -125,62 +126,7 @@ public class Plugin extends AbstractUIPlugin {
 	public static void setAllowed(boolean isAllowed) {
 		Plugin.isAllowed = isAllowed;
 	}
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.eclipse.ui.plugin.AbstractUIPlugin#start(org.osgi.framework.BundleContext
-	 * )
-	 */
 	
-	
-	/*
-	public static Runnable readFromCSVFile() throws InterruptedException
-	{
-		String csvFile = "C:\\Users\\nnur\\Desktop\\AnnotationCSV.csv";
-		BufferedReader br = null;
-		String line = "";
-		String headerLine="";
-		String cvsSplitBy = ",";
-		
-		try {
-
-			br = new BufferedReader(new FileReader(csvFile));
-			headerLine = br.readLine();
-			while ((line = br.readLine()) != null) {
-
-			        // use comma as separator
-				String[] annotation = line.split(cvsSplitBy);
-
-				System.out.println("Annotation [annotationMarkerName= " + annotation[0] 
-						 				+ " , fileName=" + annotation[1]
-						 				+ " , markerStart=" + annotation[2]
-						 				+ " , highlightingLength =" + annotation[3]
-						 				+ " , annotatedText=" + annotation[4]
-						 				+ " , randomId=" + annotation[5] + "]");
-				//setAnnotationFromCSVFile(annotation[0],annotation[1],annotation[2],annotation[3],annotation[4],annotation[5]);
-				MakerManagement.setAnnotationFromCSVFile( annotation[0],annotation[1],annotation[2],annotation[3]);
-			}
-
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-			if (br != null) {
-				try {
-					br.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		}
-
-		System.out.println("Done");
-		return null;
-	  }
-		
-	*/
 	
 	public void start(BundleContext context) throws Exception {
 		
@@ -236,7 +182,7 @@ public class Plugin extends AbstractUIPlugin {
 
 		configureLog();
 
-		System.out.println("Aside Plugin start print test");
+		System.out.println("Aside Plugin starts.");
 
 		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 		// get current date time with Date()
@@ -255,23 +201,14 @@ public class Plugin extends AbstractUIPlugin {
 		if (Plugin.isAllowed()) {
 			Plugin.getDefault().setUserId(userIDFromSystem);
 
-			System.out.println("Removing Markers");
-
-			// MakerManagement.deleteWorkspaceMarkers(PluginConstants.MARKER_ROOT_TYPE);
+		//	InterfaceUtil.deleteWorkspaceMarkers(PluginConstants.MARKER_ROOT_TYPE);
 
 			
-
-			//RunAnalysisOnAllProjects runAnalysisOnAllProjects = new RunAnalysisOnAllProjects();
-			//	runAnalysisOnAllProjects.runOnAllProjects();
-
-
-
-			//	MakerManagement.restoreMarkersFromFile("markers.csv");
-
-			//	Utils.RetrievalImplementation.readFromCSVFile();
-			
-		//	IMarker[] markers = project.getCorrespondingResource().findMarkers(, true, IResource.DEPTH_INFINITE);
+		//	RunAnalysis runAnalysisOnAllProjects = new RunAnalysis();
+		//	RunAnalysis.runAllAnalysisOnAllProjects();
     		
+			runBackgroundJobs();
+			
 			restoreMarkers();
 
 		}else{
@@ -299,6 +236,34 @@ public class Plugin extends AbstractUIPlugin {
 		//		ResourcesPlugin.getWorkspace().addResourceChangeListener(
 		//				CodeAnnotateMarkerChangeListener.getListener());
 	}
+
+	/**
+	 * 
+	 */
+	private void runBackgroundJobs() {
+		// Running jobs for all active projects in the current workspace
+		Set<IProject> activeProjects = Utils.getActiveProjects();
+		
+		for(final IProject project : activeProjects){
+
+			System.out.println("projectname = " + project.getName());
+
+			if(project.getName().equalsIgnoreCase("RemoteSystemsTempFiles") || 
+					project.getName().equalsIgnoreCase("Servers")  
+					|| project.getName().equalsIgnoreCase("Server") ){
+				continue;
+			}
+			IJavaProject javaProject = JavaCore.create(project);
+
+			if(javaProject == null )
+				continue;
+						
+			// Document Changer listeners for all Java files are set
+			RunAnalysis.runChangeListernersJob(project);
+
+		} 
+	}
+
 
 	/**
 	 * 
@@ -475,7 +440,7 @@ public class Plugin extends AbstractUIPlugin {
 	 *            the path
 	 * @return the image descriptor
 	 */
-// differently define in AsidePlugin. Has to investigate later
+// differently define in Old_AsidePlugin. Has to investigate later
 	public static ImageDescriptor getImageDescriptor(String name) {
 		String iconPath = "icons/";
 		try {

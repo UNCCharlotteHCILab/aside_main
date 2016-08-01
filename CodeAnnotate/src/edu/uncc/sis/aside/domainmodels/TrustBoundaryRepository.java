@@ -19,7 +19,7 @@ import edu.uncc.aside.codeannotate.PluginConstants;
 import edu.uncc.aside.utils.MarkerAndAnnotationUtil;
 import edu.uncc.aside.utils.Converter;
 import edu.uncc.aside.utils.Validator;
-import edu.uncc.sis.aside.AsidePlugin;
+import edu.uncc.sis.aside.Old_AsidePlugin;
 import edu.uncc.sis.aside.preferences.PreferencesSet;
 import edu.uncc.sis.aside.xml.TrustBoundariesReader;
 import edu.uncc.sis.aside.xml.XMLFileUtil;

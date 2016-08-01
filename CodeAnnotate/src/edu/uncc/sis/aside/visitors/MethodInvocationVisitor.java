@@ -43,11 +43,11 @@ import edu.uncc.aside.codeannotate.models.ModelRegistry;
 import edu.uncc.aside.codeannotate.models.ModelCollector;
 import edu.uncc.aside.utils.MarkerAndAnnotationUtil;
 import edu.uncc.aside.utils.Converter;
-import edu.uncc.sis.aside.AsidePlugin;
+import edu.uncc.sis.aside.Old_AsidePlugin;
 import edu.uncc.sis.aside.domainmodels.TrustBoundaryRepository;
 import edu.uncc.sis.aside.preferences.PreferencesSet;
 
-import org.apache.commons.lang3.*;
+
 /**
  * 
  * @author Jun Zhu (jzhu16 at uncc dot edu) Jing Xie (jxie2 at uncc dot edu) <a href="http://www.uncc.edu/">UNC
@@ -344,11 +344,11 @@ public class MethodInvocationVisitor extends ASTVisitor {
 						((ASTNode)node,this.astRoot,this.cu.getResource());
 				
 				modelCollector.addInputValidation(point);
-				
+				/*
 				byte[] data =SerializationUtils.serialize(point);
 				
 				markerAttributes.put("model.point", data);
-				
+				*/
 				marker = MarkerAndAnnotationUtil.addMarker(astRoot,
 						markerAttributes, PluginConstants.MARKER_INPUT_VALIDATION);
 				

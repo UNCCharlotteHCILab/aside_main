@@ -12,7 +12,7 @@ import org.eclipse.ui.IMarkerResolution;
 import org.eclipse.ui.IMarkerResolution2;
 
 import edu.uncc.aside.codeannotate.Plugin;
-import edu.uncc.sis.aside.AsidePlugin;
+import edu.uncc.sis.aside.Old_AsidePlugin;
 
 public class SemanticValidationResolution implements IMarkerResolution, IMarkerResolution2 {
 
