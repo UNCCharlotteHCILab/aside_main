@@ -843,6 +843,8 @@ TextEdit textEdits = null;
 	private ASTRewriteAndTryCatchFlag _refactoringCodeAndAddASIDE_Flag(ICompilationUnit fCompilationUnit, ASTRewrite fASTRewrite, AST ast,
 			String inputType, Statement statement,ASTNode node, String returnTypeOfMethodDeclarationStr) {
 
+		//MM Building the ESAPI validation statements. There is no template, only adding different AST nodes in a particular order
+		// We can have different orders based on the library selcetd for validation
 		ASTRewriteAndTryCatchFlag astRewriteAndTryCatchFlag = new ASTRewriteAndTryCatchFlag();
 		MethodInvocation esapiValidator = ast.newMethodInvocation();
 		esapiValidator.setExpression(ast.newSimpleName(PluginConstants.ESAPI));
@@ -1633,6 +1635,9 @@ ListRewrite fListRewrite = fASTRewrite.getListRewrite(
 	public boolean generateSpecialOutputValidationCode(IDocument document,
 			CompilationUnit astRoot, ImportRewrite fImportRewrite, AST ast,
 			ASTNode node, String inputType, String returnTypeOfMethodDeclarationStr) {
+		
+		//MM Task ID should be provided so that the customizable properties can be read from the config file
+		
 		//document, root, fImportRewrite, ast, node, key
 		ASTNode matchNode = null;
 			ASTNode newNode = null; // the node created and put into the validation code.

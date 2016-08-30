@@ -1,15 +1,25 @@
 package edu.uncc.sis.aside.markers;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
+import java.nio.file.FileAlreadyExistsException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.nio.file.Files;
 
 import org.eclipse.core.runtime.FileLocator;
 import org.apache.log4j.Logger;
@@ -26,6 +36,7 @@ import org.eclipse.ui.browser.IWebBrowser;
 import edu.uncc.aside.asideInterface.VariablesAndConstants;
 import edu.uncc.aside.codeannotate.Plugin;
 import edu.uncc.aside.codeannotate.PluginConstants;
+import edu.uncc.aside.utils.InterfaceUtil;
 import edu.uncc.aside.utils.MarkerAndAnnotationUtil;
 import edu.uncc.aside.utils.Converter;
 import edu.uncc.sis.aside.Old_AsidePlugin;
@@ -160,14 +171,16 @@ IMarkerResolution2{
 	    
 	    
 	    String userID = Plugin.getUserId();
-	    url = Platform.getBundle(PluginConstants.PLUGIN_ID).getEntry("files/ASIDE_Input_Validation.html");
-	    
+	   // url = Platform.getBundle(PluginConstants.PLUGIN_ID).getEntry("files/ASIDE_Input_Validation.html");
+	    String fileName="";
 	    /// Make Them Offline. Changing the URLl to load from local
 	    if(this.readMoreType.equals("output")){
 	    	
 	    	
-	    	 url = Platform.getBundle(PluginConstants.PLUGIN_ID).getEntry("files/ASIDE_Output_Encoding.html");
+	    	// url = Platform.getBundle(PluginConstants.PLUGIN_ID).getEntry("files/ASIDE_Output_Encoding.html");
 	    	//url = new URL("https://bf01edb9cef99332ecbb51e2b7d6bd6e0ea6e715.googledrive.com/host/0B_sYP_Y3om2XaVVManJKcU1xVHc/ASIDE_Output_Encoding.html");
+	    	 fileName = "ASIDE_Output_Encoding.html";
+	    	 
 		 }else if(this.readMoreType.equals("input")){
 			 
 			 ruleNameBelongTo = (String)marker.getAttribute("edu.uncc.sis.aside.marker.typeNameBelongTo");
@@ -175,8 +188,10 @@ IMarkerResolution2{
 			 String ruleTypeUrlParam = Converter.ruleTypeToUrlParam(ruleNameBelongTo);
 			    //System.out.println("ruleTypeUrlParam-=-"+ruleTypeUrlParam);
 			 
-			 url = Platform.getBundle(PluginConstants.PLUGIN_ID).getEntry("files/ASIDE_Input_Validation.html");
+			 //url = Platform.getBundle(PluginConstants.PLUGIN_ID).getEntry("files/ASIDE_Input_Validation.html");
 			 //url = new URL("https://5b1d4b79290586caa52348cf1f0035de64b53bf3.googledrive.com/host/0B_sYP_Y3om2XSDB0aUMwSTRTQUE/ASIDE_Input_Validation.html");
+			 fileName = "ASIDE_Input_Validation.html";
+			 
 			 
 			 if(userID.equals("anonymizedUser")){
 			    	urlStr = queryUrlStr + ruleTypeUrlParam + ".jsp";
@@ -186,50 +201,23 @@ IMarkerResolution2{
 		 else if(this.readMoreType.equals("sql"))
 		 {
 			 //url = Platform.getBundle(PluginConstants.PLUGIN_ID).getEntry("files\\ASIDE SQL Statement.html");
-			 url =  Platform.getBundle(PluginConstants.PLUGIN_ID).getEntry("files/ASIDE_SQL_Statement.html");
+			// url =  Platform.getBundle(PluginConstants.PLUGIN_ID).getEntry("files/ASIDE_SQL_Statement.html");
+			 fileName = "ASIDE_SQL_Statement.html";
 		 }
 		 else if(this.readMoreType.equals("annotation"))
 			 {
 				 //url = Platform.getBundle(PluginConstants.PLUGIN_ID).getEntry("files\\ASIDE SQL Statement.html");
-				 url =  Platform.getBundle(PluginConstants.PLUGIN_ID).getEntry("files/ASIDE_Access_Control.html");
+				// url =  Platform.getBundle(PluginConstants.PLUGIN_ID).getEntry("files/ASIDE_Access_Control.html");
+				 fileName = "ASIDE_Access_Control.html";
 			 }
 	    
+	    Path tempPath =InterfaceUtil.prepareHelpFiles();
+	  
+	    url =tempPath.resolve(fileName).toUri().toURL();	    
 	    
-	    //System.out.println("urlStr = " + urlStr);
-	    
-		 webBrowser.openURL(FileLocator.resolve(url));
-		 URLConnection urlConnection = url.openConnection();
-		 urlConnection.setDoOutput(true);
-	    //URL url = new URL(urlStr);
-	    
-	    //webBrowser.openURL(url);
-		//URLConnection urlConnection = url.openConnection();
-		//urlConnection.setDoOutput(true);
-		//added Aug 30th
-		/*
-	   
-		String data = URLEncoder.encode("userID", "UTF-8") + "=" + URLEncoder.encode(userID, "UTF-8");
-		OutputStreamWriter wr = new OutputStreamWriter(urlConnection.getOutputStream());
-		wr.write(data);*/
-		//
-		/*
-		 *  OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
-		 *  wr.write(data);
-    wr.flush();
-
-    // Get the response
-    BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-    String line;
-    while ((line = rd.readLine()) != null) {
-        // Process line...
-    }
-    wr.close();
-    rd.close();
-    */
+		webBrowser.openURL(FileLocator.resolve(url));
+	
 	    } catch (CoreException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (UnsupportedEncodingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (MalformedURLException e) {

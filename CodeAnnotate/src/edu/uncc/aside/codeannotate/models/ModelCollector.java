@@ -15,7 +15,7 @@ import edu.uncc.aside.codeannotate.visitors.RemoveModelVisitor;
 /**
  * 
  * @author Jing Xie (jxie2 at uncc dot edu)
- * @author Mahmoud Mohammadi (mmoham12 at uncc dot edu)
+ * 
  */
 public class ModelCollector extends Model {
 

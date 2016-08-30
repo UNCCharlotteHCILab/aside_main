@@ -52,7 +52,7 @@ public class SyntacticValidationResolution implements IMarkerResolution,
 			SyntacticValidationResolution.class.getName());
 
 	private ICompilationUnit fCompilationUnit;
-	private String fInputType;
+	private String fInputType; //MM Menu Item Id in the future
 	private IMarker fMarker;
 //	private IProject fProject;
 
@@ -69,6 +69,8 @@ public class SyntacticValidationResolution implements IMarkerResolution,
 		fInputType = inputType;
 		fMarker = marker;
 	//	fProject = project;
+		
+		//MM Preparing the label, icon and description from the config file
 	}
 
 	@Override

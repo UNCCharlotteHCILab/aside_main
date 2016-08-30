@@ -3,6 +3,12 @@ package edu.uncc.aside.utils;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Array;
+import java.net.URL;
+import java.nio.file.FileAlreadyExistsException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -17,6 +23,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.Platform;
 //import org.eclipse.dltk.core.DLTKCore;
 //import org.eclipse.dltk.core.IScriptProject;
 //import org.eclipse.dltk.core.ISourceModule;
@@ -60,10 +67,11 @@ import edu.uncc.aside.codeannotate.models.ModelRegistry;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.io.PrintWriter;
 
 import javax.mail.*;
-import javax.print.DocFlavor.URL;
+//import javax.print.DocFlavor.URL;
 
 //import edu.uncc.aside.codeannotate.NodeFinder;
 //import edu.uncc.aside.codeannotate.util.Utils;
@@ -80,6 +88,82 @@ public  class InterfaceUtil
 	public static String annotationMarkerName=null;
 	public static String randomId=null;
 	
+	public static Path  prepareHelpFiles()
+	{
+		URL helpUrls[] = new URL[10];
+	    String[] helpFiles = new String[10];
+	    
+	    helpFiles [0] ="jquery.min.js";
+	    helpFiles [1] ="hello.js";
+	    helpFiles [2] ="main.css";
+	    helpFiles [3] ="ASIDE_Access_Control.html";
+	    helpFiles [4] ="ASIDE_Input_Validation.html";
+	    helpFiles [5] ="ASIDE_Output_Encoding.html";
+	    helpFiles [6] ="ASIDE_SQL_Statement.html";
+	    helpFiles [7] ="yellowQuestion.png";
+	    helpFiles [8] ="devil-icon.png";
+	    
+	    int helpFilesCuont= 9;
+	    
+	    for ( int i=0; i< helpFilesCuont; i++)	    	
+	    	helpUrls[i] = Platform.getBundle(PluginConstants.PLUGIN_ID).getEntry("files/" +helpFiles [i]);
+	     
+	    //System.out.println("urlStr = " + urlStr);
+	    final String DEFAULT_TEMP_PATH = System.getProperty("java.io.tmpdir");
+	    Path tempPath =  Paths.get(DEFAULT_TEMP_PATH, "ESIDE");
+	    
+	    try {
+	    	//Creating the ESIDE directory in temp dir
+	    	
+	    	if (! Files.exists(tempPath))	    	
+	    		Files.createDirectory(tempPath);
+	    	
+	    	// Create Help files
+	    	for ( int i=0; i< helpFilesCuont; i++)
+	    	{
+	    	 Path temp= InterfaceUtil.getOrCreateFile(tempPath.toString(), helpFiles[i]);
+	    	 InputStream instream = helpUrls[i].openStream();
+	    	 
+	    	 Files.copy(helpUrls[i].openStream(), temp, StandardCopyOption.REPLACE_EXISTING);
+	    	 
+	    	 instream.close();
+	    	}
+	    	    	 
+	        
+	    } catch(FileAlreadyExistsException e){
+	        // the directory already exists.
+	    	
+	    } catch (IOException e) {
+	        //something else went wrong
+	        e.printStackTrace();
+	    }
+	    
+	    return tempPath;
+	}
+	public static Path getOrCreateFile(String filePath, String fileName) {
+		Path path = null;
+		
+		Path directory = Paths.get(filePath);
+		
+		Path file = directory.resolve(fileName);
+		
+		if (Files.exists(file)) {
+			path = file;
+		} else if (Files.notExists(file)) {
+			try {
+			    // Create the empty file with default permissions
+			    path = Files.createFile(file);
+			} catch (FileAlreadyExistsException e) {
+				
+				//logger.error("File already exists (shouldn't happen): " + file, e);
+			} catch (IOException e) {
+			    // Some other sort of failure, such as permissions.
+				//logger.error("Permissions failure for file creation: " + file, e);
+			}
+		}
+
+		return path;
+	}
 	//changes a marker type, like a yellow question into a green check. markerType of 0 means it is an annotation request. markerType of 1 means it is an annotation
 	public static void changeMarker(String targetMarkerName, int srcIndex, int srcMarkerType, int srcSecondIndex)
 	{
