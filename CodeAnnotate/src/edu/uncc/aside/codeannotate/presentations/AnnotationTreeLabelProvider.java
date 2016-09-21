@@ -5,7 +5,9 @@ import java.util.Map;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.ui.internal.dialogs.ViewLabelProvider;
+import org.eclipse.jface.viewers.LabelProvider;
+//import org.eclipse.ui.internal.dialogs.ViewLabelProvider;
+
 
 import edu.uncc.aside.codeannotate.Plugin;
 import edu.uncc.aside.codeannotate.models.InputValidationPoint;
@@ -21,7 +23,8 @@ import edu.uncc.aside.codeannotate.models.SQLInjectionPoint;
 public class AnnotationTreeLabelProvider extends ColorDecoratingLabelProvider {
 
 	public AnnotationTreeLabelProvider() {
-		super(new ViewLabelProvider(null, null), null);
+		super(new LabelProvider(), null);
+		//super(new ViewLabelProvider(null, null), null);
 	}
 
 	@Override
