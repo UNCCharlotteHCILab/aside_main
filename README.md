@@ -46,7 +46,7 @@ Solution: First, ensure that you are using a supported version of eclipse for "J
 
 Optional: Installing on Eclipse for Java Developers (Not EE)
 
-If you already have eclipse Neon, Mars, or Luna for Java Developers (with no EE) installed, we recommend that you download a supported version of eclipse for "Java EE Developers." Multiple Eclipse installations can exist on one device without any difficulties, provided that they have different workspaces. However, if you wish to use your existing version, you may be able to do so, but will need to install the Eclipse plugin development environment (pde). To do this, please click "Help" -> "Install New Software" -> choose "All Sites" search for "PDE" and install it. It may take several minutes for the entry to appear. If any errors occur after installing and restarting Eclipse, please install an alernative version of Eclipse with EE
+If you already have eclipse Neon, Mars, or Luna for Java Developers (with no EE) installed, we recommend that you download a supported version of eclipse for "Java EE Developers." Multiple Eclipse installations can exist on one device without any difficulties, provided that they have different workspaces. However, if you wish to use your existing version, you may be able to do so, but will need to install the Eclipse plugin development environment (pde). To do this, please click "Help" -> "Install New Software" -> choose "All Available Sites" search for "PDE" and install it. It may take several minutes for the entry to appear. If any errors occur after installing and restarting Eclipse, please install an alernative version of Eclipse with EE
 
 
 -Tyler W Thomas
