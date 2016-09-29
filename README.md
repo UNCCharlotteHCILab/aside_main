@@ -17,8 +17,16 @@ Eclipse Neon for Java EE Developers is recommended. At the time of this writing,
 
 http://www.eclipse.org/downloads/packages/eclipse-ide-java-ee-developers/neon1rc3
 
-
 Installation Instructions:
+
+1. Ensure you have followed the "Before Installing" section to make sure you have a compatible version of Eclipse
+2. Download and extract the contents of ESIDE zip file into the "plugins" directory of eclipse
+3. Restart Eclipse. Contratulations, ESIDE is installed.
+
+
+
+
+Installation Instructions (for PhD students and researchers):
 
 1. Ensure you have followed the "Before Installing" section to make sure you have a compatible version of Eclipse
 2. Download code or clone repository. If downloaded, extract the zip file.
