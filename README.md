@@ -26,6 +26,10 @@ Installation Instructions:
 
 
 
+
+
+
+
 Installation Instructions (for PhD students and researchers):
 
 1. Ensure you have followed the "Before Installing" section to make sure you have a compatible version of Eclipse
