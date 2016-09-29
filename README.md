@@ -21,7 +21,7 @@ Installation Instructions:
 
 1. Ensure you have followed the "Before Installing" section to make sure you have a compatible version of Eclipse
 2. Download and extract the contents of ESIDE zip file into the "plugins" directory of eclipse
-3. Restart Eclipse. Contratulations, ESIDE is installed.
+3. Restart Eclipse. Congratulations, ESIDE is installed.
 
 
 
