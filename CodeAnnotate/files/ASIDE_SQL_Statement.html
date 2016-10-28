@@ -40,7 +40,7 @@
 <div class="info-section">
 	<div class="info-head"><h3>+ <span>How do you fix it?</span></h3></div>
 	<div class="info-content" style="display: none;">
-		Look back at your code.  In this line, the sql command is using a Statement, to query rather than a PreparedStatement.  When using a PreparedStatement, the SQL statement is precompiled so the DBMS does not compile the statement when executed.  In other words, the statement and the data are not presented on the same line.  By separating the two, the DBMS does not execute the data as its own statement.  This prevents unintended queries.
+		Look back at your code.  In this line, the SQL command is using a Statement, to query rather than a PreparedStatement.  When using a PreparedStatement, the SQL statement is pre-compiled so the DBMS does not compile the statement when executed.  In other words, the statement and the data are not presented on the same line.  By separating the two, the DBMS does not execute the data as its own statement.  This prevents unintended queries.
 		<p><button id="example-prepared">View Example Prepared Statement</button>
 		</p><div class="expandable" id="prepared-code" style="display: none;">
 			<p><i>PreparedStatement preparedStatement = con.prepareStatement("INSERT INTO transaction (accountNumber, transactionDate, payee, amount) VALUES (?, ?, ?, ?)");

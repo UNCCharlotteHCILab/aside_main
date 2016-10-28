@@ -138,6 +138,7 @@ public class ASIDEToggleStatusHandler extends AbstractHandler {
 
 			Plugin.setAllowed(true);
 			
+			
 			MessageDialog.openInformation(null, "Info", "" + Plugin.PLUGIN_NAME + " is turning on. Please wait until it scans the source codes.");
 					
 			RunAnalysis.runAllAnalysisOnAllProjects();

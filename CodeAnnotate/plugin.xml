@@ -107,6 +107,11 @@
       
       
    </extension>  
+   
+   
+   <!-- dont think a part of code now from here -->
+   
+   
    <extension
          point="org.eclipse.core.resources.markers" 
          id="ASIDE.RootMarker" name="ASIDE Root Marker">     
@@ -273,7 +278,8 @@
       </compilationParticipant>
    </extension>
    
-    
+     <!-- dont think a part of code now to here -->
+     
 <extension
          id="green.check"
          name="Green Check"

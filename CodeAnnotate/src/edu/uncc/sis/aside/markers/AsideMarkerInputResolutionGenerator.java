@@ -110,10 +110,9 @@ public class AsideMarkerInputResolutionGenerator implements
 		ArrayList<String> definedInputTypeList = MarkerAndAnnotationUtil.filterValidationTypes(tmpList);
 		
 		// The First Option in Menu. ReadMore information with Devil icon		
-		IMarkerResolution readMoreResolution = new ReadMoreResolution(
+		IMarkerResolution TitleMarkerResolution = new TitleMarkerResolution(
 				 marker,  "input", "");
-		
-		resolutionSet.add(readMoreResolution);
+		resolutionSet.add(TitleMarkerResolution);
 
 //Adding other menu items from definedInputTypeList
 		if (validationType.equals("String")) {
@@ -144,7 +143,11 @@ public class AsideMarkerInputResolutionGenerator implements
 			Date noResolutionDate = new Date();
 			logger.info(Plugin.getUserId() + dateFormat.format(noResolutionDate) + " No Resolution is available.");
 		}
-
+		
+		IMarkerResolution readMoreResolution = new ReadMoreResolution(
+				 marker,  "input", "");
+		resolutionSet.add(readMoreResolution);
+		
 		IMarkerResolution ignoreResolution = new IgnoreMarkerResolution(
 				fCompilationUnit, PluginConstants.INPUT_IGNORE_RANK_NUM, "input");
 		resolutionSet.add(ignoreResolution);

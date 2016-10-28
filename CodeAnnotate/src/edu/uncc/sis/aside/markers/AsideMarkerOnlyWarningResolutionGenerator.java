@@ -113,16 +113,20 @@ public class AsideMarkerOnlyWarningResolutionGenerator implements
 		//for the case of OnlyWarning, inputType is just the msg Aside gonna show, not a real type
 		String inputType = PluginConstants.DontUseWarning;// + PluginConstants.BlankLine+ PluginConstants.DynamicSQLWarningMsg;
 		
-		IMarkerResolution readMoreResolution = new ReadMoreResolution(
-				 marker,  "input", "");
+		IMarkerResolution TitleMarkerResolution = new TitleMarkerResolution(
+				 marker,  "sql", "");
 		
-		resolutionSet.add(readMoreResolution);
+		resolutionSet.add(TitleMarkerResolution);
 		
 		OnlyWarningResolution resolution = null;
 			resolution = new OnlyWarningResolution(
 					fCompilationUnit, marker, inputType, project);
 			resolutionSet.add(resolution);
-		
+			
+			IMarkerResolution readMoreResolution = new ReadMoreResolution(
+					 marker,  "sql", "");
+			
+			resolutionSet.add(readMoreResolution);
 		
 
 //		IMarkerResolution ignoreResolution = new IgnoreMarkerResolution(

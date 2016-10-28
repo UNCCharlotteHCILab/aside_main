@@ -783,6 +783,7 @@ public  class InterfaceUtil
 			callingIndex = callingMarker.getAttribute("markerIndex", -1);
 			secondIndex = callingMarker.getAttribute("secondIndex", -1); //this will be -1 if the marker is an annotation request. This is ok since changeAnnotationHighlighting handles it properly
 			
+			//to which file the marker is associated
 			IResource theResource = callingMarker.getResource();
 			IFile theFile = (IFile) theResource;
 			fileName = theFile.getName();

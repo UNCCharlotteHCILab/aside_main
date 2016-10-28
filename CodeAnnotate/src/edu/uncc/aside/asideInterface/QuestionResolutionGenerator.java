@@ -53,13 +53,14 @@ import edu.uncc.sis.aside.markers.*;
 		          return new IMarkerResolution[] 
 		        {
 		             //new QuestionTitleResolution("**********" + Plugin.pluginName + " Annotation Request**********"+problem),
-		        	new ReadMoreResolution(marker, "annotation", ""+ problem),		        	
+		        	new TitleMarkerResolution(marker, "annotation", ""+ problem),		        	
 		        	
 		        	new AnnotateNowResolution("41-Add Annotation", PluginConstants.MARKER_ANNOTATION_REQUEST,randomId),
 		        //	new QuestionResolution("42-Delete Annotation"+problem),
 		        	
 		        	new IgnoreMarkerResolution(
-		    				fCompilationUnit, PluginConstants.INPUT_IGNORE_RANK_NUM, "annotation")
+		    				fCompilationUnit, PluginConstants.INPUT_IGNORE_RANK_NUM, "annotation"),
+		        	new ReadMoreResolution(marker, "annotation", ""+ problem)
 		        	
 		         //    new QuestionResolution("403-Modify Annotation"+problem),
 		         //    new AnnotationRequestReadMore("404-Read More"+problem),

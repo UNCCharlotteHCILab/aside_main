@@ -123,11 +123,10 @@ public class AsideMarkerOutputResolutionGenerator implements
 		}
 
 		LinkedList<IMarkerResolution> resolutions = new LinkedList<IMarkerResolution>();
-		//for test use
-				IMarkerResolution readMoreResolution = new ReadMoreResolution(
-						 marker,  "output", "");
-				resolutions.add(readMoreResolution);
-				
+		
+		IMarkerResolution TitleMarkerResolution = new TitleMarkerResolution(marker,  "output", "");
+		resolutions.add(TitleMarkerResolution);
+		
 		String type = null;
 		for (int i = 0; i < SIZE - 1; i++) {
 			type = PluginConstants.ENCODING_TYPES[i];
@@ -135,7 +134,11 @@ public class AsideMarkerOutputResolutionGenerator implements
 					type);
 			resolutions.add(encodingResolution);
 		}
-
+		
+	//for test use
+		IMarkerResolution readMoreResolution = new ReadMoreResolution(marker,  "output", "");
+		resolutions.add(readMoreResolution);
+		
 		IMarkerResolution ignoreResolution = new IgnoreMarkerResolution(fCompilationUnit, PluginConstants.OUTPUT_IGNORE_RANK_NUM, "encoding");
 		resolutions.add(ignoreResolution);
 

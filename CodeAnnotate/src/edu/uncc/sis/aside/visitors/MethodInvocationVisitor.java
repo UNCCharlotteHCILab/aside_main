@@ -132,8 +132,11 @@ public class MethodInvocationVisitor extends ASTVisitor {
 	@Override
 	public boolean visit(MethodInvocation node) {
 		
+		System.out.println("The invoked method name is " + node.getName());
+		
 		IMethodBinding methodBinding = node.resolveMethodBinding();
 		
+		System.out.println("The binded method name is " + methodBinding.getName());
 		
 
 	//	System.out.println("MM visit(MethodInvocation");
@@ -152,6 +155,8 @@ public class MethodInvocationVisitor extends ASTVisitor {
 		}
 		String qualifiedName = returnTypeBinding.getQualifiedName();
 		boolean isMethodInvocation = true;
+		
+		System.out.println("The return type name is " + qualifiedName);
 		
 		//System.out.println("MM TrustBoundaryRepository 1");
 		

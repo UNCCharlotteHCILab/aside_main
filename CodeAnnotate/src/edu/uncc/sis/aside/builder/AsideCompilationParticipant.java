@@ -99,8 +99,11 @@ public class AsideCompilationParticipant extends CompilationParticipant {
 				String description = "Project: " + resourceProject.getName()
 						+ "\nLocation: "
 						+ resourceProject.getLocation().toOSString() + "\n";
+				System.out.println(description);
+				
 
 				IFile aside_detection = resourceProject.getFile(".aside");
+				
 
 				if (aside_detection == null || !aside_detection.exists()) {
 					aside_detection.create(
@@ -218,7 +221,7 @@ public class AsideCompilationParticipant extends CompilationParticipant {
 				
 				System.out.println("MM After F_AST_AFFECTED");
 				
-				CompilationUnit cuAfterReconcile = context.getAST3();
+				CompilationUnit cuAfterReconcile = context.getAST8();
 
 				if (cuAfterReconcile == null) {
 					return;

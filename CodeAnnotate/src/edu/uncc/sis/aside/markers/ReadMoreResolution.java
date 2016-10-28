@@ -73,22 +73,27 @@ IMarkerResolution2{
 		// First Option : Read more examples
 		if(this.readMoreType.equals("input")){
 			
-			description ="This line of code reads untrusted data. If the input is not validated before it is used, attackers can potentially insert malicious code into the program. This can lead to Cross Site Scripting or other security problems.";
-			instruction ="";
-			moreInfo =" Use the options below to insert code that validates this input, or Read more information about this vulnerability and how to fix it.";
-			
-		content = instruction + "<p><p>" + description + "<p><p>" + moreInfo;
+			instruction = "-- Double click the \"Input Validation: Explanations and Examples\" link for an in-depth review of these issues";
+			description = "Security issues occur when malicious characters make their way into applications, programs, systems and databases (to name a few). Therefore, it is imperative to validate anything that is externally obtained prior to doing anything with the external input.";
+			moreInfo = "Follow the \"Input Validation: Explanations and Examples\" link for more info about why this method invocation needs validation.";
+		
 		
 		}else if(this.readMoreType.equals("output")){
 			instruction = "-- Double click the \"Output Encoding: Explanations and Examples\" link for an in-depth review of these issues.";
-			description = " MM Security issues occur when malicious characters make their way into the output. Therefore, it is imperative to encode anything that is externally obtained prior to sending it to a browser.";
+			description = " Security issues occur when malicious characters make their way into the output. Therefore, it is imperative to encode anything that is externally obtained prior to sending it to a browser.";
 			moreInfo = "Follow the \"Output Encoding: Explanations and Examples\" link for more info about why this method invocation needs encoding.";
 			
+			
 		}else if(this.readMoreType.equals("annotation")){
-			description ="This line of code reads untrusted data. If the input is not validated before it is used, attackers can potentially insert malicious code into the program. This can lead to Cross Site Scripting or other security problems.";
-			instruction ="";
-			moreInfo =" Use the options below to insert code that validates this input, or Read More for more information about this vulnerability and how to fix it.";
-					
+			instruction = "-- Double click the \"Annotation Request: Explanations and Examples\" link for an in-depth review of these issues";
+			description = "Security issues occur when a real, authorized user has access to data or functions that they should not have access to. Therefore, it is imperative to perform access control checks prior to giving access to secure information.";
+			moreInfo = "Follow the \"Annotation Request: Explanations and Examples\" link for more info about why this method invocation needs access control checks";
+	
+		}else if(this.readMoreType.equals("sql")){
+			instruction = "-- Double click the \"SQL Injection: Explanations and Examples\" link for an in-depth review of these issues";
+			description = "Security issues occur when input data contain an SQL command that executes unwanted actions.";
+			moreInfo = "Follow the \"Annotation Request: Explanations and Examples\" link for more info about why you are seeing this marker and what you can do to fix it";
+	
 		}
 		return instruction + "<p><p>" + description + "<p><p>" + moreInfo;
 	}
@@ -104,18 +109,18 @@ IMarkerResolution2{
 	@Override
 	public String getLabel() {
 		if(this.readMoreType.equals("input")){
-			return  "10-" + Plugin.PLUGIN_NAME + " Unvalidated Input Vulnerability"; //"101 - Input Validation: Explanations and Examples";
+			return  "101-Input Validation: Explanations and Examples"; //"101 - Input Validation: Explanations and Examples";
 		}
 		else if(this.readMoreType.equals("output")){
-			return "20-Output Encoding: Explanations and Examples";
+			return "201-Output Encoding: Explanations and Examples";
 		}
 		else if(this.readMoreType.equals("sql")){
-			return "30-SQL Injection: Explanations and Examples";
+			return "301-SQL Injection: Explanations and Examples";
 		}
 		else if(this.readMoreType.equals("annotation")){
-			return "40-Annotation Request: Explanations and Examples";
+			return "401-Annotation Request: Explanations and Examples";
 		}else
-			return "50-" + Plugin.PLUGIN_NAME + " Unvalidated Input Vulnerability"; //"101 - Input Validation: Explanations and Examples";
+			return  "101-Input Validation: Explanations and Examples"; //"101 - Input Validation: Explanations and Examples";
 	}
 
 	@Override
