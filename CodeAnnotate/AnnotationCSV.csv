@@ -1,0 +1,39 @@
+annotationMarkerName,fileName,markerStart,highlightingLength,annotatedText,randomId
+green.check.box,AccountsServlet.java,2337,56,null,4272
+green.diamond.box,AccountsServlet.java,1891,49,"request.getSession().getAttribute(""USER"") == null",4272
+green.check.box,AccountsServlet.java,2931,56,null,3320
+green.check.box,AccountsServlet.java,2710,46,,9059
+green.check.box,AccountsServlet.java,2931,56,null,8074
+green.check.box,AccountsServlet.java,2931,56,null,8077
+green.check.box,AccountsServlet.java,2937,56,null,5251
+green.check.box,AccountsServlet.java,2937,56,,6245
+green.check.box,AccountsServlet.java,2937,56,null,4893
+green.diamond.box,AccountsServlet.java,2708,46,session = DBUtil.getSqlMapper().openSession();,4893
+null,AccountsServlet.java,2937,56,null,2884
+null,AccountsServlet.java,2937,56,null,1954
+green.check.box,AccountsServlet.java,2937,56,null,6574
+green.diamond.box,AccountsServlet.java,2896,46,session = DBUtil.getSqlMapper().openSession();,6574
+green.diamond.box,AccountsServlet.java,2937,56,,4569
+green.diamond.box,AccountsServlet.java,2937,56,,4569
+green.diamond,AccountsServlet.java,2937,56,,4569
+green.diamond.box,AccountsServlet.java,3119,44,logger.info("Updating account information");,4569
+green.diamond.box,AccountsServlet.java,3119,44,logger.info("Updating account information");,4569
+green.check.box,AccountsServlet.java,2937,56,null,9755
+green.diamond.box,AccountsServlet.java,2844,46,session = DBUtil.getSqlMapper().openSession();,9755
+green.diamond.box,AccountsServlet.java,2937,56,,1675
+green.diamond.box,AccountsServlet.java,2937,56,,1675
+green.diamond,AccountsServlet.java,2937,56,,1675
+green.diamond.box,AccountsServlet.java,3001,44,logger.info("Updating account information");,1675
+green.diamond.box,AccountsServlet.java,3001,44,logger.info("Updating account information");,1675
+green.check.box,AccountsServlet.java,2937,56,null,3659
+green.diamond.box,AccountsServlet.java,2937,46,session = DBUtil.getSqlMapper().openSession();,3659
+green.diamond.box,AccountsServlet.java,2937,56,accountMapperImpl.updateAccount(accountName, newBalance),2280
+green.diamond.box,AccountsServlet.java,2937,56,accountMapperImpl.updateAccount(accountName, newBalance),2280
+green.diamond,AccountsServlet.java,2937,56,accountMapperImpl.updateAccount(accountName, newBalance),2280
+green.diamond.box,AccountsServlet.java,2668,44,logger.info("Updating account information");,2280
+green.diamond.box,AccountsServlet.java,2668,44,logger.info("Updating account information");,2280
+green.check.box,AccountsServlet.java,2937,56,null,9215
+null,AccountsServlet.java,2937,56,null,4745
+green.diamond.box,AccountsServlet.java,2877,44,logger.info("Updating account information");,4745
+green.check.box,AccountsServlet.java,2937,56,null,6243
+green.check.box,AccountsServlet.java,2937,56,null,10404
