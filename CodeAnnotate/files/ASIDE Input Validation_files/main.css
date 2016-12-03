@@ -1,0 +1,51 @@
+body {
+	background-color: #33861A;
+	font-family: sans-serif;
+}
+#header-img {
+	width:100%;
+	text-align: center;
+}
+#header-img>img {
+	width: 10em;
+	height: 10em;
+}
+#content-wrapper {
+	width: 90%;
+	height: 100%;
+	margin-top: 2%;
+	margin-left: 5%;
+	padding-top: 5em;
+	padding-bottom: 5em;
+	border: 2px solid gold;
+	background-color: white;
+}
+#content-wrapper>h1 {
+	width:100%;
+	text-align: center;
+	padding-bottom: 2em;
+}
+#open-example {
+	cursor: pointer;
+	border-bottom: 1px solid black;
+}
+#vulnerable-line {
+	font-family: "Lucida Console"
+}
+.info-section {
+	width: 80%;
+	margin-left: 10%;
+	margin-bottom: 1.5em;
+}
+.info-head {
+	cursor: pointer;
+	border-bottom: 1px solid black;
+}
+.info-head>h3>span {
+	margin-left: 2em;
+}
+.info-content {
+	padding: 2em 4.5em;
+	display:none;
+	border-bottom: 1px solid black;
+}
